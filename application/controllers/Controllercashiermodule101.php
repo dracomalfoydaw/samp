@@ -38,29 +38,30 @@ class Controllercashiermodule101 extends CI_Controller {
 		$TotalCashToBePaid = 0;
 		$TotalDiscount = 0;
 		$loadRemainingBalanceArray = json_decode($_POST['loadRemainingBalanceArray']) ;
-		echo json_encode($loadRemainingBalanceArray  );
+		
 		
 		/**/
 
 
 		//$category = $this->htmlpurifier_lib->purify($category);
-		$TotalCashToBePaid = $_POST['TotalCashToBePaid'];
-		$TotalCashReceived = $_POST['TotalCashReceived'];
-		$TotalCashChanged = $_POST['TotalCashChanged'];
-		$TotalDiscount = $_POST['TotalDiscount'];
-
+		$TotalCashToBePaid = $this->htmlpurifier_lib->purify($_POST['TotalCashToBePaid']);
+		$TotalCashReceived = $this->htmlpurifier_lib->purify($_POST['TotalCashReceived']);
+		$TotalCashChanged = $this->htmlpurifier_lib->purify($_POST['TotalCashChanged']);
+		$TotalDiscount = $this->htmlpurifier_lib->purify($_POST['TotalDiscount']);
+		$payorID = $this->htmlpurifier_lib->purify($_POST['memberID']);
+		$payorFullname = $this->htmlpurifier_lib->purify($_POST['memberFullname']);
 		$data = array(
 			$this->session->userdata('ORnumber'),  // replace with actual ORNUmber
 		    date("Y-m-d") , // replace with actual date
-		    $_POST['memberID'],             // replace with actual PayorID
-		    $_POST['memberFullname'],    // replace with actual PayorName
+		    $payorID ,             // replace with actual PayorID
+		    $payorFullname ,    // replace with actual PayorName
 		    $TotalCashToBePaid,        // replace with actual AmountDue
 		    $TotalCashReceived,        // replace with actual CashReceive
 		    $TotalCashChanged,         // replace with actual Change
 		    $TotalDiscount,         // replace with actual Discount
 		    convertNumberToWord($TotalCashReceived), // replace with actual AmountinWords
 		    123,           // replace with actual CashierID
-		    'admin'        // replace with actual entry_by
+		   1,        // replace with actual entry_by
 		);
 
 
@@ -78,7 +79,7 @@ class Controllercashiermodule101 extends CI_Controller {
 			        $Debit = $key->Debit;
 			        if(isset($key->Discount))
 			        {
-			        	$Discount = $key->Discount;
+			        	$Discount = $this->htmlpurifier_lib->purify($key->Discount);
 			        }
 			        else
 			        {
@@ -87,16 +88,57 @@ class Controllercashiermodule101 extends CI_Controller {
 
 			        if(isset($key->Remarks))
 			        {
-			        	$Remarks = $key->Remarks;
+			        	$Remarks = $this->htmlpurifier_lib->purify($key->Remarks);
 			        }
 			        else
 			        {
 			        	$Remarks='';
 			        }
-			        
+			        if(isset($key->EntryID))
+			        {
+			        	$EntryID = $this->htmlpurifier_lib->purify($key->EntryID);
+			        }
+			        else
+			        {
+			        	$EntryID='';
+			        }
 
-			        echo $Debit. " - ". $Discount . "||||";
+			        if(isset($key->ChartCode))
+			        {
+			        	$ChartCode = $this->htmlpurifier_lib->purify($key->ChartCode);
+			        }
+			        else
+			        {
+			        	$ChartCode='';
+			        }
+			        
+			        $referenceID = $currentId;
+			        $ChartAccountID = $this->cashiering_model->getChartAccountID($ChartCode);
+			        
+			        $data2 = array(
+			        	'entryID' => $EntryID, // EntryID of person balance
+			        	'TransactionTypeID' => 2, //TransactionTypeID of Payment
+			        	'ReferenceID' => $referenceID, //ReferenceID
+			        	'ChartAccountID' => $ChartAccountID['ChartID'] , //ChartAccountID
+			        	'description' => $Remarks , //description
+			        	'amountPaid' => $Debit , //amountPaid
+			        	'payorFullname' => $payorFullname , //amountPaid
+			        	'payorID' => $payorID , //amountPaid
+			        	'Discount' => $Discount , //Discount
+			        	'TransRefNo' => $EntryID . ";". $currentId, //TransRefNo
+
+			        	 );
+			        //echo json_encode($data2);
+
+			        $this->cashiering_model->saveTransactionDetails($data2);
+
+
 			    }
+			    $SetORnumber =  $this->session->userdata('ORnumber')+1;
+			    $this->session->set_userdata(array(
+					'ORnumber' => $SetORnumber  , 
+				));
+				$data_res = array('message' => "success", );
 			}
 			else
 			{
