@@ -9,9 +9,35 @@ class Cashieringinfomodel extends CI_Model {
                 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?
             )", $data
         );
-
-        return $query->row_array(); // Assuming you want to return the result
+        $result = $query->row_array();
+        mysqli_next_result( $this->db->conn_id );
+        return $result; // Assuming you want to return the result
     }
+
+    public function saveTransactionDetails($data) {
+        $query = $this->db->query(
+            "CALL SaveTransactionPaymentDetails(
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            )", $data
+        );
+
+        $result = $query->result();
+        mysqli_next_result( $this->db->conn_id );
+        return $result; // Assuming you want to return the result
+    }
+
+    function getChartAccountID($code)
+    {
+    	$query = $this->db->query("SELECT
+			viewchartaccountprofile.ChartID 
+		FROM
+			viewchartaccountprofile 
+		WHERE
+			chartcode = '$code' 
+			LIMIT 1");
+    	return $query->row_array();
+    }
+
 
 	function checkornumber($params)
 	{
