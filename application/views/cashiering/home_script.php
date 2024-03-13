@@ -202,7 +202,17 @@
                 params.append("memberFullname", this.memberFullname);
                 axios.post(address, params)
                     .then(response => {
-                        console.log(response.data);
+                        if(response.data.message=="success")
+                        {
+                            alert("transaction succesful");
+                            $('#payment_modal').modal('show');
+                            if ($.fn.DataTable.isDataTable('#showmemberinfoDataTable')) { // Destroy existing DataTable if it exists
+                                $('#showmemberinfoDataTable').DataTable().destroy();
+                            }
+                            this.OrNumber = this.OrNumber +1;
+                            this.memberID = "";
+                            this.memberFullname = "";
+                        }
                     })
                     .catch(error => {
                         console.error('Error fetching data:', error);
