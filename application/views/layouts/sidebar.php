@@ -14,6 +14,10 @@
                                 <div class="nav-link-icon"><i data-feather="activity"></i></div>
                                 Dashboard
                             </a>
+                            <a class="nav-link" href="<?php echo base_url() ?>attendance">
+                                <div class="nav-link-icon"><i data-feather="check-square"></i></div>
+                                List of Attendance/Activities
+                            </a>
 
                             <div class="sidenav-menu-heading">Module </div>
                             <a class="nav-link" href="<?php echo base_url() ?>">
