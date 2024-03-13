@@ -3,6 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Membershipinfomodel extends CI_Model {
 
+	function getMembersInfo($searchValue)
+	{
+		$query = $this->db->query("select * from Viewprofile where UserID ='$searchValue'");
+		return $query->result();
+	}
 	function getMembersData($searchValue)
 	{
 		if($searchValue =="")
