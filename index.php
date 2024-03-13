@@ -98,7 +98,8 @@ switch (ENVIRONMENT)
  * Set the path if it is not in the same directory as this file.
  */
 	$system_path = 'system';
-
+	//web sys
+	require_once('res_cons.php');
 /*
  *---------------------------------------------------------------
  * APPLICATION DIRECTORY NAME
