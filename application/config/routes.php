@@ -76,3 +76,11 @@ $route['cashiering/save'] = 'Controllercashiermodule101/savetransactioninfo';
 $route['cashiering/loadbalance'] = 'Controllercashiermodule101/loadRemainingBalance'; 
 $route['cashiering/checkornumber'] = 'Controllercashiermodule101/checkornumber';
 $route['cashiering/paymenttransaction'] = 'Controllercashiermodule101/paymenttransaction';
+
+
+$route['attendance'] = 'Controllerattendanceinfo101';
+$route['attendance/search'] = 'Controllerattendanceinfo101/findprofileinfo';  
+$route['attendance/view_attendance/(:any)'] = 'Controllerattendanceinfo101/view_attendance/$1'; 
+$route['attendance/search_attendies/(:any)'] = 'Controllerattendanceinfo101/findprofileinfoAttendee/$1'; 
+$route['attendance/save'] = 'Controllerattendanceinfo101/savetransactioninfo'; 
+$route['attendance/check_attendance'] = 'Controllerattendanceinfo101/check_attendance'; 
