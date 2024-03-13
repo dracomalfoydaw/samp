@@ -75,11 +75,11 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '1234',
-	'database' => 'vle',
-	'dbdriver' => 'mysqli',
+	'hostname' => CNF_DBHOST,
+	'username' => CNF_DBUSERNAME,
+	'password' => CNF_DBPASS,
+	'database' => CNF_DBNAME,
+	'dbdriver' => CNF_DBDRIVER,
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => (ENVIRONMENT !== 'production'),
