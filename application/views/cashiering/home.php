@@ -65,7 +65,7 @@
 
                         
                         <span class="input-group-btn">
-                            <button title = "Payment Received" disabled id="payNowButton" @click="payNow()" class="btn btn-secondary" style="margin-right:  5px;" ><i class="fas fa-cash-register "></i></button >
+                            <button title = "Payment Received" disabled id="payNowButton" @click="payNow()" class="btn btn-secondary" style="margin-right:  5px;" ><i class="fa fa-cash-register "></i></button >
                          <button class="btn btn-danger" @click="cashierSetup()" title="Settings"><i class="fas fa-cog "></i> </button>
                      </span>
                  </div>
