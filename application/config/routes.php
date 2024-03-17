@@ -84,3 +84,17 @@ $route['attendance/view_attendance/(:any)'] = 'Controllerattendanceinfo101/view_
 $route['attendance/search_attendies/(:any)'] = 'Controllerattendanceinfo101/findprofileinfoAttendee/$1'; 
 $route['attendance/save'] = 'Controllerattendanceinfo101/savetransactioninfo'; 
 $route['attendance/check_attendance'] = 'Controllerattendanceinfo101/check_attendance'; 
+
+
+
+$route['login'] = 'Controllerlogin101';
+$route['login/check_credentials'] = 'Controllerlogin101/searchaccount';
+
+
+$route['accounting'] = 'Controllerlogin101';
+$route['accounting/assessment'] = 'Controlleraccountinginfo101/individual_assessment';
+$route['accounting/ledger'] = 'Controlleraccountinginfo101/individual_ledger';
+$route['accounting/ledger/(:any)'] = 'Controlleraccountinginfo101/individual_ledger/$1';
+$route['accounting/getledgerentries'] = 'Controlleraccountinginfo101/loadGetLedgerEntries';
+$route['accounting/getassessmententries'] = 'Controlleraccountinginfo101/loadGetAssestmentEntries';
+
