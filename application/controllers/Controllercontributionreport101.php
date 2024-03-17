@@ -5,9 +5,12 @@ class Controllercontributionreport101 extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-		
+		if(!$this->session->userdata('logged_in_session')) :
+			redirect('login',301);
+
+		endif;
 		$this->load->model('Contributioninfomodel','contribution_model');
-		
+		$this->load->model('Announcementinfomodel','announcement');
 	}
 
 
@@ -77,7 +80,7 @@ class Controllercontributionreport101 extends CI_Controller {
 		// Check if form validation passed
 		if ($this->form_validation->run()) {
 		    // Form validation passed, no errors
-		    
+		    		$createannoucement = $this->htmlpurifier_lib->purify($this->input->post('createannoucement'));
                     $contributionname  = $this->htmlpurifier_lib->purify($this->input->post('contributionname'));
                     $amountofcontribution = $this->filtering_process->test_input($this->input->post('amountofcontribution'));
                     $desccontribution = $this->htmlpurifier_lib->purify($this->input->post('desccontribution'));
@@ -85,14 +88,21 @@ class Controllercontributionreport101 extends CI_Controller {
                     $applyrecord = $this->htmlpurifier_lib->purify($this->input->post('applyrecord'));
 
 
-                     $system_user = 1;
+                     $system_user = $this->session->userdata('uid');
                 
                     $result = $this->contribution_model->insertData($applyrecord,$contributionname, $amountofcontribution , $desccontribution , 1, 0, $system_user);
+
+                    if($result->SuccessMessage=="success" and $createannoucement=='true')
+                    {
+                    	$TitleAnnouncement = "Contribution Name: ".$contributionname;
+                    	$TitleDescription = $desccontribution. ". Corresponding Contribution Amount: ".$amountofcontribution. ".  ";
+                    	$this->announcement->newAnnouncement($TitleAnnouncement, $TitleDescription , $system_user);
+                    }
 
                     
                 	$data = array(
 				        'message' =>  $result->SuccessMessage,  // Assuming success when validation passes
-				        'message_details' => '',
+				        'message_details' => $createannoucement,
 				        
 				    );
                    
