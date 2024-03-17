@@ -136,7 +136,7 @@
                             $("#Fines").prop('disabled', false);
                             $("#submit_form_btn").prop('disabled', false);
 
-                            console.log(response);
+                            //console.log(response);
                         }
                         else
                         {
@@ -148,7 +148,7 @@
                             $("#error_content").html(response.data.message_details);
                             $(".messagebox").fadeIn("slow");
                             $('#registrationModal').animate({ scrollTop: 0 }, 'slow');
-                            console.log(response);
+                            //console.log(response);
                         }
                     })
                     .catch(error => {
@@ -157,7 +157,7 @@
                         $(".messagebox").fadeIn("slow");
                         alert("Something went wrong. Contact the administrator for the problem.");
                         $('html,body').animate({ scrollTop: 0 }, 'slow');
-                        console.log(error);
+                        //console.log(error);
                     });
 
 
