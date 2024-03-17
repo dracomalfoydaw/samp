@@ -110,7 +110,9 @@ class Contributioninfomodel extends CI_Model {
 
         $query = $this->db->query($sql, $params);
 
-        return $query->row();  // Assuming you expect a single result row
+        $result = $query->row();
+        mysqli_next_result( $this->db->conn_id );
+        return $result; // Assuming you expect a single result row
     }
 
 
