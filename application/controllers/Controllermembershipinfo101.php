@@ -5,7 +5,10 @@ class Controllermembershipinfo101 extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-		
+		if(!$this->session->userdata('logged_in_session')) :
+			redirect('login',301);
+
+		endif;
 		$this->load->model('Membershipinfomodel','members');
 		$this->load->model('User_model');
 		

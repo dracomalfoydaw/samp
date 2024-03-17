@@ -18,13 +18,26 @@ class Home extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/userguide3/general/urls.html
 	 */
+
+	function __construct() {
+		parent::__construct();
+		if(!$this->session->userdata('logged_in_session')) :
+			redirect('login',301);
+
+		endif;
+		
+		
+	}
+
 	public function index()
 	{
 		$this->data = [];
 		$this->data['pageTitle'] = "Home";
-		$this->data['pageSubtitle'] = "Message";
-		$this->data['content'] = $this->load->view('template/home',$this->data, true );
-		$this->data['home_script'] = $this->load->view('template/home_script',$this->data, true );
+		$this->data['pageSubtitle'] = "Dashboard";
+		$this->data['content'] = $this->load->view('dashboard/home',$this->data, true );
+		$this->data['home_script'] = $this->load->view('dashboard/home_script',$this->data, true );
 		$this->load->view('layouts/main', $this->data );
 	}
+
+	
 }
