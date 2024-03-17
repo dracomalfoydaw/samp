@@ -5,7 +5,10 @@ class Controllercashiermodule101 extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-		
+		if(!$this->session->userdata('logged_in_session')) :
+			redirect('login',301);
+
+		endif;
 		$this->load->model('cashieringinfomodel','cashiering_model');
 		
 	}
@@ -142,9 +145,11 @@ class Controllercashiermodule101 extends CI_Controller {
 			}
 			else
 			{
-				echo "ssss";
+				$data_res = array('message' => "success", );
 			}
 		}
+
+		echo json_encode($data_res);
 	}
 
 	public function findinfo($category = '')
