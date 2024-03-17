@@ -5,6 +5,10 @@ class Controllerattendanceinfo101 extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
+		if(!$this->session->userdata('logged_in_session')) :
+			redirect('login',301);
+
+		endif;
 		
 		$this->load->model('Attendanceinfomodel','attendance');
 		$this->load->model('Membershipinfomodel','members');
@@ -152,7 +156,7 @@ class Controllerattendanceinfo101 extends CI_Controller {
                     $system_user = 1;
                 
                     $result = $this->attendance->insertProfile($Name, $Description, $Fines, $mysqldate);
-                    if($result->SuccessMessage=="success")
+                    if($result->SuccessMessage=="success" and $createannoucement=='createannoucement')
                     {
                     	$TitleAnnouncement = "Activity Name: ".$Name;
                     	$TitleDescription = $Description. ". Corresponding Fines: ".$Fines. ".  Date : ". $mysqldate;
