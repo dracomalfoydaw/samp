@@ -12,10 +12,9 @@
                 errors: {},
                 error_transaction:[],
                 formData: {
-
+                    createannoucement:'',
                     desccontribution: '',
-                    amountofcontribution: '',
-                    amountofcontribution: '',
+                    amountofcontribution: '0.00',
                     applyrecord: [],
                 },
             };
@@ -36,7 +35,17 @@
                         }
                     },
                     columns: [                  
-                       
+                        {
+                            data: null,
+                            render: function (data, type, row, meta) {
+                                if (meta) {
+                                    return meta.row + 1; // Row number starts from 1
+                                } else {
+                                    return ''; // or handle the case when meta is undefined
+                                }
+                            },
+                            title: '#'
+                        },
                         { data: 'Name', title: 'Name' },
                         { data: 'BalanceFee', title: 'BalanceFee' },
                         { data: 'Description', title: 'Description' },
@@ -45,7 +54,7 @@
                           render: (data, type, row) => {
                             
                             return '<button class="update-button btn btn-sm btn-warning" data-user-id="' + row.EntryID + '"><i class="fa fa-edit"></i></button> <button class="delete-button btn btn-sm btn-danger" data-user-id="' + row.EntryID + '"><i class="fa fa-trash"></i></button>';
-                          },
+                          },title: 'Description'
                         },
                     ]
                 });
@@ -110,6 +119,7 @@
 
                     const address = base_url+"contribution/save";
                     let params = new URLSearchParams();
+                    params.append("createannoucement", this.formData.createannoucement);
                     params.append("applyrecord", this.formData.applyrecord);
                     params.append("contributionname", this.formData.contributionname);
                     params.append("amountofcontribution", this.formData.amountofcontribution);
@@ -126,7 +136,7 @@
                             $("#amountofcontribution").prop('disabled', false);
                             $("#desccontribution").prop('disabled', false);
                             $("#submit_form_btn").prop('disabled', false);
-
+                            this.reloaddata();
                             console.log(response);
                         }
                         else
@@ -157,18 +167,19 @@
                 }
                 
             },
-            /*validateAmount() {
-                const value = this.formData.amountofcontribution;
-
-                  // Regular expression to check for a valid number with two decimal places
-                const regex = /^\d+(\.\d{1,2})?$/;
-
-                if (!regex.test(value)) {
-                    this.errors.amountofcontribution = 'Please enter a valid number with up to two decimal places.';
-                } else {
-                    this.errors.amountofcontribution = null;
+            reloaddata()
+            {
+                if ($.fn.DataTable.isDataTable('#dataTable')) { // Destroy existing DataTable if it exists
+                    $('#dataTable').DataTable().destroy();
                 }
-            }*/
+
+                
+                this.formData.createannoucement ='';
+                this.formData.desccontribution= '';
+                this.formData.amountofcontribution= '0.00';
+                this.formData.applyrecord =  [];
+                this.loadDatatable();
+            }
 
         },
         mounted(){

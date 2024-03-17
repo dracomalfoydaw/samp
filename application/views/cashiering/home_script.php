@@ -168,6 +168,11 @@
                 }
                 else
                 {
+                    $('#payment_modal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    })
+
                     // Create an array to store the JSON objects for each row
                     const jsonData = [];
 
@@ -187,25 +192,36 @@
                         jsonData.push(rowObject);
                     });
 
+                    $('#payment_loading_div').modal('show');
+                    $(".btnconfirmpayNow").attr("disabled", true);
+                    $(".btnCloseModal").attr("disabled", true);
+
                       // Display the JSON data in the console (you can modify this part based on your requirements)
                     transtable = JSON.stringify(jsonData, null, 2);
                     //console.log(JSON.stringify(jsonData, null, 2));
-
+                    payment_loading_div
                     let params = new URLSearchParams();
-                var address = base_url + "cashiering/paymenttransaction";
-                params.append("loadRemainingBalanceArray", transtable);
-                params.append("TotalCashReceived", this.TotalCashReceived);
-                params.append("TotalCashToBePaid", this.TotalCashToBePaid);
-                params.append("TotalCashChanged", this.TotalCashChanged);
-                params.append("TotalDiscount", this.totalDiscount);
-                params.append("memberID", this.memberID);
-                params.append("memberFullname", this.memberFullname);
-                axios.post(address, params)
+                    var address = base_url + "cashiering/paymenttransaction";
+                    params.append("loadRemainingBalanceArray", transtable);
+                    params.append("TotalCashReceived", this.TotalCashReceived);
+                    params.append("TotalCashToBePaid", this.TotalCashToBePaid);
+                    params.append("TotalCashChanged", this.TotalCashChanged);
+                    params.append("TotalDiscount", this.totalDiscount);
+                    params.append("memberID", this.memberID);
+                    params.append("memberFullname", this.memberFullname);
+                    axios.post(address, params)
                     .then(response => {
                         if(response.data.message=="success")
                         {
                             alert("transaction succesful");
-                            $('#payment_modal').modal('show');
+                            $('#payment_loading_div').modal('hide');
+                            $('#payment_modal').modal('hide');
+                            $(".btnconfirmpayNow").attr("disabled", true);
+                            $(".btnCloseModal").attr("disabled", true);
+                            
+                            $("#searchusermessegediv").hide();
+                            $("#nousermessegediv").hide();
+
                             if ($.fn.DataTable.isDataTable('#showmemberinfoDataTable')) { // Destroy existing DataTable if it exists
                                 $('#showmemberinfoDataTable').DataTable().destroy();
                             }

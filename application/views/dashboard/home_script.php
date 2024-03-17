@@ -1,1 +1,0 @@
- <script src="<?php echo base_url() ?>assets/assets/demo/datatables-demo.js"></script>

@@ -10,19 +10,7 @@
 
         <div class="datatable">
             <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Billing</th>
-                        <th>Description</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-
-                </tbody>
+                
             </table>
         </div>
     </div>

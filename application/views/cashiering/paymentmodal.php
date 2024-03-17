@@ -4,13 +4,17 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="paymentModalLabel">Cash Payment</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close btnCloseModal" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="datatable">
                    <table class="table"> 
+                        <div  id='payment_loading_div' style="display: none;"  >
+                           <center><img src="<?php echo base_url()?>assets/imgs/loading.gif"></center>
+                               
+                        </div>
                         <tr id="showerrorcashierpayment" style="display: none;">
                             <td colspan="2">
                                 <div class="col-sm-12 col-md-12">
@@ -35,8 +39,8 @@
                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" @click="confirmpayNow()" >Confirm</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success btnconfirmpayNow" @click="confirmpayNow()" >Confirm</button>
+                <button type="button" class="btn btn-secondary btnCloseModal" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

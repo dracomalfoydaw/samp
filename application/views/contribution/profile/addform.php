@@ -34,15 +34,15 @@
 
           </div> 
           <div class="custom-control custom-checkbox custom-control-solid">
-              <input
-                  class="custom-control-input"
-                  id="customCheckSolid1"
-                  type="checkbox"
-                  value="applyrecord"
-                  v-model="formData.applyrecord"
-              >
-              <label class="custom-control-label" for="customCheckSolid1">Apply this record to all active members</label>
+              <input class="custom-control-input" id="createAnnouncementCheckbox" name="createannoucement" type="checkbox" value="createannoucement" v-model="formData.createannoucement">
+              <label class="custom-control-label" for="createAnnouncementCheckbox">Create an Announcement</label>
           </div>
+
+          <div class="custom-control custom-checkbox custom-control-solid">
+              <input class="custom-control-input" id="applyRecordCheckbox" type="checkbox" value="applyrecord" v-model="formData.applyrecord" name="applyrecord">
+              <label class="custom-control-label" for="applyRecordCheckbox">Apply this record to all active members</label>
+          </div>
+
 
           <div>
             <label for="contributionname">Name of Contribution:</label>
@@ -53,7 +53,7 @@
 
           <div>
             <label for="amountofcontribution">Amount of Contribution:</label>
-            <input type="text" id="amountofcontribution" name="amountofcontribution" class="form-control" v-model="formData.amountofcontribution" required>
+            <input type="number" id="amountofcontribution" name="amountofcontribution" class="form-control" v-model="formData.amountofcontribution" required>
             <span v-if="errors.amountofcontribution" class="error">{{ errors.amountofcontribution }}</span>
           </div>
           
