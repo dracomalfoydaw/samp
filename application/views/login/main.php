@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
     <?php $this->load->view("login/head") ?>
-    <body class="bg-primary" >
+    <body class="bg-primary"  >
         <div id="layoutAuthentication">
-            <div id="layoutAuthentication_content">
+            <div id="layoutAuthentication_content" style="background-image: linear-gradient(24deg, #0000ff70 0%, rgb(55 231 102) 100%);">
                 <main>
                     <div class="container">
                         <div class="row justify-content-center">
@@ -11,13 +11,14 @@
                                 <!-- Basic login form-->
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
                                     <div class="card-header justify-content-center">
+                                        <hr>
                                         <div class="text-center">
                                             <img src="<?php echo base_url().'assets/imgs/login-logo.png'?>" width="90" height="90" />
+                                            <img src="<?php echo base_url().'assets/imgs/login-logo-2.png'?>" width="90" height="90" />
                                         </div>
                                         <div class="text-center">
                                             <h3 class="font-weight-light my-4">
-                                                Illana Bay Masonic Lodge No. 274 <br>   
-                                                Masonic District RIX
+                                                <?php echo CNF_APPNAMELANDINGPAGE ?>
                                             </h3>
                                         </div>
                                     </div>
@@ -48,7 +49,7 @@
                                         <?php $this->load->view('login/home') ?>
                                     </div>
                                     <div class="card-footer text-center">
-                                        <div class="small"><a href="auth-register-basic.html">Need an account? Sign up!</a></div>
+                                       
                                     </div>
                                 </div>
                             </div>

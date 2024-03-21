@@ -1,18 +1,14 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Membershipinfomodel extends CI_Model {
+class Accountinfomodel extends CI_Model {
 
-	function getMembersInfo($searchValue)
-	{
-		$query = $this->db->query("select * from viewprofile where UserID ='$searchValue' ");
-		return $query->result();
-	}
+	
 	function getMembersData($searchValue)
 	{
 		if($searchValue =="")
 		{
-			$query = $this->db->query("select * from viewprofile order by ProfileID desc limit 1000");
+			$query = $this->db->query("select * from viewuserprofile order by LastName  limit 1000");
 		}
 		else
 		{
@@ -35,7 +31,7 @@ class Membershipinfomodel extends CI_Model {
 			}
 
 			// Constructing the final query
-			$query_string = "SELECT * FROM Viewprofile WHERE " . implode(" OR ", $whereClause) . " order by ProfileID desc limit 1000";
+			$query_string = "SELECT * FROM viewuserprofile WHERE " . implode(" OR ", $whereClause) . " order by LastName  limit 1000";
 			$query = $this->db->query($query_string);
 
 		}

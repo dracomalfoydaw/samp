@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+?><!DOCTYPE html>
 <html lang="en">
     <?php $this->load->view('layouts/head') ?>
     <body class="nav-fixed">
@@ -51,7 +53,12 @@
                                         </h1>
                                         <div class="page-header-subtitle"><?php echo $pageSubtitle ?></div>
                                     </div>
-                                    
+                                    <div class="col-auto mt-8">
+                                        <div class="text-center">
+                                            <img src="<?php echo base_url().'assets/imgs/login-logo.png'?>" width="90" height="90" />
+                                            <img src="<?php echo base_url().'assets/imgs/login-logo-2.png'?>" width="90" height="90" />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

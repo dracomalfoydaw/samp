@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Controllermembershipinfo101 extends CI_Controller {
+class Controlleraccountinfo101 extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
@@ -9,8 +9,8 @@ class Controllermembershipinfo101 extends CI_Controller {
 			redirect('login',301);
 
 		endif;
-		$this->load->model('Membershipinfomodel','members');
-		$this->load->model('User_model');
+		$this->load->model('Accountinfomodel','account');
+		$this->load->model('User_model','user_model');
 		
 	}
 
@@ -20,10 +20,11 @@ class Controllermembershipinfo101 extends CI_Controller {
 	public function index()
 	{
 		$this->data = [];
-		$this->data['pageTitle'] = "Members Information";
-		$this->data['pageSubtitle'] = "Profile";
-		$this->data['content'] = $this->load->view('members/profile/home',$this->data, true );
-		$this->data['home_script'] = $this->load->view('members/profile/home_script',$this->data, true );
+		$this->data['pageTitle'] = "Utilities";
+		$this->data['pageSubtitle'] = "User Account";
+		$this->data['pageSubtitleTable'] = "User Account List";
+		$this->data['content'] = $this->load->view('utilities/accounts/home',$this->data, true );
+		$this->data['home_script'] = $this->load->view('utilities/accounts/home_script',$this->data, true );
 		$this->load->view('layouts/main', $this->data );
 	}
 
@@ -38,7 +39,7 @@ class Controllermembershipinfo101 extends CI_Controller {
 			$fieldValue = "" ;
 		}
 		
-		echo json_encode($this->members->getMembersData($fieldValue)) ;
+		echo json_encode($this->account->getMembersData($fieldValue)) ;
 	}
 
 	public function updatetransactioninfo()

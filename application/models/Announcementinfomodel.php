@@ -3,7 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Announcementinfomodel extends CI_Model {
 
-	
+	function getDataforDashboard()
+	{
+		$query = $this->db->query("select * from `getdatafordashboard` ");
+		return $query->result();
+	}
 
 	function getMembersInfo($searchValue)
 	{

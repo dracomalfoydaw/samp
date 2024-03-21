@@ -58,6 +58,8 @@ $route['translate_uri_dashes'] = FALSE;
 $route['members'] = 'controllermembershipinfo101';
 $route['members/search'] = 'controllermembershipinfo101/findprofileinfo';  
 $route['members/save'] = 'controllermembershipinfo101/savetransactioninfo'; 
+$route['members/update'] = 'controllermembershipinfo101/updatetransactioninfo'; 
+$route['members/delete'] = 'controllermembershipinfo101/deletetransactioninfo'; 
 
 
 
@@ -97,4 +99,13 @@ $route['accounting/ledger'] = 'Controlleraccountinginfo101/individual_ledger';
 $route['accounting/ledger/(:any)'] = 'Controlleraccountinginfo101/individual_ledger/$1';
 $route['accounting/getledgerentries'] = 'Controlleraccountinginfo101/loadGetLedgerEntries';
 $route['accounting/getassessmententries'] = 'Controlleraccountinginfo101/loadGetAssestmentEntries';
+
+
+
+
+$route['account'] = 'controlleraccountinfo101';
+$route['account/search'] = 'controlleraccountinfo101/findprofileinfo';  
+$route['account/save'] = 'controlleraccountinfo101/savetransactioninfo'; 
+$route['account/update'] = 'controlleraccountinfo101/updatetransactioninfo'; 
+$route['account/delete'] = 'controlleraccountinfo101/deletetransactioninfo'; 
 

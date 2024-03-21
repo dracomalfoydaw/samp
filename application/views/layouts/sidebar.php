@@ -82,7 +82,7 @@
                             </a>
                             <div class="collapse" id="collapseUtilities" data-parent="#accordionSidenav">
                                 <nav class="sidenav-menu-nested nav">
-                                    <a class="nav-link" href="animations.html">Users Account</a>
+                                    <a class="nav-link" href="<?php echo base_url() ?>account/">Users Account</a>
                                     <!-- <a class="nav-link" href="background.html">User Group</a>
                                     <a class="nav-link" href="borders.html">Access Rights</a> -->
                                 </nav>

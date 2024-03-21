@@ -33,7 +33,7 @@
           "serverSide": true,
 
           ajax: {
-            url: base_url + 'members/search', // Replace with your server-side script
+            url: base_url + 'account/search', // Replace with your server-side script
             dataSrc: '',
             type: "POST",
             data: function(d) {
@@ -54,6 +54,17 @@
             {
               data: 'UserID',
               title: 'User ID'
+            },
+            {
+              data: 'UserName',
+              title: 'User Name',
+              render: function(data, type, row) {
+                if (row.RecordDeleted === 'Record deleted') {
+                  return '<span><del>' + data + '</del></span>';
+                } else {
+                  return '<input type="text" value="' + data + '" class="form-control UserNameRow" />';
+                }
+              }
             },
             {
               data: 'LastName',
@@ -88,19 +99,9 @@
                 }
               }
             },
+            
             {
-              data: 'NameExtension',
-              title: 'Name Extension',
-              render: function(data, type, row) {
-                if (row.RecordDeleted === 'Record deleted') {
-                  return '<span><del>' + data + '</del></span>';
-                } else {
-                  return '<input type="text" value="' + data + '" class="form-control NameExtensionRow" />';
-                }
-              }
-            },
-            {
-              data: 'Email',
+              data: 'email',
               title: 'Email address',
               render: function(data, type, row) {
                 if (row.RecordDeleted === 'Record deleted') {
@@ -186,7 +187,7 @@
           $("#email").prop('disabled', true);
           $("#idnumber").prop('disabled', true);
 
-          const address = base_url + "members/save";
+          const address = base_url + "account/save";
           let params = new URLSearchParams();
           params.append("defaultuseraccount", this.formData.defaultuseraccount);
           params.append("firstName", this.formData.firstName);
@@ -247,7 +248,7 @@
       },
 
       updateRow(userID, lastName, firstName, middleName, nameExtension, email) {
-        const address = base_url + "members/update";
+        const address = base_url + "members/account";
         let params = new URLSearchParams();
 
         params.append("firstName", firstName);
@@ -279,7 +280,7 @@
       deleteRow(userID)
       {
         $("#delete_loading_div").show();
-        const address = base_url + "members/delete";
+        const address = base_url + "members/account";
 
         let params = new URLSearchParams();       
         params.append("userID", userID);

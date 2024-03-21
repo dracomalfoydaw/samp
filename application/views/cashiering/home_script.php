@@ -214,7 +214,8 @@
                         if(response.data.message=="success")
                         {
                             alert("transaction succesful");
-                            $('#payment_loading_div').modal('hide');
+                            window.location.href = base_url+"cashiering";
+                            /*$('#payment_loading_div').modal('hide');
                             $('#payment_modal').modal('hide');
                             $(".btnconfirmpayNow").attr("disabled", true);
                             $(".btnCloseModal").attr("disabled", true);
@@ -225,9 +226,10 @@
                             if ($.fn.DataTable.isDataTable('#showmemberinfoDataTable')) { // Destroy existing DataTable if it exists
                                 $('#showmemberinfoDataTable').DataTable().destroy();
                             }
+
                             this.OrNumber = this.OrNumber +1;
                             this.memberID = "";
-                            this.memberFullname = "";
+                            this.memberFullname = "";*/
                         }
                     })
                     .catch(error => {

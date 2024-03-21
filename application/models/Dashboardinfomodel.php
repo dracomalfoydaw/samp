@@ -3,16 +3,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Dashboardinfomodel extends CI_Model {
 
+	
+
 	function getMembersInfo($searchValue)
 	{
-		$query = $this->db->query("select * from Viewprofile where UserID ='$searchValue'");
+		$query = $this->db->query("select * from viewprofile where UserID ='$searchValue'");
 		return $query->result();
 	}
 	function getMembersData($searchValue)
 	{
 		if($searchValue =="")
 		{
-			$query = $this->db->query("select * from Viewprofile limit 1000");
+			$query = $this->db->query("select * from viewprofile limit 1000");
 		}
 		else
 		{

@@ -2,7 +2,7 @@
 
 <!-- Example DataTable for Dashboard Demo-->
 <div class="card mb-4">
-    <div class="card-header">Personnel Management</div>
+    <div class="card-header"><?php echo $pageSubtitleTable ?></div>
     <div class="card-body">
         <button class="btn btn-primary mb-3" @click="openRegistrationModal">Register</button>
     </div>
@@ -25,5 +25,5 @@
 
 
 
-<?php $this->load->view("members/profile/addform") ?>
-<?php $this->load->view("members/profile/modaldeleteprompt") ?>
+<?php $this->load->view("utilities/accounts/addform") ?>
+<?php $this->load->view("utilities/accounts/modaldeleteprompt") ?>

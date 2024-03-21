@@ -25,7 +25,7 @@ class Home extends CI_Controller {
 			redirect('login',301);
 
 		endif;
-		
+		$this->load->model('Announcementinfomodel','announcement');
 		
 	}
 
@@ -34,6 +34,7 @@ class Home extends CI_Controller {
 		$this->data = [];
 		$this->data['pageTitle'] = "Home";
 		$this->data['pageSubtitle'] = "Dashboard";
+		$this->data['announcementlist'] = $this->announcement->getDataforDashboard();
 		$this->data['content'] = $this->load->view('dashboard/home',$this->data, true );
 		$this->data['home_script'] = $this->load->view('dashboard/home_script',$this->data, true );
 		$this->load->view('layouts/main', $this->data );
