@@ -15,8 +15,8 @@ $config['smtp_port'] = '465';
 /*
  * SMTP username and password.
  */
-$config['smtp_user']='info.sis@cmu.edu.ph';
-$config['smtp_pass']='2@MS6-dj2nCcn3Wx';
+$config['smtp_user']=EmailAddress;
+$config['smtp_pass']=EmailPassword;
          
 $config['validate'] = TRUE;
 $config['mailtype'] = 'html';
