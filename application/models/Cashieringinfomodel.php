@@ -17,7 +17,7 @@ class Cashieringinfomodel extends CI_Model {
     public function saveTransactionDetails($data) {
         $query = $this->db->query(
             "CALL SaveTransactionPaymentDetails(
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?
             )", $data
         );
 

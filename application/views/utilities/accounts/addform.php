@@ -33,45 +33,61 @@
 
 
           </div> 
-          <div class="custom-control custom-checkbox custom-control-solid">
-              <input class="custom-control-input" id="customCheckSolid1" class="defaultsystemuser" type="checkbox" value="defaultsystemuser" v-model="formData.defaultuseraccount" >
-              <label class="custom-control-label" for="customCheckSolid1">Create Dafault System User</label>
-          </div>
+
           <div>
-            <label for="username">ID Number:</label>
+            <label for="group">Group:</label>
+            <select id="group" class="form-control" v-model="formData.group" required>
+              <option v-for="(value, key) in options" :value="key">{{ value }}</option>
+            </select>
+            <span v-if="errors.group" class="error" style="color:red;">{{ errors.group }}</span>
+          </div>
+
+          <div>
+            <label for="username">Profile Number : </label>
             <input type="text" id="idnumber" name="idnumber" class="form-control" v-model="formData.idnumber" required>
-            <span v-if="errors.idnumber" class="error">{{ errors.idnumber }}</span>
+            <span v-if="errors.idnumber" class="error" style="color:red;">{{ errors.idnumber }}</span>
+          </div>
+          
+          <div>
+            <label for="username">Username : </label>
+            <input type="text" id="username" name="username" class="form-control" v-model="formData.username" required>
+            <span v-if="errors.username" class="error" style="color:red;">{{ errors.username }}</span>
           </div>
           
           <div>
             <label for="firstName">First Name:</label>
             <input type="text" id="firstName" class="form-control" name="firstName"  v-model="formData.firstName" required>
-            <span v-if="errors.firstName" class="error">{{ errors.firstName }}</span>
+            <span v-if="errors.firstName" class="error" style="color:red;">{{ errors.firstName }}</span>
           </div>
 
-          <div>
-            <label for="middleName">Middle Name:</label>
-            <input type="text" id="middleName" name="middleName" class="form-control" v-model="formData.middleName" required>
-            <span v-if="errors.middleName" class="error">{{ errors.middleName }}</span>
-          </div>
+          
 
           <div>
             <label for="lastName">Last Name:</label>
             <input type="text" id="lastName" name="lastName" class="form-control" v-model="formData.lastName" required>
-            <span v-if="errors.lastName" class="error">{{ errors.lastName }}</span>
+            <span v-if="errors.lastName" class="error" style="color:red;">{{ errors.lastName }}</span>
           </div>
 
-          <div>
-            <label for="nameExtension">Name Extension:</label>
-            <input type="text" id="nameExtension" name="nameExtension" class="form-control" v-model="formData.nameExtension">
-          </div>
+         
 
           
 
           <div>
             <label for="email">Email:</label>
             <input type="email" id="email" id="name" class="form-control" v-model="formData.email" required>
-            <span v-if="errors.email" class="error">{{ errors.email }}</span>
+            <span v-if="errors.email" class="error" style="color:red;">{{ errors.email }}</span>
+          </div>
+
+           <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" class="form-control passwordinput" v-model="formData.password" required>
+            <span v-if="errors.password" class="error" style="color:red;">{{ errors.password }}</span>
+          </div>
+
+          <div>
+            <label for="confirmPassword">Confirm Password:</label>
+            <input type="password" id="confirmPassword" class="form-control passwordinput" v-model="formData.confirmPassword" required>
+            <span v-if="errors.confirmPassword" class="error" style="color:red;">{{ errors.confirmPassword }}</span>
           </div>
 
         

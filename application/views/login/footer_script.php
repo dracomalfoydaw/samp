@@ -47,7 +47,7 @@
                                                 $('#loading').fadeOut("slow");
                                                 if(response.data.message=="success")
                                                 {
-                                                        console.log(response);
+                                                        
                                                         window.location.href=base_url+'home';
                                                 }
                                                 else
@@ -58,7 +58,7 @@
                                                         $("#error_content").html(response.data.message_details);
                                                         $(".messagebox").fadeIn("slow");
                                                         $('#registrationModal').animate({ scrollTop: 0 }, 'slow');
-                                                        console.log(response);
+                                                      
                                                 }
                                         })
                                         .catch(error => {
@@ -71,7 +71,7 @@
                                                 $(".messagebox").fadeIn("slow");
                                                 alert("Something went wrong. Contact the administrator for the problem.");
                                                 $('html,body').animate({ scrollTop: 0 }, 'slow');
-                                                console.log(error);
+                                              
                                         });
 
 

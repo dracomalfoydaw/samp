@@ -5,29 +5,51 @@ class Announcementinfomodel extends CI_Model {
 
 	function getDataforDashboard()
 	{
-		$query = $this->db->query("select * from `getdatafordashboard` ");
+		$query = $this->db->query("SELECT
+			* 
+		FROM
+			getdatafordashboard 
+		WHERE
+			DATE( `date posted` ) BETWEEN DATE_SUB( CURDATE(), INTERVAL 1 WEEK ) 
+			AND CURDATE();");
 		return $query->result();
 	}
 
-	function getMembersInfo($searchValue)
+	/*function getMembersInfo($searchValue)
 	{
 		$query = $this->db->query("select * from Viewprofile where UserID ='$searchValue'");
 		return $query->result();
+	}*/
+
+	public function insert($TitleName, $Description, $entryBy ) {
+	    $sql = "CALL InsertAnnouncement(?, ?, ?)";
+	    
+	    $params = array(
+	        $TitleName,
+	        $Description,
+	        $entryBy,
+	       
+	    );
+
+	    $query = $this->db->query($sql, $params);
+	    $result = $query->row();
+
+	    mysqli_next_result( $this->db->conn_id );
+
+	    return $result;  // Assuming you expect a single result row
 	}
-	function getMembersData($searchValue)
+	function getData($searchValue)
 	{
 		if($searchValue =="")
 		{
-			$query = $this->db->query("select * from Viewprofile limit 1000");
+			$query = $this->db->query("select * from viewannouncementlist order by EntryID desc limit 1000");
 		}
 		else
 		{
 			
 			$columns = array(
-			    'UserID',
-			    'LastName',
-			    'FirstName',
-			    'MiddleName'
+			    'title',
+			    'description',
 			    // Add more columns as needed
 			);
 
@@ -40,7 +62,7 @@ class Announcementinfomodel extends CI_Model {
 			}
 
 			// Constructing the final query
-			$query_string = "SELECT * FROM Viewprofile WHERE " . implode(" OR ", $whereClause) . "limit 1000";
+			$query_string = "SELECT * FROM viewannouncementlist WHERE " . implode(" OR ", $whereClause) . " order by EntryID desc limit 1000";
 
 			$query = $this->db->query($query_string);
 
@@ -71,6 +93,45 @@ class Announcementinfomodel extends CI_Model {
 
     return $result;  // Assuming you expect a single result row
 }
+
+public function deleteProfile($userID)
+	{
+		$sql = "CALL DeleteRecordProcedure(?, ?, ?, ?, ?, ?, ?)";
+		$params = array(
+
+	        'tb_announcement',
+	        'EntryID',
+	        $userID,
+	        'is_del',
+	        '1',
+	        '0',
+	       	'EntryID'
+	    );
+
+	    $query = $this->db->query($sql, $params);
+	    $result = $query->row();
+
+	    mysqli_next_result( $this->db->conn_id );
+
+	    return $result;  // Assuming you expect a single result row
+	}
+
+	public function updateProfile($uniqueID, $TitleName, $Description) {
+	    $sql = "CALL updateAnnouncement(?, ?, ?)";
+	    
+	    $params = array(
+	        $uniqueID,
+	        $TitleName,
+	        $Description,
+	    );
+
+	    $query = $this->db->query($sql, $params);
+	    $result = $query->row();
+
+	    mysqli_next_result( $this->db->conn_id );
+
+	    return $result;  // Assuming you expect a single result row
+	}
 
 
 }
