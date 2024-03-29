@@ -88,7 +88,6 @@ class Controllermembershipinfo101 extends CI_Controller {
 		$this->form_validation->set_rules('firstName', 'First Name', 'required|trim|htmlspecialchars');
 		
 		$this->form_validation->set_rules('lastName', 'Last Name', 'required|trim|htmlspecialchars');
-		$this->form_validation->set_rules('nameextension', 'Name Extension', 'required|trim|htmlspecialchars');
 		$this->form_validation->set_rules('email', 'Email', 'required|trim|htmlspecialchars|valid_email|is_unique[tb_profile.email]');
 		//$this->form_validation->set_rules('email', 'Email', 'required|trim|htmlspecialchars');
 		$this->form_validation->set_rules('idnumber', 'ID Number', 'required|trim|htmlspecialchars|is_unique[tb_profile.UniqueID]');
