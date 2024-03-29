@@ -64,7 +64,7 @@ class Controllercashiermodule101 extends CI_Controller {
 		    $TotalDiscount,         // replace with actual Discount
 		    convertNumberToWord($TotalCashReceived), // replace with actual AmountinWords
 		    123,           // replace with actual CashierID
-		   1,        // replace with actual entry_by
+		   $this->session->userdata('uid'),        // replace with actual entry_by
 		);
 
 
@@ -129,7 +129,7 @@ class Controllercashiermodule101 extends CI_Controller {
 			        	'payorID' => $payorID , //amountPaid
 			        	'Discount' => $Discount , //Discount
 			        	'TransRefNo' => $EntryID . ";". $currentId, //TransRefNo
-
+			        	 $this->session->userdata('uid'),        // replace with actual entry_by
 			        	 );
 			        //echo json_encode($data2);
 
