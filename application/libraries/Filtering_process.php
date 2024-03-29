@@ -24,5 +24,24 @@ class filtering_process {
 		return $data;
 	}
 
-	
+	function password_check($password) {
+	    // Regular expression to match special characters
+	    $specialCharactersRegex = '/[!@#$%^&*()_+\-=\[\]{};:\'"\|,.<>\/?]/';
+
+	    if (!preg_match($specialCharactersRegex, $password) || strlen($password) < 8) {
+	        // Password does not meet requirements
+	        $data	 = array(
+	        	'status' => false,
+	        	'status_details' => 'The {field} must contain special characters and be at least 8 characters long.',
+	        	 );
+	        return $data;
+	    } else {
+	    	$data	 = array(
+	        	'status' => true,
+	        	'status_details' => '',
+	        	 );
+	        return $data;
+	    }
+	}
+
 }
