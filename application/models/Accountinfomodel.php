@@ -61,17 +61,16 @@ class Accountinfomodel extends CI_Model {
 	    return $result;  // Assuming you expect a single result row
 	}
 
-	public function updateProfile($uniqueID, $firstName, $middleName, $lastName, $nameExtension, $email) {
-	    $sql = "CALL updateProfile(?, ?, ?, ?, ?, ?)";
+	public function updateProfile($uniqueID, $firstName, $middleName, $lastName,  $email,$groupID) {
+	    $sql = "CALL updateSystemUsers(?, ?, ?, ?, ?, ?)";
 	    
 	    $params = array(
 	        $uniqueID,
 	        $firstName,
 	        $middleName,
 	        $lastName,
-	        $nameExtension,
 	        $email,
-	       
+	       $groupID,
 	    );
 
 	    $query = $this->db->query($sql, $params);
@@ -87,13 +86,47 @@ class Accountinfomodel extends CI_Model {
 		$sql = "CALL DeleteRecordProcedure(?, ?, ?, ?, ?, ?, ?)";
 		$params = array(
 
-	        'tb_profile',
-	        'UniqueID',
+	        'tb_users',
+	        'id',
 	        $userID,
 	        'is_del',
 	        '1',
 	        '0',
-	       	'ProfileID'
+	       	'id'
+	    );
+
+	    $query = $this->db->query($sql, $params);
+	    $result = $query->row();
+
+	    mysqli_next_result( $this->db->conn_id );
+
+	    return $result;  // Assuming you expect a single result row
+	}
+
+	public function accountunlockinfo($userID)
+	{
+		$sql = "CALL unlockAccount(?,?)";
+		$params = array(
+
+	        $userID,
+	        '0',
+	    );
+
+	    $query = $this->db->query($sql, $params);
+	    $result = $query->row();
+
+	    mysqli_next_result( $this->db->conn_id );
+
+	    return $result;  // Assuming you expect a single result row
+	}
+
+	public function accountchangenewpasswordinfo($userID,$password)
+	{
+		$sql = "CALL changePassword(?,?)";
+		$params = array(
+
+	        $userID,
+	        $password,
 	    );
 
 	    $query = $this->db->query($sql, $params);
