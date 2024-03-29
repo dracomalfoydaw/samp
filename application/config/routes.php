@@ -99,6 +99,11 @@ $route['accounting/ledger'] = 'Controlleraccountinginfo101/individual_ledger';
 $route['accounting/ledger/(:any)'] = 'Controlleraccountinginfo101/individual_ledger/$1';
 $route['accounting/getledgerentries'] = 'Controlleraccountinginfo101/loadGetLedgerEntries';
 $route['accounting/getassessmententries'] = 'Controlleraccountinginfo101/loadGetAssestmentEntries';
+$route['accounting/getListofPaymenttoAdd'] = 'Controlleraccountinginfo101/getListofPaymenttoAdd';
+$route['accounting/insertnewpayment'] = 'Controlleraccountinginfo101/insertnewpayment';
+$route['accounting/removeListofPayment'] = 'Controlleraccountinginfo101/removeListofPayment';
+$route['accounting/updateListofPayment'] = 'Controlleraccountinginfo101/updateListofPayment';
+
 
 
 
@@ -108,4 +113,13 @@ $route['account/search'] = 'controlleraccountinfo101/findprofileinfo';
 $route['account/save'] = 'controlleraccountinfo101/savetransactioninfo'; 
 $route['account/update'] = 'controlleraccountinfo101/updatetransactioninfo'; 
 $route['account/delete'] = 'controlleraccountinfo101/deletetransactioninfo'; 
+$route['account/unlock'] = 'controlleraccountinfo101/accountunlockinfo'; 
+$route['account/resetpass'] = 'controlleraccountinfo101/accountchangenewpasswordinfo'; 
 
+
+
+$route['announcement'] = 'controllerannouncementinfo101';
+$route['announcement/search'] = 'controllerannouncementinfo101/findinfo';  
+$route['announcement/save'] = 'controllerannouncementinfo101/savetransactioninfo'; 
+$route['announcement/update'] = 'controllerannouncementinfo101/updatetransactioninfo'; 
+$route['announcement/delete'] = 'controllerannouncementinfo101/deletetransactioninfo'; 
