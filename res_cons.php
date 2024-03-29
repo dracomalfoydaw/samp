@@ -12,4 +12,8 @@ define('CNF_DBUSERNAME','root');
 define('CNF_DBPASS','1234');
 define('CNF_DBNAME','vle');
 define('CNF_DBDRIVER','mysqli');
+
+
+define('EmailAddress','noreply@ibml274.org');
+define('EmailPassword','0%^1gU}6[bA,Y$5g0%^1gU}6[bA,Y$5g');
 ?>

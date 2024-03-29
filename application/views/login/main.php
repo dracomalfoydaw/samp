@@ -13,8 +13,8 @@
                                     <div class="card-header justify-content-center">
                                         <hr>
                                         <div class="text-center">
-                                            <img src="<?php echo base_url().'assets/imgs/login-logo.png'?>" width="90" height="90" />
-                                            <img src="<?php echo base_url().'assets/imgs/login-logo-2.png'?>" width="90" height="90" />
+                                            <img src="<?php echo base_url().'assets/imgs/login-logo.png'?>" title='Login Logo' width="90" height="90" />
+                                            <img src="<?php echo base_url().'assets/imgs/login-logo-2.png'?>" title='Login Logo' width="90" height="90" />
                                         </div>
                                         <div class="text-center">
                                             <h3 class="font-weight-light my-4">
