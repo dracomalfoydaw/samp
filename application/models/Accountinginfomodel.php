@@ -3,11 +3,39 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Accountinginfomodel extends CI_Model {
 
-	function getMembersInfo($searchValue)
-	{
-		$query = $this->db->query("select * from Viewprofile where UserID ='$searchValue'");
-		return $query->result();
-	}
+
+	public function UpdateCreditonJournal($entryid, $new_credit,$Remarks) {
+       
+        $query = $this->db->query("CALL UpdateCreditonJournal(?, ?,?)", array($entryid, $new_credit,$Remarks));
+        if ($query->num_rows() > 0) {
+            return $query->row(); // Assuming you expect only one row as a result
+        } else {
+            return null; // No result found
+        }
+        // If you need to return data or handle success/error messages, you can do so here
+    }
+
+	 function getListofPaymenttoAdd($typePayment, $searchvalue) {
+        $query = $this->db->query("CALL getListofPaymenttoAdd(?, ?)", array($typePayment, $searchvalue));
+        return $query->result_array();
+    }
+
+    public function addNewPayment($typePayment, $v_EntryID, $v_ProfileID, $p_EntryBy, $p_Name) {
+        $query = $this->db->query("CALL AddNewPayment(?, ?, ?, ?, ?)", array(
+            $typePayment,
+            $v_EntryID,
+            $v_ProfileID,
+            $p_EntryBy,
+            $p_Name
+        ));
+
+        if ($query->num_rows() > 0) {
+            return $query->row(); // Assuming you expect only one row as a result
+        } else {
+            return null; // No result found
+        }
+    }
+
 	function getMembersData($searchValue)
 	{
 		if($searchValue =="")
@@ -79,5 +107,27 @@ public function GetAssestmentEntries($uniqueID) {
     return $result;  // Assuming you expect a single result row
 }
 
+public function deleteListofPayment($EntryID,$memberID){
 
+		$sql = "CALL DeleteRecordProcedure(?, ?, ?, ?, ?, ?, ?)";
+			$params = array(
+
+		        'tb_journal',
+		        'EntryID',
+		        $EntryID,
+		        'is_del',
+		        '1',
+		        '0',
+		       	'EntryID'
+		    );
+
+		    $query = $this->db->query($sql, $params);
+		    $result = $query->row();
+
+		    mysqli_next_result( $this->db->conn_id );
+
+		    return $result;  // Assuming you expect a single result row
+	}
+
+	
 }
