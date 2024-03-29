@@ -58,7 +58,7 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array('database', 'email', 'session','form_validation','htmlpurifier_lib','filtering_process');
+$autoload['libraries'] = array('database', 'session','form_validation','htmlpurifier_lib','filtering_process', 'email');
 
 /*
 | -------------------------------------------------------------------
@@ -103,7 +103,7 @@ $autoload['helper'] = array('url','numbertotext');
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array();
+$autoload['config'] = array('emailsetup');
 
 /*
 | -------------------------------------------------------------------
