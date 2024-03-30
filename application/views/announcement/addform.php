@@ -33,6 +33,11 @@
 
 
           </div> 
+
+          <div class="custom-control custom-checkbox custom-control-solid">
+              <input class="custom-control-input" id="customCheckSolid1" class="sendannouncement" type="checkbox" value="sendannouncement" v-model="formData.sendannouncement" >
+              <label class="custom-control-label" for="customCheckSolid1">Send Announcement Through email;</label>
+          </div>
           
           <div>
             <label for="username">Title Name:</label>

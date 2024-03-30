@@ -119,4 +119,28 @@ class Email_model extends CI_Model {
 
       	$result = $this->email->send();
 	}
+
+
+	function send_announcement($title,$description,$fullname,$email)
+	{
+		$data = array(
+	        'title'  => $title  ,
+	        'email'    => $email ,
+	        'description'  => $description  ,
+	        'Fullname'  => $fullname  ,
+	     );
+	    $msg = $this->load->view('emails/announcement_notif', $data,true);
+	    $this->load->library('email');
+        $this->email->set_newline("\r\n");
+
+      
+        $this->email->from(CNF_EMAIL, 'ibml274.org');
+        $this->email->to($email); 
+
+        $this->email->subject('Important:Announcement: '. $title);
+        $this->email->message($msg);  
+
+
+      	$result = $this->email->send();
+	}
 }

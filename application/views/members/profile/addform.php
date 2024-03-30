@@ -51,7 +51,7 @@
 
           <div>
             <label for="middleName">Middle Name:</label>
-            <input type="text" id="middleName" name="middleName" class="form-control" v-model="formData.middleName" required>
+            <input type="text" id="middleName" name="middleName" class="form-control" v-model="formData.middleName" >
             <span v-if="errors.middleName" class="error">{{ errors.middleName }}</span>
           </div>
 

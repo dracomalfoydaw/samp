@@ -111,7 +111,7 @@ class Controllermembershipinfo101 extends CI_Controller {
                     $result = $this->members->insertProfile($idnumber, $firstName, $middleName, $lastName, $nameExtension, $email);
                     if($defaultuseraccount=="defaultsystemuser")
                     {
-                    	$result = $this->User_model->insertUser($idnumber, $idnumber,  $email , 1, $result->ProfileID ,  $firstName  , $lastName, 1, $system_user);
+                    	$result = $this->User_model->insertUser($idnumber, $idnumber,  $email , 3, $result->ProfileID ,  $firstName  , $lastName, 1, $system_user);
                     	$data = array(
 					        'message' =>  $result->SuccessMessage,  // Assuming success when validation passes
 					        'message_details' => '',

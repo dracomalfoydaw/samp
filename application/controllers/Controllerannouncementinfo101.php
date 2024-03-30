@@ -10,8 +10,8 @@ class Controllerannouncementinfo101 extends CI_Controller {
 
 		endif;
 		$this->load->model('Announcementinfomodel','announcement');
-	
-		
+		$this->load->model('Email_model','email_model');
+		$this->load->model('Membershipinfomodel','members');
 	}
 
 
@@ -88,9 +88,19 @@ class Controllerannouncementinfo101 extends CI_Controller {
 		    
                     $TitleName  = $this->htmlpurifier_lib->purify($this->input->post('Titlename'));
             		$Description = $this->htmlpurifier_lib->purify($this->input->post('Description'));
+            		$SendAnnouncement = $this->htmlpurifier_lib->purify($this->input->post('SendAnnouncement'));
 
 
                     $system_user = $this->session->userdata('uid');
+
+                    if($SendAnnouncement=="sendannouncement")
+                    {
+                    	$memberActiveList = $this->members->getMembers();
+
+                    	foreach ($memberActiveList as $key) { 
+                    		$this->email->send_announcement($TitleName, $TitleDescription,$key->Fullname, $key->email);
+                    	}
+                    }
                 
                     $result = $this->announcement->insert($TitleName, $Description, $system_user );
                     
