@@ -139,8 +139,18 @@ class Email_model extends CI_Model {
 
         $this->email->subject('Important:Announcement: '. $title);
         $this->email->message($msg);  
+        $this->email->set_mailtype('html'); // Set email format to HTML
 
 
-      	$result = $this->email->send();
+      	if ($this->email->send()) {
+        // Email sent successfully, log it
+	        log_message('info', 'Email sent successfully to: ' . $email);
+	        return "success";
+	    } else {
+	        // Email sending failed, log error
+	        $error_msg = '';//$this->email->print_debugger();
+	        log_message('error', 'Failed to send email to ' . $email . ': ' . $error_msg);
+	        return "error";
+	    }
 	}
 }

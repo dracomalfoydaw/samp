@@ -92,23 +92,39 @@ class Controllerannouncementinfo101 extends CI_Controller {
 
 
                     $system_user = $this->session->userdata('uid');
-
-                    if($SendAnnouncement=="sendannouncement")
+                    $error_send = "";
+                    if($SendAnnouncement==true)
                     {
                     	$memberActiveList = $this->members->getMembers();
 
                     	foreach ($memberActiveList as $key) { 
-                    		$this->email->send_announcement($TitleName, $TitleDescription,$key->Fullname, $key->email);
+                    		$email_status = $this->email_model->send_announcement($TitleName, $Description,$key->Fullname, $key->Email);
+                    		if($email_status=="error")
+                    		{
+                    			$error_send = "error";
+                    			break;
+                    		}
                     	}
                     }
-                
+                	
                     $result = $this->announcement->insert($TitleName, $Description, $system_user );
-                    
+                    if($error_send=="error")
+                    {
+                    	$data = array(
+					        'message' =>  $error_send,  // Assuming success when validation passes
+					        'message_details' => '<li>Error on Sending Email. Please Contact the Developer on this Problem</li>',
+					        
+					    );
+                    }
+                    else
+                    {
                     	$data = array(
 					        'message' =>  $result->SuccessMessage,  // Assuming success when validation passes
 					        'message_details' => '',
 					        
 					    );
+                    }
+                    	
                     
 
 		    
