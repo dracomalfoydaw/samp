@@ -9,14 +9,14 @@ $config['protocol'] = 'smtp';
 /*
  * SMTP server address and port
  */
-$config['smtp_host'] = 'ssl://smtp.googlemail.com';
+$config['smtp_host'] = 'ssl://smtp.hostinger.com';
 $config['smtp_port'] = '465';
 
 /*
  * SMTP username and password.
  */
-$config['smtp_user']=EmailAddress;
-$config['smtp_pass']=EmailPassword;
+$config['smtp_user']=CNF_EMAIL;
+$config['smtp_pass']=CNF_EmailPassword;
          
 $config['validate'] = TRUE;
 $config['mailtype'] = 'html';
