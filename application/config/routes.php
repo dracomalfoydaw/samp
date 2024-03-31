@@ -66,6 +66,7 @@ $route['members/delete'] = 'controllermembershipinfo101/deletetransactioninfo';
 $route['contribution'] = 'Controllercontributionreport101';
 $route['contribution/search'] = 'Controllercontributionreport101/findinfo';  
 $route['contribution/save'] = 'Controllercontributionreport101/savetransactioninfo'; 
+$route['contribution/delete'] = 'Controllercontributionreport101/deletetransactioninfo'; 
 
 $route['contribution/collection'] = 'Controllercontributionreport101/collection';
 $route['contribution/search/collection'] = 'Controllercontributionreport101/findinfo/collection';  
