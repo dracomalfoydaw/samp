@@ -35,7 +35,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="sidenav-footer">
                         <div class="sidenav-footer-content">
                             <div class="sidenav-footer-subtitle">Logged in as:</div>
-                            <div class="sidenav-footer-title">Valerie Luna</div>
+                            <div class="sidenav-footer-title"><?php echo $this->session->userdata('username') ;?></div>
                         </div>
                     </div>
                 </nav>

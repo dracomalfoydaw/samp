@@ -43,6 +43,8 @@
                                 <div class="nav-link-icon"><i data-feather="book-open"></i></div>
                                 Balances
                             </a>
+
+                            <?php if($this->session->userdata('gid')!=3 ): ?>
                             <a class="nav-link collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseContribution" aria-expanded="false" aria-controls="collapseContribution">
                                 <div class="nav-link-icon"><i data-feather="users"></i></div>
                                 Contribution
@@ -50,13 +52,20 @@
                             </a>
                             <div class="collapse" id="collapseContribution" data-parent="#accordionSidenav">
                                 <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
-                                    <?php if($this->session->userdata('gid')==3 or $this->session->userdata('gid')==1  or $this->session->userdata('gid')==2 ): ?>
+                                   
                                     <a class="nav-link" href="<?php echo base_url() ?>contribution">Contribution Profile</a>
-                                    <?php endif; ?>
+                                   
                                     <a class="nav-link" href="<?php echo base_url() ?>contribution/collection">Contribution Collection</a>
                                 </nav>
                             </div>
 
+                            <?php else: ?>
+                            <a class="nav-link" href="<?php echo base_url() ?>contribution">
+
+                                <div class="nav-link-icon"><i data-feather="users"></i></div>
+                                Contribution
+                            </a>
+                            <?php endif; ?>
                           
 
 
@@ -75,7 +84,7 @@
                                 </nav>
                             </div>
                             <?php endif; ?>
-                            <?php if($this->session->userdata('gid')==3 or $this->session->userdata('gid')==1  or $this->session->userdata('gid')==2 ): ?>
+                            <?php if($this->session->userdata('gid')==1  or $this->session->userdata('gid')==2 ): ?>
                             <div class="sidenav-menu-heading">Utilities</div>
                             <!-- Sidenav Accordion (Utilities)-->
                             <a class="nav-link collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="false" aria-controls="collapseUtilities">
