@@ -19,3 +19,4 @@
 
 
 <?php $this->load->view("contribution/profile/addform") ?>
+<?php $this->load->view("contribution/profile/modaldeleteprompt") ?>

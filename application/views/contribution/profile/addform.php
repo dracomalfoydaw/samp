@@ -37,6 +37,10 @@
               <input class="custom-control-input" id="createAnnouncementCheckbox" name="createannoucement" type="checkbox" value="createannoucement" v-model="formData.createannoucement">
               <label class="custom-control-label" for="createAnnouncementCheckbox">Create an Announcement</label>
           </div>
+          <div class="custom-control custom-checkbox custom-control-solid">
+              <input class="custom-control-input" id="customCheckSolid1" class="sendannouncement" type="checkbox" value="sendannouncement" v-model="formData.sendannouncement" >
+              <label class="custom-control-label" for="customCheckSolid1">Send Announcement Through email;</label>
+          </div>
 
           <div class="custom-control custom-checkbox custom-control-solid">
               <input class="custom-control-input" id="applyRecordCheckbox" type="checkbox" value="applyrecord" v-model="formData.applyrecord" name="applyrecord">
