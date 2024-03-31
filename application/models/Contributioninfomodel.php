@@ -51,7 +51,7 @@ class Contributioninfomodel extends CI_Model {
 		{
 			if($searchValue =="")
 			{
-				$query = $this->db->query("select * from viewcontribution limit 1000");
+				$query = $this->db->query("select * from viewcontribution order by EntryID desc limit 1000");
 			}
 			else
 			{
@@ -72,7 +72,7 @@ class Contributioninfomodel extends CI_Model {
 				}
 
 				// Constructing the final query
-				$query_string = "SELECT * FROM viewcontribution WHERE " . implode(" OR ", $whereClause) . "limit 1000";
+				$query_string = "SELECT * FROM viewcontribution WHERE " . implode(" OR ", $whereClause) . " EntryID desc limit 1000";
 
 				$query = $this->db->query($query_string);
 
@@ -115,5 +115,25 @@ class Contributioninfomodel extends CI_Model {
         return $result; // Assuming you expect a single result row
     }
 
+    public function deleteProfile($userID)
+	{
+		$sql = "CALL DeleteRecordProcedure(?, ?, ?, ?, ?, ?, ?)";
+		$params = array(
 
+	        'tb_contribution',
+	        'EntryID',
+	        $userID,
+	        'is_del',
+	        '1',
+	        '0',
+	       	'EntryID'
+	    );
+
+	    $query = $this->db->query($sql, $params);
+	    $result = $query->row();
+
+	    mysqli_next_result( $this->db->conn_id );
+
+	    return $result;  // Assuming you expect a single result row
+	}
 }

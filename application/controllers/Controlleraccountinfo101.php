@@ -9,8 +9,12 @@ class Controlleraccountinfo101 extends CI_Controller {
 			redirect('login',301);
 
 		endif;
-		$this->load->model('Accountinfomodel','account');
-		$this->load->model('User_model','user_model');
+		if($this->session->userdata('gid')==1 or $this->session->userdata('gid')==2):
+			$this->load->model('Accountinfomodel','account');
+			$this->load->model('User_model','user_model');
+		else:
+			redirect('home',301);
+		endif;
 		
 	}
 

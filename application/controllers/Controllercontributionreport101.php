@@ -11,6 +11,8 @@ class Controllercontributionreport101 extends CI_Controller {
 		endif;
 		$this->load->model('Contributioninfomodel','contribution_model');
 		$this->load->model('Announcementinfomodel','announcement');
+		$this->load->model('Email_model','email_model');
+		$this->load->model('Membershipinfomodel','members');
 	}
 
 
@@ -19,6 +21,11 @@ class Controllercontributionreport101 extends CI_Controller {
 	public function index()
 	{
 		$this->data = [];
+		if($this->session->userdata('gid')==3):
+			$this->data['category']  = "members";
+		else:
+			$this->data['category']  = "";
+		endif; 
 		$this->data['pageTitle'] = "Contribution";
 		$this->data['pageSubtitle'] = "Contribution Profile";
 		$this->data['content'] = $this->load->view('contribution/profile/home',$this->data, true );
@@ -28,6 +35,9 @@ class Controllercontributionreport101 extends CI_Controller {
 
 	public function collection($category = '')
 	{
+		if($this->session->userdata('gid')==3):
+			redirect('home',301);
+		endif; 
 		if($category == "profilecollectionlist")
 		{
 			$searchvalue = $this->htmlpurifier_lib->purify($this->input->post('searchvalue'));
@@ -84,8 +94,10 @@ class Controllercontributionreport101 extends CI_Controller {
                     $contributionname  = $this->htmlpurifier_lib->purify($this->input->post('contributionname'));
                     $amountofcontribution = $this->filtering_process->test_input($this->input->post('amountofcontribution'));
                     $desccontribution = $this->htmlpurifier_lib->purify($this->input->post('desccontribution'));
+                    $SendAnnouncement = $this->htmlpurifier_lib->purify($this->input->post('sendannouncement'));
 
                     $applyrecord = $this->htmlpurifier_lib->purify($this->input->post('applyrecord'));
+
 
 
                      $system_user = $this->session->userdata('uid');
@@ -97,6 +109,24 @@ class Controllercontributionreport101 extends CI_Controller {
                     	$TitleAnnouncement = "Contribution Name: ".$contributionname;
                     	$TitleDescription = $desccontribution. ". Corresponding Contribution Amount: ".$amountofcontribution. ".  ";
                     	$this->announcement->newAnnouncement($TitleAnnouncement, $TitleDescription , $system_user);
+                    }
+
+                    $error_send = "";
+                    if($SendAnnouncement==true)
+                    {
+                    	$memberActiveList = $this->members->getMembers();
+
+                    	foreach ($memberActiveList as $key) { 
+                    		$TitleAnnouncement = "Contribution Name: ".$contributionname;
+                    		$TitleDescription = $desccontribution. ". Corresponding Contribution Amount: ".$amountofcontribution. ".  ";
+
+                    		$email_status = $this->email_model->send_announcement($TitleAnnouncement, $TitleDescription,$key->Fullname, $key->Email);
+                    		if($email_status=="error")
+                    		{
+                    			$error_send = "error";
+                    			break;
+                    		}
+                    	}
                     }
 
                     
@@ -120,6 +150,31 @@ class Controllercontributionreport101 extends CI_Controller {
 
 		echo json_encode($data);
 
+	}
+
+	public function deletetransactioninfo()
+	{
+		$this->form_validation->set_rules('userID', 'Data ', 'required|trim|htmlspecialchars');
+		if ($this->form_validation->run()) {
+			$userID  = $this->htmlpurifier_lib->purify($this->input->post('userID'));
+			$result = $this->contribution_model->deleteProfile($userID);
+			$data = array(
+		        'message' =>  $result->SuccessMessage,  // Assuming success when validation passes
+		        'message_details' => $userID,
+		        
+		    );
+		}
+		else
+		{
+			// Form validation failed, there are errors
+		    $message_details = validation_errors('<li>', '</li>');//'The following errors occurred <br>' . validation_errors('<li>', '</li>');
+		    $data = array(
+		        'message' => "error",
+		        'message_details' => $message_details,
+		        'id' => '',
+		    );
+		}
+		echo json_encode($data);
 	}
 }
 

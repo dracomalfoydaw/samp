@@ -9,6 +9,9 @@ class Controllercashiermodule101 extends CI_Controller {
 			redirect('login',301);
 
 		endif;
+		if($this->session->userdata('gid')==3):
+			redirect('home',301);
+		endif;
 		$this->load->model('cashieringinfomodel','cashiering_model');
 		
 	}
