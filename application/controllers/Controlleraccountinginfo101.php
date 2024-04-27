@@ -167,9 +167,16 @@ class Controlleraccountinginfo101 extends CI_Controller {
 		$this->data = [];
 		$this->data['pageTitle'] = "Accounting";
 		$this->data['pageSubtitle'] = "Account balances Module";
+		if($this->session->userdata('gid')==3):			
+			$this->data['content'] = $this->load->view('accounting/assessment/members/home',$this->data, true );
+			$this->data['home_script'] = $this->load->view('accounting/assessment/members/home_script',$this->data, true );
+		else:
+			
+			$this->data['content'] = $this->load->view('accounting/assessment/other/home',$this->data, true );
+			$this->data['home_script'] = $this->load->view('accounting/assessment/other/home_script',$this->data, true );
+		endif;
 		
-		$this->data['content'] = $this->load->view('accounting/assessment/home',$this->data, true );
-		$this->data['home_script'] = $this->load->view('accounting/assessment/home_script',$this->data, true );
+		
 		$this->load->view('layouts/main', $this->data );
 	}
 	public function individual_ledger($memberID = null)

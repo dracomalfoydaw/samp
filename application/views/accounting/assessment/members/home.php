@@ -77,8 +77,7 @@
 
 </div>
 
-<?php $this->load->view("accounting/assessment/modaldeleterow"); ?>
-<?php $this->load->view("accounting/assessment/addform"); ?>
+
 
 
 <div class="card mb-4">
@@ -186,5 +185,5 @@
 </div>
 
 
-<?php $this->load->view("accounting/assessment/showmemberinfo"); ?>
+
 
