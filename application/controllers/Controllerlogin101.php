@@ -92,11 +92,11 @@ class Controllerlogin101 extends CI_Controller {
 			}
 			else
 			{
-				$message_details = '<li> Error </li>';//'The following errors occurred <br>' . validation_errors('<li>', '</li>');
-		    	$data = array(
+			//	$message_details = '<li> Error </li>';//'The following errors occurred <br>' . validation_errors('<li>', '</li>');
+		    /*	$data = array(
 			        'message' => "error",
 			        'message_details' => $message_details,
-			    );
+			    );*/redirect('home',301);
 			}
 
 			echo json_encode($data);

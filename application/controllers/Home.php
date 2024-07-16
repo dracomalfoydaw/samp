@@ -31,10 +31,6 @@ class Home extends CI_Controller {
 
 	public function index()
 	{
-		$this->session->set_userdata(array(
-				                'gid'    =>3,
-				                
-			                ));
 		$this->data = [];
 		$this->data['pageTitle'] = "Home";
 		$this->data['pageSubtitle'] = "Dashboard";

@@ -141,7 +141,6 @@ class Email_model extends CI_Model {
         $this->email->message($msg);  
         $this->email->set_mailtype('html'); // Set email format to HTML
 
-
       	if ($this->email->send()) {
         // Email sent successfully, log it
 	        log_message('info', 'Email sent successfully to: ' . $email);

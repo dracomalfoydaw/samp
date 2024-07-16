@@ -9,7 +9,7 @@
         <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js" crossorigin="anonymous"></script>
         
-        <script src="https://unpkg.com/vue@3.4.15/dist/vue.global.js"></script>
+        <script src="https://unpkg.com/vue@3.4.15/dist/vue.global.prod.js"></script>
         <script src="https://unpkg.com/axios@1.6.5/dist/axios.min.js"></script>
         <script src="https://unpkg.com/lodash@4.17.21/lodash.min.js"></script>
 
