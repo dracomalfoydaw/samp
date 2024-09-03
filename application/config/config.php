@@ -385,7 +385,7 @@ $config['encryption_key'] = '&&&^(3202!@@#@#5';
 |
 */
 $config['sess_driver'] = 'files';
-$config['sess_cookie_name'] = 'ci_session';
+$config['sess_cookie_name'] = 'ci_session_vle1-1';
 $config['sess_samesite'] = 'Lax';
 $config['sess_expiration'] = 1200;
 $config['sess_save_path'] = NULL;
