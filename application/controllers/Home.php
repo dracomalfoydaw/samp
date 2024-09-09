@@ -25,15 +25,18 @@ class Home extends CI_Controller {
 			redirect('login',301);
 
 		endif;
-		$this->load->model('Announcementinfomodel','announcement');
 		
 	}
 
 	public function index()
 	{
-		$this->data = [];
+		
+		$this->data = [];			
+		$this->load->model('Announcementinfomodel','announcement');
 		$this->data['pageTitle'] = "Home";
 		$this->data['pageSubtitle'] = "Dashboard";
+		$this->data['pageSubtitleTable'] = "";
+		$this->data['custom_css'] = "";
 		$this->data['announcementlist'] = $this->announcement->getDataforDashboard();
 		$this->data['content'] = $this->load->view('dashboard/home',$this->data, true );
 		$this->data['home_script'] = $this->load->view('dashboard/home_script',$this->data, true );

@@ -57,9 +57,10 @@ $route['translate_uri_dashes'] = FALSE;
 
 $route['members'] = 'controllermembershipinfo101';
 $route['members/search'] = 'controllermembershipinfo101/findprofileinfo';  
-$route['members/save'] = 'controllermembershipinfo101/savetransactioninfo'; 
+$route['members/add'] = 'controllermembershipinfo101/savetransactioninfo'; 
 $route['members/update'] = 'controllermembershipinfo101/updatetransactioninfo'; 
 $route['members/delete'] = 'controllermembershipinfo101/deletetransactioninfo'; 
+$route['members/show/(:any)'] = 'controllermembershipinfo101/individual_details/$1';
 
 
 

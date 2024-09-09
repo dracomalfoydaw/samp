@@ -140,7 +140,21 @@ app.component('table-content', {
 
                   </div>
                 </div>
-
+                <div class="mb-3">
+                  <div class="custom-control custom-checkbox">
+                    <input 
+                      :disabled="isSubmit" 
+                      class="custom-control-input" 
+                      v-model="newForm.defaultuseraccount" 
+                      id="defaultuseraccount" 
+                      type="checkbox" 
+                    />
+                    <label class="custom-control-label" for="defaultuseraccount">
+                      Create Default System User
+                    </label>
+                  </div>
+                </div>
+                <hr>
                 <div class="mb-3">                    
                   <div class ="row">
                     <div class="col-md-6">
@@ -148,7 +162,7 @@ app.component('table-content', {
                       <span class="form-control">
                         <label><input :disabled="isSubmit" type="radio" name="stud-num-rad" class="stud-num-rad auto" value="auto-num" v-model="newForm.studNumRad"checked> Automatic</label> &nbsp;
                         <label><input :disabled="isSubmit" type="radio" name="stud-num-rad" class="stud-num-rad" value="pre-num" v-model="newForm.studNumRad"> Manual</label>
-                        </span>
+                      </span>
                     </div>
                     <div class="col-md-6">
                       <label for="ProfileID" class="form-label">Profile ID</label>
@@ -157,18 +171,11 @@ app.component('table-content', {
                     </div>
                   </div>
                 </div>
+                
+
+                
                 <h3>Personal Information</h3>
                 <hr>
-                <div class="mb-3">
-                  <div class ="row">
-                    <div class="col-md-3">                      
-                      <label for="Email" class="form-label">Email Address</label>
-                      <input :disabled="isSubmit" type="email" class="form-control" id="Email" name="Email" v-model="newForm.Email" required>
-                      <span v-if="errors.Email" style="color: red;">{{ errors.Email }}</span>
-                    </div>
-                  </div>
-                </div>
-
                 <div class="mb-3">
                   <div class ="row">
                     <div class="col-md-3">
@@ -193,14 +200,51 @@ app.component('table-content', {
                     </div>
                   </div>
                 </div>
-                <h3>Home Address</h3>
-                <hr>
+
                 <div class="mb-3">
                   <div class ="row">
-                    <div class="col-md-12">
-                      <label for="homeaddress" class=" control-label text-left"> Home/Blkd</label>
+                    <div class="col-md-3">
+                      <label for="sex" class="form-label">Sex</label>
+                      <select class="form-control required" id="sex" name="sex" v-model="newForm.sex">
+                          <option value="M">Male</option>
+                          <option value="F">Female</option>
+                      </select>
+                      <span v-if="errors.sex" style="color: red;">{{ errors.sex }}</span>
+                    </div>
+                    <div class="col-md-3">
+                      <label for="dateofbirth" class="form-label">Date of Birth</label>
+                      <input :disabled="isSubmit" type="date" class="form-control" id="dateofbirth" name="dateofbirth" v-model="newForm.dateofbirth" >
+                      <span v-if="errors.dateofbirth" style="color: red;">{{ errors.dateofbirth }}</span>
+                    </div>
+                    <div class="col-md-3">
+                      <label for="placeofbirth" class="form-label">Place of Birth</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="placeofbirth" name="placeofbirth" v-model="newForm.placeofbirth" required>
+                      <span v-if="errors.placeofbirth" style="color: red;">{{ errors.placeofbirth }}</span>
+                    </div>
+                    <div class="col-md-3">
+                      <label for="bloodtype" class="form-label">Blood Type</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="bloodtype" name="bloodtype" v-model="newForm.bloodtype" >
+                      <span v-if="errors.bloodtype" style="color: red;">{{ errors.bloodtype }}</span>
+                    </div>
+                  </div>
+                </div>
+
+
+                
+
+                
+                
+                <div class="mb-3">
+                  <div class ="row">
+                    <div class="col-md-6">
+                      <label for="homeaddress" class=" control-label text-left"> Home Address</label>
                       <input :disabled="isSubmit" type="text" class="form-control" id="homeaddress" name="homeaddress" v-model="newForm.homeaddress" >
                       <span v-if="errors.homeaddress" style="color: red;">{{ errors.homeaddress }}</span>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="Country" class=" control-label text-left"> Country</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="Country" name="Country" v-model="newForm.Country" >
+                      <span v-if="errors.Country" style="color: red;">{{ errors.Country }}</span>
                     </div>
                   </div>
                 </div>
@@ -229,21 +273,179 @@ app.component('table-content', {
                   </div>
                 </div>
 
-                           
                 <div class="mb-3">
-                  <div class="custom-control custom-checkbox">
-                    <input 
-                      :disabled="isSubmit" 
-                      class="custom-control-input" 
-                      v-model="newForm.defaultuseraccount" 
-                      id="defaultuseraccount" 
-                      type="checkbox" 
-                    />
-                    <label class="custom-control-label" for="defaultuseraccount">
-                      Create Default System User
-                    </label>
+                  <div class ="row">
+                    <div class="col-md-3">                      
+                      <label for="contactno" class="form-label">Contact No</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="contactno" name="contactno" v-model="newForm.contactno" required>
+                      <span v-if="errors.contactno" style="color: red;">{{ errors.contactno }}</span>
+                    </div>
+
+                    <div class="col-md-3">                      
+                      <label for="faxno" class="form-label">Fax No</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="faxno" name="faxno" v-model="newForm.faxno" required>
+                      <span v-if="errors.faxno" style="color: red;">{{ errors.faxno }}</span>
+                    </div>
+
+
+                    <div class="col-md-3">                      
+                      <label for="homeno" class="form-label">Home Number</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="homeno" name="homeno" v-model="newForm.homeno" required>
+                      <span v-if="errors.homeno" style="color: red;">{{ errors.homeno }}</span>
+                    </div>
+
+
+                    <div class="col-md-3">                      
+                      <label for="officeno" class="form-label">Office Number</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="officeno" name="officeno" v-model="newForm.officeno" required>
+                      <span v-if="errors.officeno" style="color: red;">{{ errors.officeno }}</span>
+                    </div>
                   </div>
                 </div>
+
+                <div class="mb-3">
+                  <div class ="row">
+                    <div class="col-md-3">                      
+                      <label for="Email" class="form-label">Email Address</label>
+                      <input :disabled="isSubmit" type="email" class="form-control" id="Email" name="Email" v-model="newForm.Email" required>
+                      <span v-if="errors.Email" style="color: red;">{{ errors.Email }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <hr>
+
+                <div class="mb-3">
+                  <div class ="row">
+                    <div class="col-md-3">                      
+                      <label for="Occupation" class="form-label">Occupation</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="Occupation" name="Occupation" v-model="newForm.Occupation" required>
+                      <span v-if="errors.Occupation" style="color: red;">{{ errors.Occupation }}</span>
+                    </div>
+
+                    <div class="col-md-3">                      
+                      <label for="Education" class="form-label">Education</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="Education" name="Education" v-model="newForm.Education" required>
+                      <span v-if="errors.Education" style="color: red;">{{ errors.Education }}</span>
+                    </div>
+
+
+                    <div class="col-md-3">                      
+                      <label for="Employment" class="form-label">Employment</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="Employment" name="Employment" v-model="newForm.Employment" required>
+                      <span v-if="errors.Employment" style="color: red;">{{ errors.Employment }}</span>
+                    </div>
+
+
+                    <div class="col-md-3">                      
+                      <label for="EmploymentAddress" class="form-label">Address</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="EmploymentAddress" name="EmploymentAddress" v-model="newForm.EmploymentAddress" required>
+                      <span v-if="errors.EmploymentAddress" style="color: red;">{{ errors.EmploymentAddress }}</span>
+                    </div>
+                  </div>
+                </div>
+                <hr>
+                <div class="mb-3">
+                  <div class ="row">
+                    <div class="col-md-3">                      
+                      <label for="familykin" class="form-label">Kin</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="familykin" name="familykin" v-model="newForm.familykin" required>
+                      <span v-if="errors.familykin" style="color: red;">{{ errors.familykin }}</span>
+                    </div>
+                    <div class="col-md-3">                      
+                      <label for="familyrelation" class="form-label">Relation</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="familyrelation" name="familyrelation" v-model="newForm.familyrelation" required>
+                      <span v-if="errors.familyrelation" style="color: red;">{{ errors.familyrelation }}</span>
+                    </div>
+                    <div class="col-md-6">                      
+                      <label for="familyaddress" class="form-label">Address</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="familyaddress" name="familyaddress" v-model="newForm.familyaddress" required>
+                      <span v-if="errors.familyaddress" style="color: red;">{{ errors.familyaddress }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <div class ="row">
+                    <div class="col-md-3">                      
+                      <label for="familynokids" class="form-label">Number of Kids</label>
+                      <input :disabled="isSubmit" type="number" class="form-control" id="familynokids" name="familynokids" v-model="newForm.familynokids" required>
+                      <span v-if="errors.familynokids" style="color: red;">{{ errors.familynokids }}</span>
+                    </div>
+                    <div class="col-md-9">                      
+                      <label for="familykidsname" class="form-label">Name of Kids</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="familykidsname" name="familykidsname" v-model="newForm.familykidsname" required>
+                      <span v-if="errors.familykidsname" style="color: red;">{{ errors.familykidsname }}</span>
+                    </div>
+                  </div>
+                </div>
+                <hr>
+
+                <h3>Masonic Record</h3>
+                <hr>
+                <div class="mb-3">
+                  <div class ="row">
+                      <div class="col-md-6">
+                        <span class="form-control">
+                          <label><input :disabled="isSubmit" type="radio" name="recordStat" class="recordStat auto" value="petitioner" v-model="newForm.recordStat"checked> Petitioner</label> &nbsp;
+                          <label><input :disabled="isSubmit" type="radio" name="recordStat" class="recordStat" value="cabletow" v-model="newForm.recordStat"> Cabletow</label>
+                        </span>
+                      </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <div class ="row">
+                    <div class="col-md-3">
+                      <label for="LodgeNo" class="form-label">Lodge Number</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="LodgeNo" name="LodgeNo" v-model="LodgeNo" required>
+                      <span v-if="errors.LodgeNo" style="color: red;">{{ errors.LodgeNo }}</span>
+                    </div>
+                    <div class="col-md-3">
+                      <label for="LodgeName" class="form-label">Lodge Name</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="LodgeName" name="LodgeName" v-model="LodgeName" >
+                      <span v-if="errors.LodgeName" style="color: red;">{{ errors.LodgeName }}</span>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="MasonDistrict" class="form-label">Mason District</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="MasonDistrict" name="MasonDistrict" v-model="MasonDistrict" required>
+                      <span v-if="errors.MasonDistrict" style="color: red;">{{ errors.MasonDistrict }}</span>
+                    </div>
+                    
+                  </div>
+                </div> 
+                <div class="mb-3">
+                  <div class ="row">
+                    <div class="col-md-3">                      
+                      <label for="initiated" class="form-label">Date Initiated</label>
+                      <input :disabled="isSubmit" type="date" class="form-control" id="initiated" name="initiated" v-model="newForm.initiated" required>
+                      <span v-if="errors.initiated" style="color: red;">{{ errors.initiated }}</span>
+                    </div>
+                    <div class="col-md-3">                      
+                      <label for="passed" class="form-label">Date Passed</label>
+                      <input :disabled="isSubmit" type="date" class="form-control" id="passed" name="passed" v-model="newForm.passed" required>
+                      <span v-if="errors.passed" style="color: red;">{{ errors.passed }}</span>
+                    </div>
+                    <div class="col-md-3">                      
+                      <label for="raised" class="form-label">Date Raised</label>
+                      <input :disabled="isSubmit" type="date" class="form-control" id="raised" name="raised" v-model="newForm.raised" required>
+                      <span v-if="errors.raised" style="color: red;">{{ errors.raised }}</span>
+                    </div>
+                    <div class="col-md-3">                      
+                      <label for="memberstatus" class="form-label">Status</label>
+                      <select :disabled="isSubmit" id="memberstatus" v-model="newForm.memberstatus" class="form-control select2">
+                        <option value="" disabled>Select Status</option>
+                        <option value="Active" >Active</option>
+                        <option value="Foreigner" >Foreigner</option>
+                        <option value="SNPD" >SNPD</option>
+                        <option value="Demitted" >Demitted</option>
+                        <option value="LML" >LML</option>
+                        <option value="Died" >Died</option>
+                        <option value="Other" >Other</option>
+                      </select>
+                      <span v-if="errors.memberstatus" style="color: red;">{{ errors.memberstatus }}</span>
+                    </div>
+                  </div>
+                </div>
+                
 
               </div>
               <div class="modal-footer">
@@ -288,6 +490,10 @@ app.component('table-content', {
       isDeleting: false,
       deleteModal: null,
       /**New form**/      
+      LodgeNo: LodgeNo,
+      LodgeName: LodgeName,
+      MasonDistrict: MasonDistrict,
+      recordStat: "petitioner",
       errors : {},      
       isSubmit: false,
       isAutomatic: false,
@@ -308,7 +514,7 @@ app.component('table-content', {
       this.table.clear();
       this.table.draw();
       try {
-        const response = await axios.get(base_url + 'members/get_data', {
+        const response = await axios.get(base_url + 'members/search', {
           params: {
             start: (page - 1) * this.rowsPerPage,
             limit: this.rowsPerPage,
@@ -456,6 +662,38 @@ app.component('table-content', {
             formdata.append('Barangay', this.newForm.Barangay);
             formdata.append('ZipCode', this.newForm.zipcode);
 
+            formdata.append('sex', this.newForm.sex);
+            formdata.append('dateofbirth', this.newForm.dateofbirth);
+            formdata.append('placeofbirth', this.newForm.placeofbirth);
+            formdata.append('bloodtype', this.newForm.bloodtype);
+
+            formdata.append('Country', this.newForm.Country);
+
+            formdata.append('contactno', this.newForm.contactno);
+            formdata.append('faxno', this.newForm.faxno);
+            formdata.append('homeno', this.newForm.homeno);
+            formdata.append('officeno', this.newForm.officeno);
+
+            formdata.append('Occupation', this.newForm.Occupation);
+            formdata.append('Education', this.newForm.Education);
+            formdata.append('Employment', this.newForm.Employment);
+            formdata.append('EmploymentAddress', this.newForm.EmploymentAddress);
+
+            formdata.append('familykin', this.newForm.familykin);
+            formdata.append('familyrelation', this.newForm.familyrelation);
+            formdata.append('familyaddress', this.newForm.familyaddress);
+            formdata.append('familynokids', this.newForm.familynokids);
+            formdata.append('familykidsname', this.newForm.familykidsname);
+
+            formdata.append('recordStat', this.newForm.recordStat);
+            formdata.append('LodgeNo', this.LodgeNo);
+            formdata.append('LodgeName', this.LodgeName);
+            formdata.append('MasonDistrict', this.MasonDistrict);
+            formdata.append('initiated', this.newForm.initiated);
+            formdata.append('passed', this.newForm.passed);
+            formdata.append('raised', this.newForm.raised);
+            formdata.append('memberstatus', this.newForm.memberstatus);
+
             formdata.append("defaultuseraccount", this.newForm.defaultuseraccount); 
             var address = base_url + 'members/add';
             axios.post(address, formdata,)
@@ -482,7 +720,7 @@ app.component('table-content', {
               else
               {
                 alert('Session TimeOut. Reloading the Page');
-                location.reload(true);
+                //location.reload(true);
               }
               this.isSubmit = false;
             })

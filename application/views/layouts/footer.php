@@ -9,13 +9,14 @@
         <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js" crossorigin="anonymous"></script>
         
-        <script src="https://unpkg.com/vue@3.4.15/dist/vue.global.prod.js"></script>
+        <script src="https://unpkg.com/vue@3.4.15/dist/vue.global.js"></script>
         <script src="https://unpkg.com/axios@1.6.5/dist/axios.min.js"></script>
         <script src="https://unpkg.com/lodash@4.17.21/lodash.min.js"></script>
 
 
         <script>
         var base_url = "<?php echo base_url() ?>";
+        var session_log="<?php echo $this->encryption->encrypt(CNF_SESSION_LOG); ?>";
         $(document).ready(function(){
             // Set the time limit (in milliseconds) for inactivity
             var inactivityTimeLimit = 10 * 60 * 2000; // 10 minutes

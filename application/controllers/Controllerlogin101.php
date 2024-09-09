@@ -45,7 +45,7 @@ class Controllerlogin101 extends CI_Controller {
 			$this->form_validation->set_rules('password', 'Password', 'required|trim|htmlspecialchars');
 			if ($this->form_validation->run()) {
 				$email = $this->htmlpurifier_lib->purify($this->input->post('email'));
-				$password = $this->htmlpurifier_lib->purify($this->input->post('password'));
+				$password = $this->htmlpurifier_lib->purify2($this->input->post('password'));
 
 				$result = $this->user_model->getUserAccount($email);
 				$error = "";

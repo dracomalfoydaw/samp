@@ -1,10 +1,13 @@
                     
-
-<!-- Example DataTable for Dashboard Demo-->
-<div class="card mb-4">
-    <div class="card-header">Personnel Management</div>
-    <table-content></table-content>
+<div class="container mt-n10" id="app">
+    <div class="card">
+        <div class="card-header"><?php echo $pageSubtitleTable?></div>
+        <div class="card-body">
+            <table-content></table-content>
+        </div>
+    </div>
 </div>
+
 
 
 

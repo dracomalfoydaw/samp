@@ -13,7 +13,7 @@ class Controllermembershipinfo101 extends CI_Controller {
 
 		if($this->session->userdata('gid')==1 or $this->session->userdata('gid')==2):
 			$this->load->model('Membershipinfomodel','members');
-			$this->load->model('User_model');
+			$this->load->model('User_model','user_model');
 		else:
 			redirect('home',301);
 		endif;
@@ -28,14 +28,21 @@ class Controllermembershipinfo101 extends CI_Controller {
 		$this->data = [];
 		$this->data['pageTitle'] = "Members Information";
 		$this->data['pageSubtitle'] = "Profile";
+		$this->data['pageSubtitleTable'] = "";
 		$this->data['content'] = $this->load->view('members/profile/home',$this->data, true );
 		$this->data['home_script'] = $this->load->view('members/profile/home_script',$this->data, true );
+		$this->data['custom_css'] = $this->load->view('members/profile/css_script',$this->data,true);
 		$this->load->view('layouts/main', $this->data );
+	}
+
+	public function individual_details($id = null)
+	{
+
 	}
 
 	public function findprofileinfo()
 	{
-		if(isset($this->input->post('search')['value']))
+		/*if(isset($this->input->post('search')['value']))
 		{
 			$fieldValue = trim($this->htmlpurifier_lib->purify($this->input->post('search')['value'])) ;
 		}
@@ -44,7 +51,35 @@ class Controllermembershipinfo101 extends CI_Controller {
 			$fieldValue = "" ;
 		}
 		
-		echo json_encode($this->members->getMembersData($fieldValue)) ;
+		echo json_encode($this->members->getMembersData($fieldValue)) ;*/
+
+		$system_user_login = $this->session->userdata('logged_in_session') ;
+        $session_log  = $this->encryption->decrypt($this->input->get('session_log'));
+        if($session_log==CNF_SESSION_LOG): // session for ajax is active
+        
+        	if($system_user_login == true):
+        		$session_log = true;
+        	else:
+        		$session_log = true;
+        	endif;
+
+            // Get the start and limit parameters from the request
+            $start = $this->input->get('start');
+            $limit = $this->input->get('limit');
+            $search = $this->htmlpurifier_lib->purify($this->input->get('search'));
+            $sortColumn = $this->htmlpurifier_lib->purify($this->input->get('sortColumn'));
+            $sortOrder = $this->htmlpurifier_lib->purify($this->input->get('sortOrder'));  
+
+            $data = $this->members->search_data($start,$limit,$sortColumn,$sortOrder,$search,$session_log); 
+            // Return the data as JSON
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($data));
+   
+
+        else:
+            redirect('home',301);
+        endif;
 	}
 
 	public function updatetransactioninfo()
@@ -91,7 +126,7 @@ class Controllermembershipinfo101 extends CI_Controller {
 	public function savetransactioninfo()
 	{
 
-		$this->form_validation->set_rules('firstName', 'First Name', 'required|trim|htmlspecialchars');
+		/*$this->form_validation->set_rules('firstName', 'First Name', 'required|trim|htmlspecialchars');
 		
 		$this->form_validation->set_rules('lastName', 'Last Name', 'required|trim|htmlspecialchars');
 		$this->form_validation->set_rules('email', 'Email', 'required|trim|htmlspecialchars|valid_email|is_unique[tb_profile.email]');
@@ -144,13 +179,200 @@ class Controllermembershipinfo101 extends CI_Controller {
 		    );
 		}
 
-		echo json_encode($data);
+		echo json_encode($data);*/
+
+
+		$system_user_login = $this->session->userdata('logged_in_session') ;
+	   	$session_key  = $this->encryption->decrypt($this->input->post('session_log'));
+
+	   	$email_error_message = "Can't Proceed on Registration. Email already registered on Profile Members";
+        $email_error_message_2 = "Invalid Email Address!";
+
+    	$this->form_validation->set_rules('FirstName', 'First Name', 'required|trim|htmlspecialchars');
+    	$this->form_validation->set_rules('LastName', 'Last Name', 'required|trim|htmlspecialchars');
+
+    	$this->form_validation->set_rules('homeaddress', 'Home Address', 'required|trim|htmlspecialchars');
+    	$this->form_validation->set_rules('Province', 'Province Name', 'required|trim|htmlspecialchars');
+    	$this->form_validation->set_rules('Municipality', 'Municipality Name', 'required|trim|htmlspecialchars');
+    	$this->form_validation->set_rules('Barangay', 'Barangay Name', 'required|trim|htmlspecialchars');
+    	$this->form_validation->set_rules('ZipCode', 'ZipCode', 'required|trim|htmlspecialchars');
+
+    	$this->form_validation->set_rules('email', 'Email Address', 'required|trim|htmlspecialchars|is_unique[tb_profile.email]', array('is_unique' => $email_error_message,'valid_email' => $email_error_message_2,) );
+    	if($this->input->post('isAutomaticProfileID')==false):
+	    	$this->form_validation->set_rules(
+			    'ProfileID',
+			    'Profile ID',
+			    'required|trim|htmlspecialchars|is_unique[tb_profile.UniqueID]',
+			    array(
+			        'required' => 'Profile ID is required.',
+			        'is_unique' => 'ProfileID is already registered and owned!',
+			    )
+			);
+	    endif;
+
+    	$FirstName  =  $this->htmlpurifier_lib->purify($this->input->post('FirstName'));
+    	$MiddleName  =  $this->htmlpurifier_lib->purify($this->input->post('MiddleName'));
+    	$LastName  =  $this->htmlpurifier_lib->purify($this->input->post('LastName'));
+    	$NameExtension  =  $this->htmlpurifier_lib->purify($this->input->post('NameExtension'));
+    	$ProfileID  =  $this->htmlpurifier_lib->purify($this->input->post('ProfileID'));
+    	$email  =  $this->htmlpurifier_lib->purify($this->input->post('email'));
+
+    	$homeaddress  =  $this->htmlpurifier_lib->purify($this->input->post('homeaddress'));
+    	$Province  =  $this->htmlpurifier_lib->purify($this->input->post('Province'));
+    	$Municipality  =  $this->htmlpurifier_lib->purify($this->input->post('Municipality'));
+    	$Barangay  =  $this->htmlpurifier_lib->purify($this->input->post('Barangay'));
+    	$ZipCode  =  $this->htmlpurifier_lib->purify($this->input->post('ZipCode'));
+
+    	$sex  =  $this->htmlpurifier_lib->purify($this->input->post('sex'));
+    	$dateofbirth  =  $this->htmlpurifier_lib->purify($this->input->post('dateofbirth'));
+    	$placeofbirth  =  $this->htmlpurifier_lib->purify($this->input->post('placeofbirth'));
+    	$bloodtype  =  $this->htmlpurifier_lib->purify($this->input->post('bloodtype'));
+
+    	$Country  =  $this->htmlpurifier_lib->purify($this->input->post('Country'));
+
+    	$contactno  =  $this->htmlpurifier_lib->purify($this->input->post('contactno'));
+    	$faxno  =  $this->htmlpurifier_lib->purify($this->input->post('faxno'));
+    	$homeno  =  $this->htmlpurifier_lib->purify($this->input->post('homeno'));
+    	$officeno  =  $this->htmlpurifier_lib->purify($this->input->post('officeno'));
+
+    	$Occupation  =  $this->htmlpurifier_lib->purify($this->input->post('Occupation'));
+    	$Education  =  $this->htmlpurifier_lib->purify($this->input->post('Education'));
+    	$Employment  =  $this->htmlpurifier_lib->purify($this->input->post('Employment'));
+    	$EmploymentAddress  =  $this->htmlpurifier_lib->purify($this->input->post('EmploymentAddress'));
+
+    	$familykin  =  $this->htmlpurifier_lib->purify($this->input->post('familykin'));
+    	$familyrelation  =  $this->htmlpurifier_lib->purify($this->input->post('familyrelation'));
+    	$familyaddress  =  $this->htmlpurifier_lib->purify($this->input->post('familyaddress'));
+    	$familynokids  =  $this->htmlpurifier_lib->purify($this->input->post('familynokids'));
+    	$familykidsname  =  $this->htmlpurifier_lib->purify($this->input->post('familykidsname'));
+
+    	$recordStat  =  $this->htmlpurifier_lib->purify($this->input->post('recordStat'));
+    	$LodgeNo  =  $this->htmlpurifier_lib->purify($this->input->post('LodgeNo'));
+    	$LodgeName  =  $this->htmlpurifier_lib->purify($this->input->post('LodgeName'));
+    	$MasonDistrict  =  $this->htmlpurifier_lib->purify($this->input->post('MasonDistrict'));
+    	$initiated  =  $this->htmlpurifier_lib->purify($this->input->post('initiated'));
+    	$passed  =  $this->htmlpurifier_lib->purify($this->input->post('passed'));
+    	$raised  =  $this->htmlpurifier_lib->purify($this->input->post('raised'));
+    	$memberstatus  =  $this->htmlpurifier_lib->purify($this->input->post('memberstatus'));
+
+    	$defaultuseraccount = $this->htmlpurifier_lib->purify($this->input->post('defaultuseraccount'));
+    	$data_transaction = array(
+    		'FirstName' => $FirstName,
+    		'MiddleName' => $MiddleName,
+    		'LastName' => $LastName,
+    		'UniqueID' => $ProfileID,
+    		'email' => $email ,
+
+    		'home_purok' => $homeaddress ,
+    		'home_baranggay' => $Province ,
+    		'home_muncity' => $Municipality ,
+    		'home_province' => $Barangay ,
+    		'zipcode' => $ZipCode ,
+
+    		'sex' => $sex ,
+    		'dateofbirth' => $dateofbirth ,
+    		'placeofbirth' => $ZipCode ,
+    		'bloodtype' => $bloodtype ,
+
+    		'Country' => $Country ,
+
+    		'contactno' => $contactno ,
+    		'faxno' => $faxno ,
+    		'homeno' => $homeno ,
+    		'officeno' => $officeno ,
+
+    		'Occupation' => $Occupation ,
+    		'Education' => $Education ,
+    		'Employment' => $Employment ,
+    		'EmploymentAddress' => $EmploymentAddress ,
+
+    		'familykin' => $familykin ,
+    		'familyrelation' => $familyrelation ,
+    		'familyaddress' => $familyaddress ,
+    		'familynokids' => $familynokids ,
+    		'familykidsname' => $familykidsname ,
+
+    		'recordStat' => $recordStat ,
+    		'LodgeNo' => $LodgeNo ,
+    		'LodgeName' => $LodgeName ,
+    		'MasonDistrict' => $MasonDistrict ,
+    		'initiated' => $initiated ,
+    		'passed' => $passed ,
+    		'raised' => $raised ,
+    		'memberstatus' => $memberstatus ,
+
+    	);
+
+        if($session_key==CNF_SESSION_LOG): // session for ajax is active
+
+        	$form_validation_status = false;
+        	$message_details = "";
+        	if($system_user_login == true):
+        		$session_log = true;
+        		if ($this->form_validation->run()) {
+        			$form_validation_status = true;
+        		}
+        		else
+        		{
+        			$form_validation_status = false;
+        			$message_details = validation_errors('<li>', '</li>');//'The following errors occurred <br>' . validation_errors('<li>', '</li>');
+        		}
+        	else:
+        		$form_validation_status = false;
+        		$session_log = false;
+        	endif;
+        	
+        	if($form_validation_status == true):
+        		if($defaultuseraccount=="true"): // option for encoder if created profile has a default user
+        			$email_error_message = "Can't Proceed on Registration. Email already registered on System Users";
+        			$email_error_message_2 = "Invalid Email Address!";
+        			$rules = array(
+        			array('field'   => 'email', 'label'   => 'email', 'rules'   => 'required|valid_email|is_unique[tb_users.email]', 'errors' => array('is_unique' => $email_error_message,'valid_email' => $email_error_message_2,),),
+        			);
+        			$this->form_validation->set_rules( $rules );
+        			if ($this->form_validation->run()) :
+				    	$data_result = $this->members->add_get_id($session_log,$data_transaction);
+				    	$ProfileID = trim($data_result['data']);
+				    	//$password = password_hash($ProfileID, PASSWORD_BCRYPT); 
+				    	$password = md5(md5(sha1(sha1($ProfileID))));
+				    	if($data_result['success']==true):
+				    		$transaction_result	 = $this->user_model->registration_form_profile($ProfileID,$email,$FirstName,"",$LastName,$password);
+
+				    		if($transaction_result=="success"):
+				    			$data =array('session_log' => $session_log , 'data' => $defaultuseraccount, 'message_details' => '', 'success' => true,);
+				    		else:			    	
+								$message_details = ' <li>Something went wrong during registration. Please try again. </li>';
+							    $data = array('session_log' => $session_log ,'data' => '' , 'message_details' => $message_details, 'success' => false,);
+					    	endif;
+				    	else:
+				    		$message_details = ' <li>Something went wrong during registration. Please try again. </li>';
+						    $data = array('session_log' => $session_log ,'data' => '' , 'message_details' => $message_details, 'success' => false,);
+				    	endif;
+        			else:
+        				$message_details = validation_errors('<li>', '</li>');
+        				$data = array('session_log' => $session_log ,'data' => '' , 'message_details' => $message_details, 'success' => false,);
+        			endif;
+        		else:
+	        		$data = $this->members->add($session_log,$data_transaction);
+	        	endif;
+        	else:
+        		$data = array('session_log' => $session_log ,'data' => '' , 'message_details' => $message_details, 'success' => false,);
+        	endif;
+
+
+
+		    $this->output
+		         ->set_content_type('application/json')
+		         ->set_output(json_encode($data));
+        else:            
+			redirect('template',301);
+        endif;
 
 	}
 
 	public function deletetransactioninfo()
 	{
-		$this->form_validation->set_rules('userID', 'User ID', 'required|trim|htmlspecialchars');
+		/*$this->form_validation->set_rules('userID', 'User ID', 'required|trim|htmlspecialchars');
 		if ($this->form_validation->run()) {
 			$userID  = $this->htmlpurifier_lib->purify($this->input->post('userID'));
 			$result = $this->members->deleteProfile($userID);
@@ -170,7 +392,45 @@ class Controllermembershipinfo101 extends CI_Controller {
 		        'id' => '',
 		    );
 		}
-		echo json_encode($data);
+		echo json_encode($data);*/
+
+		$system_user_login = $this->session->userdata('logged_in_session') ;
+	   	$session_key  = $this->encryption->decrypt($this->input->post('session_log'));
+        if($session_key==CNF_SESSION_LOG): // session for ajax is active
+
+        	if($system_user_login == true):
+        		$session_log = true;
+        	else:
+        		$session_log = false;
+        	endif;
+
+        	
+
+        	// Check if 'data' is set in $_POST and is not empty
+			if (isset($_POST['data']) && !empty($_POST['data'])) {
+			    // Decode JSON data from Vue.js
+			    $temp_id_res = json_decode($_POST['data'], true);
+
+			    if ($temp_id_res !== null) { // Check if decoding was successful
+
+			    	$data = $this->members->delete($temp_id_res,$session_log);
+			    } else {
+			        // Handle case where JSON decoding failed
+			        $data = array('session_log' => $session_log,  'success' => false);
+			    }
+			} else {
+			    // Handle case where 'data' is not set or empty
+			    $data = array('session_log' => $session_log,'success' => false);
+			}
+
+
+
+		    $this->output
+		         ->set_content_type('application/json')
+		         ->set_output(json_encode($data));
+        else:
+            redirect('home',301);
+        endif;
 	}
 }
 
