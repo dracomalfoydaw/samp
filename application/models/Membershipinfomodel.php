@@ -120,6 +120,100 @@ class Membershipinfomodel extends CI_Model {
 
 	//new code inserted
 
+	function get_data_details($search)
+	{
+		$entryBy =  $this->encryption->decrypt($this->session->userdata('uid'));
+		
+		$this->db->where('UniqueID', $search); // Add the is_active condition
+        $this->db->where('is_del', 0 ); // Add the is_active condition
+
+        $query = $this->db->get('tb_profile');
+        $data = $query->result();
+
+
+        $obj ="";
+        foreach ( $data as $row) {
+        	if($row->is_del== 0) //data is not deleted
+        	{
+        		$deleted = "Not Deleted";
+        	}
+        	elseif($row->is_del==1) //data is deleted
+        	{
+        		$deleted = "Record Deleted";
+        	}
+        	else
+        	{
+        		$deleted = "Unknown Status";
+        	}
+
+        	if( $row->is_active== 1 ) //data is not deleted
+        	{
+        		$active = "Active";
+        	}
+        	elseif($row->is_active== 0 ) //data is deleted
+        	{
+        		$active = "Inactive";
+        	}
+        	else
+        	{
+        		$active = "Unknown Status";
+        	}
+
+        	if(!($active =="Unknown Status" or  $deleted == "Unknown Status"))
+        	{
+        		$obj = array(
+	                'TransID' => $this->encryption->encrypt($row->ProfileID),
+	                'Avatar' => $this->htmlpurifier_lib->purify_decode($row->avatar),
+	                'EmailAddress' => $this->htmlpurifier_lib->purify_decode($row->email),
+	                'FirstName' => $this->htmlpurifier_lib->purify_decode($row->FirstName),
+	                'MiddleName' => $this->htmlpurifier_lib->purify_decode($row->MiddleName),
+	                'LastName' => $this->htmlpurifier_lib->purify_decode($row->LastName),
+	                'NameExtension' => $this->htmlpurifier_lib->purify_decode($row->NameExtension),
+	                'AccountID' => $this->htmlpurifier_lib->purify_decode($row->UniqueID),
+
+	                'HomePurok' => $this->htmlpurifier_lib->purify_decode($row->home_purok),
+	                'HomeBaranggay' => $this->htmlpurifier_lib->purify_decode($row->home_baranggay),
+	                'HomeMuncity' => $this->htmlpurifier_lib->purify_decode($row->home_muncity),
+	                'HomeProvince' => $this->htmlpurifier_lib->purify_decode($row->home_province),
+	                'zipcode' => $this->htmlpurifier_lib->purify_decode($row->zipcode),
+	                'Country' => $this->htmlpurifier_lib->purify_decode($row->Country),
+
+	                'Sex' => $this->htmlpurifier_lib->purify_decode($row->sex),
+	                'DateofBirth' => $row->dateofbirth,
+	                'PlaceofBirth' => $this->htmlpurifier_lib->purify_decode($row->placeofbirth),
+	                'Bloodtype' => $this->htmlpurifier_lib->purify_decode($row->bloodtype),
+
+	                'ContactNumber' => $this->htmlpurifier_lib->purify_decode($row->contactno),
+	                'FaxNumber' => $this->htmlpurifier_lib->purify_decode($row->faxno),
+	                'HomeNumber' => $this->htmlpurifier_lib->purify_decode($row->homeno),
+	                'OfficeNumber' => $this->htmlpurifier_lib->purify_decode($row->officeno),
+
+	                'Occupation' => $this->htmlpurifier_lib->purify_decode($row->Occupation),
+	                'Education' => $this->htmlpurifier_lib->purify_decode($row->Education),
+	                'Employment' => $this->htmlpurifier_lib->purify_decode($row->Employment),
+	                'EmploymentAddress' => $this->htmlpurifier_lib->purify_decode($row->EmploymentAddress),
+
+	                'familykin' => $this->htmlpurifier_lib->purify_decode($row->familykin),
+	                'familyrelation' => $this->htmlpurifier_lib->purify_decode($row->familyrelation),
+	                'familyaddress' => $this->htmlpurifier_lib->purify_decode($row->familyaddress),
+	                'familynokids' => $this->htmlpurifier_lib->purify_decode($row->familynokids),
+	                'familykidsname' => $this->htmlpurifier_lib->purify_decode($row->familykidsname),
+
+	                'RecordStatus' => $deleted,
+	                'RecordActive' => $active,
+	            );
+        	}
+
+        	
+        }
+       
+	    $note = "View Value: ".$search;
+	    //$this->user_model->insertLog($note,"View" ,$entryBy ,"tb_profile", $entryBy,'');
+    	
+
+		return $obj;
+	}
+
 	function search_data($start,$limit,$sortColumn,$sortOrder,$search,$session_log)
 	{
 		$entryBy =  $this->encryption->decrypt($this->session->userdata('uid'));
@@ -327,5 +421,67 @@ class Membershipinfomodel extends CI_Model {
 
         // Prepare response data
 		return array('session_log' => $session_log , 'data' => '', 'message_details' => '', 'success' => true,);
+	}
+
+
+	function update($transid,$session_log,$data )
+	{
+		
+		$isUpdate = false;
+		$email_error_message = "";
+		$entryBy =  $this->encryption->decrypt($this->session->userdata('uid'));
+		$this->db->where('email', $data['email']); // Add the is_active condition
+        $query = $this->db->get('tb_profile');
+        $result = $query->result();
+
+        if(count($result)==1){
+        	foreach ($result  as $key ) {
+        		if($key->ProfileID==$transid)
+        		{
+        			$isUpdate = true;
+        		}
+        		else
+        		{
+        			$email_error_message = "<li>Can't Proceed on Registration. Email already registered on Profile Members</li>";
+        		}
+        	}
+        }
+        elseif(count($result)>1){
+        	$email_error_message = "<li>Can't Proceed on Registration. Email already registered on Profile Members</li>";
+        }
+        else
+        {
+        	$isUpdate = true;	        	
+        }
+
+        if($isUpdate == true)
+        {        	
+			$this->db->where('ProfileID', $transid);
+	        $this->db->update('tb_profile', $data);
+	        $note = "Record Updated";
+	        //$this->user_model->insertLog($note,"update" ,$entryBy ,"tb_profile", $entryBy,$transid);
+	        // Prepare response data
+			return array('session_log' => $session_log ,   'success' => true,);
+        }
+        else
+        {
+        	return array('session_log' => $session_log , 'message_details' => $email_error_message, 'success' => false,);
+        }
+
+	}
+
+	function updateinfo($transid,$session_log,$data )
+	{
+		
+		$isUpdate = false;
+		$email_error_message = "";
+		$entryBy =  $this->encryption->decrypt($this->session->userdata('uid'));        	
+		$this->db->where('ProfileID', $transid);
+        $this->db->update('tb_profile', $data);
+        $note = "Record Updated";
+        //$this->user_model->insertLog($note,"update" ,$entryBy ,"tb_profile", $entryBy,$transid);
+        // Prepare response data
+		return array('session_log' => $session_log ,   'success' => true,);
+
 	}
 }

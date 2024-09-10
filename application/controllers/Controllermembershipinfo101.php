@@ -35,9 +35,87 @@ class Controllermembershipinfo101 extends CI_Controller {
 		$this->load->view('layouts/main', $this->data );
 	}
 
+	public function uploadImage() {
+
+		$entryBy =  $this->encryption->decrypt($this->session->userdata('uid'));
+		$session_log  = $this->encryption->decrypt($this->input->post('session_log'));
+		$ProfileID  = $this->htmlpurifier_lib->purify($this->input->post('ini_username'));
+
+		if($session_log==CNF_SESSION_LOG): // session for ajax is active
+
+			$config['upload_path'] = './uploads/users/';
+	        $config['allowed_types'] = 'jpg';
+	        $config['max_size'] = 5120; // 5MB limit
+
+	        // Load upload library
+	        $this->load->library('upload', $config);
+
+
+			$data = $this->members->get_data_details($ProfileID);
+
+	    	if($data !='')
+	    	{
+	    		$primaryID = $this->encryption->decrypt($data['TransID']);
+
+	    		// Check if the file was uploaded
+		        if (!$this->upload->do_upload('file')) {
+		            $response = array('success' => false, 'error' => $this->upload->display_errors());
+		        } else {
+		            $data = $this->upload->data();
+		            $file_ext = $data['file_ext'];
+		            $new_filename = uniqid() . '-' . substr(md5(mt_rand()), 0, 5).date("YYmmddhhss") . $file_ext;
+		            rename($data['full_path'], $data['file_path'] . $new_filename);
+		            $data = array('avatar' => $new_filename, );
+		            $this->db->where( array( "ProfileID" => $primaryID));
+					$this->db->update( "tb_profile" , $data );
+
+		            $response = array('success' => true, 'file_name' => $new_filename,'primaryID' => $primaryID, );
+		        }
+
+		        $note = "Update Members Picture";
+		        //$this->user_model->insertLog($note,"profile" ,$entryBy ,"users", $entryBy,$entryBy);
+	    	}
+	    	else
+	    	{
+	    		$response = array('success' => false, 'file_name' => '');
+	    	}
+
+	       
+
+	        
+	        echo json_encode($response);
+        else:
+        	redirect('home',301);
+        endif;
+    }
+
+
+
 	public function individual_details($id = null)
 	{
+		if($id!=null): // session for ajax is active
 
+        	$data = $this->members->get_data_details($this->htmlpurifier_lib->purify($id));
+
+        	if($data !='')
+        	{
+        		$this->data['data'] = $data;
+        	}
+        	else
+        	{
+        		redirect('members',301);
+        	}
+        	$this->data['pageTitle'] = "My Account";
+			$this->data['pageSubtitle'] = "Profile";
+			$this->data['pageSubtitleTable'] = "";
+			$this->data['pageTitleOption'] = "";
+			$this->data['content'] = $this->load->view('members/details/home',$this->data,true);
+			$this->data['home_script'] = $this->load->view('members/details/script',$this->data,true);
+			$this->data['custom_css'] = $this->load->view('members/details/css_script',$this->data,true);
+			$this->load->view('layouts/main', $this->data );
+        else:
+			redirect('members',301);			
+        endif;
 	}
 
 	public function findprofileinfo()
@@ -84,11 +162,9 @@ class Controllermembershipinfo101 extends CI_Controller {
 
 	public function updatetransactioninfo()
 	{
-		$this->form_validation->set_rules('firstName', 'First Name', 'required|trim|htmlspecialchars');
+		/*$this->form_validation->set_rules('firstName', 'First Name', 'required|trim|htmlspecialchars');
 		
 		$this->form_validation->set_rules('lastName', 'Last Name', 'required|trim|htmlspecialchars');
-		/*$this->form_validation->set_rules('email', 'Email', 'required|trim|htmlspecialchars|valid_email');*/
-		//$this->form_validation->set_rules('email', 'Email', 'required|trim|htmlspecialchars');
 		$this->form_validation->set_rules('userID', 'ID Number', 'required|trim|htmlspecialchars');
 		if ($this->form_validation->run()) {
 			$firstName  = $this->htmlpurifier_lib->purify($this->input->post('firstName'));
@@ -120,7 +196,98 @@ class Controllermembershipinfo101 extends CI_Controller {
 		    );
 		}
 
-		echo json_encode($data);
+		echo json_encode($data);*/
+
+		$system_user_login = $this->session->userdata('logged_in_session') ;
+	   	$session_key  = $this->encryption->decrypt($this->input->post('session_log'));
+        if($session_key==CNF_SESSION_LOG): // session for ajax is active
+
+        	if($system_user_login == true):
+        		$session_log = true;
+        	else:
+        		$session_log = false;
+        	endif;
+        	
+        	$email_error_message = "Can't Proceed on Registration. Email already registered on Members' Profile";
+	        $email_error_message_2 = "Invalid Email Address!";
+
+	        $this->form_validation->set_rules(
+			    'ProfileID',
+			    'Profile ID',
+			    'required|trim|htmlspecialchars',
+			    array(
+			        'required' => 'Profile ID is required.',
+			    )
+			);
+			$this->form_validation->set_rules('ProfileStatus', 'Profile Status', 'required|trim|htmlspecialchars');
+	    	$this->form_validation->set_rules('FirstName', 'First Name', 'required|trim|htmlspecialchars');
+	    	$this->form_validation->set_rules('LastName', 'Last Name', 'required|trim|htmlspecialchars');
+	    	$this->form_validation->set_rules('email', 'Email Address', 'required|trim|htmlspecialchars|htmlspecialchars', array('valid_email' => $email_error_message_2,) );
+        	$form_validation_status = false;
+        	$message_details = "";
+        	if($system_user_login == true):
+        		$session_log = true;
+        		if ($this->form_validation->run()) {
+        			$form_validation_status = true;
+        		}
+        		else
+        		{
+        			$form_validation_status = false;
+        			$message_details = validation_errors('<li>', '</li>');//'The following errors occurred <br>' . validation_errors('<li>', '</li>');
+        		}
+        	else:
+        		$form_validation_status = false;
+        		$session_log = false;
+        	endif;
+
+        	if($this->input->post('ProfileStatus')=="Active")
+        	{
+        		$ProfileStatus = 1 ;
+        	}
+        	else
+        	{
+        		$ProfileStatus = 0 ;
+        	}
+        	$FirstName  =  $this->htmlpurifier_lib->purify($this->input->post('FirstName'));
+	    	$LastName  =  $this->htmlpurifier_lib->purify($this->input->post('LastName'));
+	    	$MiddleName  =  $this->htmlpurifier_lib->purify($this->input->post('MiddleName'));
+	    	$nameExtension  =  $this->htmlpurifier_lib->purify($this->input->post('nameExtension'));
+	    	$UniqueID  =  $this->htmlpurifier_lib->purify($this->input->post('ProfileID'));
+	    	$email  =  $this->htmlpurifier_lib->purify($this->input->post('email'));
+	    	$defaultuseraccount = $this->htmlpurifier_lib->purify($this->input->post('defaultuseraccount'));
+	    	$data_transaction = array('is_active'=>$ProfileStatus , 'MiddleName' => $MiddleName,'nameExtension' => $nameExtension,'FirstName' => $FirstName,'LastName' => $LastName, 'email' => $email );
+
+	        $this->db->where('UniqueID', $UniqueID); // Add the is_active condition
+			$query = $this->db->get('tb_profile');
+			$result = $query->result();
+			$temp_id = "";
+
+			if (count($result) > 0) {
+			    foreach ($result as $row) {
+			        $temp_id = $row->ProfileID; // Ensure ProfileID is a string or convertible to a string
+			    }
+			}
+
+
+			if ($form_validation_status == true && $temp_id != '') {
+			    // Assuming $data_transaction and $session_log are defined
+			    $data = $this->members->update($temp_id, $session_log, $data_transaction);
+			} else {
+			    $data = array(
+			        'session_log' => $session_log,
+			        'data' => $temp_id,
+			        'message_details' => $message_details,
+			        'success' => false,
+			    );
+			}
+
+			$this->output
+			    ->set_content_type('application/json')
+			    ->set_output(json_encode($data));
+
+        else:            
+			redirect('template',301);
+        endif;
 	}
 
 	public function savetransactioninfo()
@@ -432,6 +599,136 @@ class Controllermembershipinfo101 extends CI_Controller {
             redirect('home',301);
         endif;
 	}
+
+	public function updatetransactionaddress()
+	{
+		$system_user_login = $this->session->userdata('logged_in_session') ;
+	   	$session_key  = $this->encryption->decrypt($this->input->post('session_log'));
+        if($session_key==CNF_SESSION_LOG): // session for ajax is active
+
+        	if($system_user_login == true):
+        		$session_log = true;
+        	else:
+        		$session_log = false;
+        	endif;
+        	
+			$this->form_validation->set_rules('homeaddress', 'Home Address', 'required|trim|htmlspecialchars');
+	    	$this->form_validation->set_rules('Province', 'Province Name', 'required|trim|htmlspecialchars');
+	    	$this->form_validation->set_rules('Municipality', 'Municipality Name', 'required|trim|htmlspecialchars');
+	    	$this->form_validation->set_rules('Barangay', 'Barangay Name', 'required|trim|htmlspecialchars');
+	    	$this->form_validation->set_rules('ZipCode', 'ZipCode', 'required|trim|htmlspecialchars');
+        	$form_validation_status = false;
+        	$message_details = "";
+        	if($system_user_login == true):
+        		$session_log = true;
+        		if ($this->form_validation->run()) {
+        			$form_validation_status = true;
+        		}
+        		else
+        		{
+        			$form_validation_status = false;
+        			$message_details = validation_errors('<li>', '</li>');//'The following errors occurred <br>' . validation_errors('<li>', '</li>');
+        		}
+        	else:
+        		$form_validation_status = false;
+        		$session_log = false;
+        	endif;
+
+        
+        	$homeaddress  =  $this->htmlpurifier_lib->purify($this->input->post('homeaddress'));
+	    	$Province  =  $this->htmlpurifier_lib->purify($this->input->post('Province'));
+	    	$Municipality  =  $this->htmlpurifier_lib->purify($this->input->post('Municipality'));
+	    	$Barangay  =  $this->htmlpurifier_lib->purify($this->input->post('Barangay'));
+	    	$ZipCode  =  $this->htmlpurifier_lib->purify($this->input->post('ZipCode'));
+	    	$UniqueID  =  $this->htmlpurifier_lib->purify($this->input->post('ProfileID'));
+
+	    	$sex  =  $this->htmlpurifier_lib->purify($this->input->post('sex'));
+	    	$dateofbirth  =  $this->htmlpurifier_lib->purify($this->input->post('dateofbirth'));
+	    	$placeofbirth  =  $this->htmlpurifier_lib->purify($this->input->post('placeofbirth'));
+	    	$bloodtype  =  $this->htmlpurifier_lib->purify($this->input->post('bloodtype'));
+
+	    	$Country  =  $this->htmlpurifier_lib->purify($this->input->post('Country'));
+
+	    	$contactno  =  $this->htmlpurifier_lib->purify($this->input->post('contactno'));
+	    	$faxno  =  $this->htmlpurifier_lib->purify($this->input->post('faxno'));
+	    	$homeno  =  $this->htmlpurifier_lib->purify($this->input->post('homeno'));
+	    	$officeno  =  $this->htmlpurifier_lib->purify($this->input->post('officeno'));
+
+	    	$Occupation  =  $this->htmlpurifier_lib->purify($this->input->post('Occupation'));
+	    	$Education  =  $this->htmlpurifier_lib->purify($this->input->post('Education'));
+	    	$Employment  =  $this->htmlpurifier_lib->purify($this->input->post('Employment'));
+	    	$EmploymentAddress  =  $this->htmlpurifier_lib->purify($this->input->post('EmploymentAddress'));
+
+	    	$familykin  =  $this->htmlpurifier_lib->purify($this->input->post('familykin'));
+	    	$familyrelation  =  $this->htmlpurifier_lib->purify($this->input->post('familyrelation'));
+	    	$familyaddress  =  $this->htmlpurifier_lib->purify($this->input->post('familyaddress'));
+	    	$familynokids  =  $this->htmlpurifier_lib->purify($this->input->post('familynokids'));
+	    	$familykidsname  =  $this->htmlpurifier_lib->purify($this->input->post('familykidsname'));
+
+	    	$data_transaction = array(
+	    		'home_purok'=>$homeaddress ,
+	    		'home_baranggay' => $Barangay,
+	    		'home_muncity' => $Municipality,
+	    		'home_province' => $Province,
+	    		'zipcode' => $ZipCode, 
+
+	    		'sex' => $sex ,
+	    		'dateofbirth' => $dateofbirth ,
+	    		'placeofbirth' => $ZipCode ,
+	    		'bloodtype' => $bloodtype ,
+
+	    		'Country' => $Country ,
+
+	    		'contactno' => $contactno ,
+	    		'faxno' => $faxno ,
+	    		'homeno' => $homeno ,
+	    		'officeno' => $officeno ,
+
+	    		'Occupation' => $Occupation ,
+	    		'Education' => $Education ,
+	    		'Employment' => $Employment ,
+	    		'EmploymentAddress' => $EmploymentAddress ,
+
+	    		'familykin' => $familykin ,
+	    		'familyrelation' => $familyrelation ,
+	    		'familyaddress' => $familyaddress ,
+	    		'familynokids' => $familynokids ,
+	    		'familykidsname' => $familykidsname ,
+	    		  );
+
+	        $this->db->where('UniqueID', $UniqueID); // Add the is_active condition
+			$query = $this->db->get('tb_profile');
+			$result = $query->result();
+			$temp_id = "";
+
+			if (count($result) > 0) {
+			    foreach ($result as $row) {
+			        $temp_id = $row->ProfileID; // Ensure ProfileID is a string or convertible to a string
+			    }
+			}
+
+
+			if ($form_validation_status == true && $temp_id != '') {
+			    // Assuming $data_transaction and $session_log are defined
+			    $data = $this->members->updateinfo($temp_id, $session_log, $data_transaction);
+			} else {
+			    $data = array(
+			        'session_log' => $session_log,
+			        'data' => $temp_id,
+			        'message_details' => $message_details,
+			        'success' => false,
+			    );
+			}
+
+			$this->output
+			    ->set_content_type('application/json')
+			    ->set_output(json_encode($data));
+
+        else:            
+			redirect('template',301);
+        endif;
+	}
+
 }
 
 

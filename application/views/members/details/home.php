@@ -17,7 +17,7 @@
                 <a class="nav-item nav-link" id="wizard2-tab" href="#wizard2" data-toggle="tab" role="tab" aria-controls="wizard2" aria-selected="true">
                     <div class="wizard-step-icon">2</div>
                     <div class="wizard-step-text">
-                        <div class="wizard-step-text-name">Address</div>
+                        <div class="wizard-step-text-name">Other Information</div>
                         <div class="wizard-step-text-details"></div>
                     </div>
                 </a>
@@ -51,7 +51,7 @@
 
 
                 <!-- Wizard tab pane item 2-->
-                <div class="tab-pane py-5 py-xl-10 fade" id="wizard2" role="tabpanel" aria-labelledby="wizard2-tab">
+                <div class="tab-pane py-5 py-xl-10 fade " id="wizard2" role="tabpanel" aria-labelledby="wizard2-tab">
 
                     <div class="row justify-content-center" style="margin-top: -10%;">
                            <account-address-card></account-address-card>

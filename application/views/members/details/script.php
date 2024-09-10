@@ -15,6 +15,28 @@
     var ini_HomeMuncity = "<?php echo $data['HomeMuncity']; ?>";
     var ini_HomeProvince = "<?php echo $data['HomeProvince']; ?>";
     var ini_zipcode = "<?php echo $data['zipcode']; ?>";
+    var ini_Country = "<?php echo $data['Country']; ?>";
+
+    var ini_Sex = "<?php echo $data['Sex']; ?>";
+    var ini_DateofBirth = "<?php echo $data['DateofBirth']; ?>";
+    var ini_PlaceofBirth = "<?php echo $data['PlaceofBirth']; ?>";
+    var ini_Bloodtype = "<?php echo $data['Bloodtype']; ?>";
+
+    var ini_ContactNumber = "<?php echo $data['ContactNumber']; ?>";
+    var ini_FaxNumber = "<?php echo $data['FaxNumber']; ?>";
+    var ini_HomeNumber = "<?php echo $data['HomeNumber']; ?>";
+    var ini_OfficeNumber = "<?php echo $data['OfficeNumber']; ?>";
+
+    var ini_Occupation = "<?php echo $data['Occupation']; ?>";
+    var ini_Education = "<?php echo $data['Education']; ?>";
+    var ini_Employment = "<?php echo $data['Employment']; ?>";
+    var ini_EmploymentAddress = "<?php echo $data['EmploymentAddress']; ?>";
+
+    var ini_familykin = "<?php echo $data['familykin']; ?>";
+    var ini_familyrelation = "<?php echo $data['familyrelation']; ?>";
+    var ini_familyaddress = "<?php echo $data['familyaddress']; ?>";
+    var ini_familynokids = "<?php echo $data['familynokids']; ?>";
+    var ini_familykidsname = "<?php echo $data['familykidsname']; ?>";
 </script>
 
 <script src="<?php echo base_url() ?>assets/js/members/details.js?t=<?php  echo  date('Ydhis')?>"></script>
