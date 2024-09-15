@@ -37,6 +37,16 @@
     var ini_familyaddress = "<?php echo $data['familyaddress']; ?>";
     var ini_familynokids = "<?php echo $data['familynokids']; ?>";
     var ini_familykidsname = "<?php echo $data['familykidsname']; ?>";
+
+
+    var ini_recordStat = "<?php echo $data['recordStat']; ?>";
+    var ini_LodgeNo = "<?php echo $data['LodgeNo']; ?>";
+    var ini_LodgeName = "<?php echo $data['LodgeName']; ?>";
+    var ini_MasonDistrict = "<?php echo $data['MasonDistrict']; ?>";
+    var ini_initiated = "<?php echo $data['initiated']; ?>";
+    var ini_passed = "<?php echo $data['passed']; ?>";
+    var ini_raised = "<?php echo $data['raised']; ?>";
+    var ini_memberstatus = "<?php echo $data['memberstatus']; ?>";
 </script>
 
 <script src="<?php echo base_url() ?>assets/js/members/details.js?t=<?php  echo  date('Ydhis')?>"></script>

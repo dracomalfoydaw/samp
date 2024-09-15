@@ -600,6 +600,94 @@ class Controllermembershipinfo101 extends CI_Controller {
         endif;
 	}
 
+	public function updatemasoninfo()
+	{
+		$system_user_login = $this->session->userdata('logged_in_session') ;
+	   	$session_key  = $this->encryption->decrypt($this->input->post('session_log'));
+        if($session_key==CNF_SESSION_LOG): // session for ajax is active
+
+        	if($system_user_login == true):
+        		$session_log = true;
+        	else:
+        		$session_log = false;
+        	endif;
+        	
+			/*$this->form_validation->set_rules('homeaddress', 'Home Address', 'required|trim|htmlspecialchars');
+	    	$this->form_validation->set_rules('Province', 'Province Name', 'required|trim|htmlspecialchars');
+	    	$this->form_validation->set_rules('Municipality', 'Municipality Name', 'required|trim|htmlspecialchars');
+	    	$this->form_validation->set_rules('Barangay', 'Barangay Name', 'required|trim|htmlspecialchars');
+	    	$this->form_validation->set_rules('ZipCode', 'ZipCode', 'required|trim|htmlspecialchars');*/
+        	$form_validation_status = true;
+        	$message_details = "";
+        	/*if($system_user_login == true):
+        		$session_log = true;
+        		if ($this->form_validation->run()) {
+        			$form_validation_status = true;
+        		}
+        		else
+        		{
+        			$form_validation_status = false;
+        			$message_details = validation_errors('<li>', '</li>');//'The following errors occurred <br>' . validation_errors('<li>', '</li>');
+        		}
+        	else:
+        		$form_validation_status = false;
+        		$session_log = false;
+        	endif;*/
+        	$UniqueID  =  $this->htmlpurifier_lib->purify($this->input->post('ProfileID'));
+        
+        	$recordStat  =  $this->htmlpurifier_lib->purify($this->input->post('recordStat'));
+	    	$LodgeNo  =  $this->htmlpurifier_lib->purify($this->input->post('LodgeNo'));
+	    	$LodgeName  =  $this->htmlpurifier_lib->purify($this->input->post('LodgeName'));
+	    	$MasonDistrict  =  $this->htmlpurifier_lib->purify($this->input->post('MasonDistrict'));
+	    	$initiated  =  $this->htmlpurifier_lib->purify($this->input->post('initiated'));
+	    	$passed  =  $this->htmlpurifier_lib->purify($this->input->post('passed'));
+	    	$raised  =  $this->htmlpurifier_lib->purify($this->input->post('raised'));
+	    	$memberstatus  =  $this->htmlpurifier_lib->purify($this->input->post('memberstatus'));
+
+	    	$data_transaction = array(
+	    		'recordStat' => $recordStat ,
+	    		'LodgeNo' => $LodgeNo ,
+	    		'LodgeName' => $LodgeName ,
+	    		'MasonDistrict' => $MasonDistrict ,
+	    		'initiated' => $initiated ,
+	    		'passed' => $passed ,
+	    		'raised' => $raised ,
+	    		'memberstatus' => $memberstatus ,
+	    		  );
+
+	        $this->db->where('UniqueID', $UniqueID); // Add the is_active condition
+			$query = $this->db->get('tb_profile');
+			$result = $query->result();
+			$temp_id = "";
+
+			if (count($result) > 0) {
+			    foreach ($result as $row) {
+			        $temp_id = $row->ProfileID; // Ensure ProfileID is a string or convertible to a string
+			    }
+			}
+
+
+			if ($form_validation_status == true && $temp_id != '') {
+			    // Assuming $data_transaction and $session_log are defined
+			    $data = $this->members->updateinfo($temp_id, $session_log, $data_transaction);
+			} else {
+			    $data = array(
+			        'session_log' => $session_log,
+			        'data' => $temp_id,
+			        'message_details' => $message_details,
+			        'success' => false,
+			    );
+			}
+
+			$this->output
+			    ->set_content_type('application/json')
+			    ->set_output(json_encode($data));
+
+        else:            
+			redirect('template',301);
+        endif;
+	}
+
 	public function updatetransactionaddress()
 	{
 		$system_user_login = $this->session->userdata('logged_in_session') ;

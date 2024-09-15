@@ -60,6 +60,7 @@ $route['members/search'] = 'controllermembershipinfo101/findprofileinfo';
 $route['members/add'] = 'controllermembershipinfo101/savetransactioninfo'; 
 $route['members/update'] = 'controllermembershipinfo101/updatetransactioninfo'; 
 $route['members/updateinfo'] = 'controllermembershipinfo101/updatetransactionaddress'; 
+$route['members/updateinfo2'] = 'controllermembershipinfo101/updatemasoninfo'; 
 $route['members/delete'] = 'controllermembershipinfo101/deletetransactioninfo'; 
 $route['members/show/(:any)'] = 'controllermembershipinfo101/individual_details/$1';
 $route['members/uploadImage'] = 'controllermembershipinfo101/uploadImage'; 

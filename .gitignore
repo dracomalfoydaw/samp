@@ -31,6 +31,8 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /tests/tests/
 /tests/results/
 
+/uploads/users/*
+
 
 vle.sql
 res_cons.php

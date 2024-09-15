@@ -199,6 +199,16 @@ class Membershipinfomodel extends CI_Model {
 	                'familynokids' => $this->htmlpurifier_lib->purify_decode($row->familynokids),
 	                'familykidsname' => $this->htmlpurifier_lib->purify_decode($row->familykidsname),
 
+
+	                'recordStat' => $this->htmlpurifier_lib->purify_decode($row->recordStat),
+	                'LodgeNo' => $this->htmlpurifier_lib->purify_decode($row->LodgeNo),
+	                'LodgeName' => $this->htmlpurifier_lib->purify_decode($row->LodgeName),
+	                'MasonDistrict' => $this->htmlpurifier_lib->purify_decode($row->MasonDistrict),
+	                'initiated' => $this->htmlpurifier_lib->purify_decode($row->initiated),
+	                'passed' => $this->htmlpurifier_lib->purify_decode($row->passed),
+	                'raised' => $this->htmlpurifier_lib->purify_decode($row->raised),
+	                'memberstatus' => $this->htmlpurifier_lib->purify_decode($row->memberstatus),
+
 	                'RecordStatus' => $deleted,
 	                'RecordActive' => $active,
 	            );

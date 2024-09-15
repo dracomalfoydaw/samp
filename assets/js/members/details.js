@@ -653,6 +653,159 @@ app.component('account-address-card', {
 });
 
 
+app.component('account-mason-card', {
+    data() {
+        return {
+            newForm: {
+                recordStat:ini_recordStat,
+                LodgeNo:ini_LodgeNo,
+                LodgeName:ini_LodgeName,
+                MasonDistrict:ini_MasonDistrict,
+                initiated:ini_initiated,
+                passed:ini_passed,
+                raised:ini_raised,
+                memberstatus:ini_memberstatus,
+            },
+            errorsForms : {},   
+            isSubmit: false,
+            username: ini_username,
+            session_log: session_log,
+        };
+    },
+    methods: {
+        confirmSubmit(){
+           
+            try {   
+            if (Object.keys(this.errorsForms).length === 0) {
+                this.isSubmit = true;
+                var formdata = new FormData();
+                formdata.append('ProfileID', this.username);
+                formdata.append('session_log', this.session_log);
+                formdata.append('recordStat', this.newForm.recordStat);
+                formdata.append('LodgeNo', this.newForm.LodgeNo);
+                formdata.append('LodgeName', this.newForm.LodgeName);
+                formdata.append('MasonDistrict', this.newForm.MasonDistrict);
+                formdata.append('initiated', this.newForm.initiated);
+                formdata.append('passed', this.newForm.passed);
+                formdata.append('raised', this.newForm.raised);
+                formdata.append('memberstatus', this.newForm.memberstatus);
 
+                var address = base_url + 'members/updateinfo2';
+                axios.post(address, formdata,)
+                .then(response_server => {
+                  const response = response_server.data;
+                  console.log(response);
+                  if (response.session_log && response.success) {
+                    alert("success");
+                  }
+                  else if(response.session_log && response.success == false)
+                  {
+                    $("#error_content").html(response.message_details);
+                    $(".messagebox").fadeIn("slow");
+                  }
+                  else
+                  {
+                    alert('Session TimeOut. Reloading the Page');
+                    location.reload(true);
+                  }
+                  this.isSubmit = false;
+                })
+                .catch(error => {
+                  $(".messagebox_error").fadeIn("slow");
+                  this.isSubmit = false;
+                });
+              }
+          } catch (error) {
+            console.error('Error of fetching data:', error);
+            alert('An error occurred while fetching the record.');
+          }
+        },
+    },
+     template: `
+    <form @submit.prevent="confirmSubmit">
+    <div class="card mt-4">                        
+            <div class="card-header"></div>
+            <div class="card-body">
+                
+                    <div class="mb-3">
+                      <div class ="row">
+                          <div class="col-md-6">
+                            <span class="form-control">
+                              <label><input :disabled="isSubmit" type="radio" name="recordStat" class="recordStat auto" value="petitioner" v-model="newForm.recordStat" > Petitioner</label> &nbsp;
+                              <label><input :disabled="isSubmit" type="radio" name="recordStat" class="recordStat" value="cabletow" v-model="newForm.recordStat"> Cabletow</label>
+                            </span>
+                          </div>
+                          <div class="col-md-6">
+                           </div>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class ="row">
+                        <div class="col-md-3">
+                          <label for="LodgeNo" class="form-label">Lodge Number</label>
+                          <input :disabled="isSubmit" type="text" class="form-control" id="LodgeNo" name="LodgeNo" v-model="newForm.LodgeNo" required>
+                          <span v-if="errorsForms.LodgeNo" style="color: red;">{{ errorsForms.LodgeNo }}</span>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="LodgeName" class="form-label">Lodge Name</label>
+                          <input :disabled="isSubmit" type="text" class="form-control" id="LodgeName" name="LodgeName" v-model="newForm.LodgeName" >
+                          <span v-if="errorsForms.LodgeName" style="color: red;">{{ errorsForms.LodgeName }}</span>
+                        </div>
+                        <div class="col-md-6">
+                          <label for="MasonDistrict" class="form-label">Mason District</label>
+                          <input :disabled="isSubmit" type="text" class="form-control" id="MasonDistrict" name="MasonDistrict" v-model="newForm.MasonDistrict" required>
+                          <span v-if="errorsForms.MasonDistrict" style="color: red;">{{ errorsForms.MasonDistrict }}</span>
+                        </div>
+                        
+                      </div>
+                    </div>
+                   <div class="mb-3">
+                      <div class ="row">
+                        <div class="col-md-3">                      
+                          <label for="initiated" class="form-label">Date Initiated</label>
+                          <input :disabled="isSubmit" type="date" class="form-control" id="initiated" name="initiated" v-model="newForm.initiated" required>
+                          <span v-if="errorsForms.initiated" style="color: red;">{{ errorsForms.initiated }}</span>
+                        </div>
+
+                        <div class="col-md-3">                      
+                          <label for="passed" class="form-label">Date Passed</label>
+                          <input :disabled="isSubmit" type="date" class="form-control" id="passed" name="passed" v-model="newForm.passed" required>
+                          <span v-if="errorsForms.passed" style="color: red;">{{ errorsForms.passed }}</span>
+                        </div>
+
+
+                        <div class="col-md-3">                      
+                          <label for="raised" class="form-label">Date Raised</label>
+                          <input :disabled="isSubmit" type="date" class="form-control" id="raised" name="raised" v-model="newForm.raised" required>
+                          <span v-if="errorsForms.raised" style="color: red;">{{ errorsForms.raised }}</span>
+                        </div>
+
+
+                        <div class="col-md-3">                      
+                          <label for="memberstatus" class="form-label">Status</label>
+                          <select :disabled="isSubmit" id="memberstatus" v-model="newForm.memberstatus" class="form-control select2">
+                            <option value="" disabled>Select Status</option>
+                            <option value="Active" >Active</option>
+                            <option value="Foreigner" >Foreigner</option>
+                            <option value="SNPD" >SNPD</option>
+                            <option value="Demitted" >Demitted</option>
+                            <option value="LML" >LML</option>
+                            <option value="Died" >Died</option>
+                            <option value="Other" >Other</option>
+                          </select>
+                          <span v-if="errorsForms.memberstatus" style="color: red;">{{ errorsForms.memberstatus }}</span>
+                        </div>
+                      </div>
+                    </div>
+                     <button type="submit" class="btn btn-primary" :disabled="isSubmit">Submit</button>
+            </div>
+        
+    </div>
+
+   
+           
+         </form>  
+  `
+});
 
     app.mount('#app');

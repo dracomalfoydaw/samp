@@ -25,7 +25,7 @@
                 <a class="nav-item nav-link" id="wizard2-tab" href="#wizard3" data-toggle="tab" role="tab" aria-controls="wizard2" aria-selected="true">
                     <div class="wizard-step-icon">2</div>
                     <div class="wizard-step-text">
-                        <div class="wizard-step-text-name">Logs</div>
+                        <div class="wizard-step-text-name">Mason Record</div>
                         <div class="wizard-step-text-details"></div>
                     </div>
                 </a>
@@ -59,9 +59,9 @@
                 </div>
                
                 <!-- Wizard tab pane item 2-->
-                <div class="tab-pane py-5 py-xl-10 fade" id="wizard3" role="tabpanel" aria-labelledby="wizard2-tab">
-                    <div class="row justify-content-center" style="margin-top: -5%;">
-                        
+                <div class="tab-pane py-5 py-xl-10 fade" id="wizard3" role="tabpanel" aria-labelledby="wizard3-tab">
+                    <div class="row justify-content-center" style="margin-top: -10%;">
+                         <account-mason-card></account-mason-card>
                     </div>
                 </div>
                 
