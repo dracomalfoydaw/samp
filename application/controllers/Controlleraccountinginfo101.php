@@ -167,7 +167,7 @@ class Controlleraccountinginfo101 extends CI_Controller {
 		$this->data = [];
 		$this->data['pageTitle'] = "Accounting";
 		$this->data['pageSubtitle'] = "Account balances Module";
-		
+		$this->data['custom_css'] = $this->load->view('accounting/assessment/css_script',$this->data,true);
 		$this->data['content'] = $this->load->view('accounting/assessment/home',$this->data, true );
 		$this->data['home_script'] = $this->load->view('accounting/assessment/home_script',$this->data, true );
 		$this->load->view('layouts/main', $this->data );
@@ -183,7 +183,7 @@ class Controlleraccountinginfo101 extends CI_Controller {
 	     $this->data = [];
 	        $this->data['pageTitle'] = "Accounting";
 	        $this->data['pageSubtitle'] = "Ledger Module";
-	        
+	        $this->data['custom_css'] = $this->load->view('accounting/ledger/css_script',$this->data,true);
 	        $this->data['content'] = $this->load->view('accounting/ledger/home', $this->data, true);
 	        $this->data['home_script'] = $this->load->view('accounting/ledger/home_script', $this->data, true);
 	        $this->load->view('layouts/main', $this->data);

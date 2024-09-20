@@ -69,6 +69,7 @@ $route['members/uploadImage'] = 'controllermembershipinfo101/uploadImage';
 
 $route['contribution'] = 'Controllercontributionreport101';
 $route['contribution/search'] = 'Controllercontributionreport101/findinfo';  
+$route['contribution/search/(:any)'] = 'Controllercontributionreport101/findinfo/$1';  
 $route['contribution/save'] = 'Controllercontributionreport101/savetransactioninfo'; 
 $route['contribution/delete'] = 'Controllercontributionreport101/deletetransactioninfo'; 
 

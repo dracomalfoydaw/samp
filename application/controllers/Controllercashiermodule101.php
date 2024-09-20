@@ -34,6 +34,7 @@ class Controllercashiermodule101 extends CI_Controller {
 			$this->data['issetORnumber'] ="set";
 			$this->data['ORnumber'] = $this->session->userdata('ORnumber');
 		}
+		$this->data['custom_css'] = $this->load->view('cashiering/css_script',$this->data,true);
 		$this->data['content'] = $this->load->view('cashiering/home',$this->data, true );
 		$this->data['home_script'] = $this->load->view('cashiering/home_script',$this->data, true );
 		$this->load->view('layouts/main', $this->data );

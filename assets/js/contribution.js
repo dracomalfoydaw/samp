@@ -188,7 +188,6 @@
                             $("#desccontribution").prop('disabled', false);
                             $("#submit_form_btn").prop('disabled', false);
                             this.reloaddata();
-                            console.log(response);
                         }
                         else
                         {
@@ -200,7 +199,6 @@
                             $("#error_content").html(response.data.message_details);
                             $(".messagebox").fadeIn("slow");
                             $('#registrationModal').animate({ scrollTop: 0 }, 'slow');
-                            console.log(response);
                         }
                     })
                     .catch(error => {

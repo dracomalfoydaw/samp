@@ -24,6 +24,7 @@ class Controllerattendanceinfo101 extends CI_Controller {
 		$this->data['pageTitle'] = "Attendance Information";
 		$this->data['pageSubtitle'] = "Profile";
 		$this->data['pageSubtitleTable'] = "List of Attendance Create";
+		$this->data['custom_css'] = $this->load->view('attendance/home/css_script',$this->data,true);
 		$this->data['content'] = $this->load->view('attendance/home/home',$this->data, true );
 		$this->data['home_script'] = $this->load->view('attendance/home/home_script',$this->data, true );
 		$this->load->view('layouts/main', $this->data );

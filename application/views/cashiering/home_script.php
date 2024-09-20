@@ -26,9 +26,46 @@
                 totalAmount: 0,
                 totalDiscount: 0,
                 showerrorcashierpayment:"",
+
+               
+                selectedPaymentType: '' // stores selected payment type
             }
         },
         methods:{
+            addRow() {
+                this.loadRemainingBalanceArray.push({
+                    ChartCode: '',
+                    ChartName: '',
+                    Description: '',
+                    Credit: '',
+                    Discount: '',
+                    Remarks: '',
+                    EntryID: ''
+                });
+            },
+            // Method to add a row with the selected payment type
+            addRowWithPaymentType() {
+                if (!this.selectedPaymentType) {
+                    alert('Please select a payment type.');
+                    return;
+                }
+                this.loadRemainingBalanceArray.push({
+                    PaymentType: this.selectedPaymentType,
+                    ChartCode: '',
+                    ChartName: '',
+                    Description: '',
+                    Credit: '',
+                    Discount: '',
+                    Remarks: '',
+                    EntryID: ''
+                });
+                this.selectedPaymentType = ''; // Reset the payment type selection
+            },
+            // Method to remove a row
+            removeRow(index) {
+                this.loadRemainingBalanceArray.splice(index, 1); // Remove row at the specified index
+                this.computeTotalAmountAndDiscount(); // Recalculate totals after removing a row
+            },
             searchProfile:function(){
                 if ($.fn.DataTable.isDataTable('#showmemberinfoDataTable')) { // Destroy existing DataTable if it exists
                     $('#showmemberinfoDataTable').DataTable().destroy();

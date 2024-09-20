@@ -28,6 +28,7 @@ class Controllercontributionreport101 extends CI_Controller {
 		endif; 
 		$this->data['pageTitle'] = "Contribution";
 		$this->data['pageSubtitle'] = "Contribution Profile";
+		$this->data['custom_css'] = $this->load->view('contribution/profile/css_script',$this->data,true);
 		$this->data['content'] = $this->load->view('contribution/profile/home',$this->data, true );
 		$this->data['home_script'] = $this->load->view('contribution/profile/home_script',$this->data, true );
 		$this->load->view('layouts/main', $this->data );
@@ -57,6 +58,7 @@ class Controllercontributionreport101 extends CI_Controller {
 			$this->data = [];
 			$this->data['pageTitle'] = "Contribution";
 			$this->data['pageSubtitle'] = "Contribution Collection";
+			$this->data['custom_css'] = $this->load->view('contribution/collection/css_script',$this->data,true);
 			$this->data['content'] = $this->load->view('contribution/collection/home',$this->data, true );
 			$this->data['home_script'] = $this->load->view('contribution/collection/home_script',$this->data, true );
 			$this->load->view('layouts/main', $this->data );
