@@ -76,6 +76,7 @@ $route['contribution/delete'] = 'Controllercontributionreport101/deletetransacti
 $route['contribution/collection'] = 'Controllercontributionreport101/collection';
 $route['contribution/search/collection'] = 'Controllercontributionreport101/findinfo/collection';  
 $route['contribution/collection/profilecollectionlist'] = 'Controllercontributionreport101/collection/profilecollectionlist';
+$route['contribution/collection/synccollection'] = 'Controllercontributionreport101/collection/synccollection';
 
 
 $route['cashiering'] = 'Controllercashiermodule101';
@@ -109,10 +110,6 @@ $route['accounting/getListofPaymenttoAdd'] = 'Controlleraccountinginfo101/getLis
 $route['accounting/insertnewpayment'] = 'Controlleraccountinginfo101/insertnewpayment';
 $route['accounting/removeListofPayment'] = 'Controlleraccountinginfo101/removeListofPayment';
 $route['accounting/updateListofPayment'] = 'Controlleraccountinginfo101/updateListofPayment';
-
-
-
-
 
 $route['account'] = 'controlleraccountinfo101';
 $route['account/search'] = 'controlleraccountinfo101/findprofileinfo';  
