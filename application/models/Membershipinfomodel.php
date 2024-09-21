@@ -44,7 +44,7 @@ class Membershipinfomodel extends CI_Model {
 			}
 
 			// Constructing the final query
-			$query_string = "SELECT * FROM Viewprofile WHERE " . implode(" OR ", $whereClause) . " order by ProfileID desc limit 1000";
+			$query_string = "SELECT * FROM viewprofile WHERE " . implode(" OR ", $whereClause) . " order by ProfileID desc limit 1000";
 			$query = $this->db->query($query_string);
 
 		}

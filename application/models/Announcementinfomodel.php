@@ -17,7 +17,7 @@ class Announcementinfomodel extends CI_Model {
 
 	/*function getMembersInfo($searchValue)
 	{
-		$query = $this->db->query("select * from Viewprofile where UserID ='$searchValue'");
+		$query = $this->db->query("select * from viewprofile where UserID ='$searchValue'");
 		return $query->result();
 	}*/
 

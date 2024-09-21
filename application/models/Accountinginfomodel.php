@@ -40,7 +40,7 @@ class Accountinginfomodel extends CI_Model {
 	{
 		if($searchValue =="")
 		{
-			$query = $this->db->query("select * from Viewprofile limit 1000");
+			$query = $this->db->query("select * from viewprofile limit 1000");
 		}
 		else
 		{
@@ -62,7 +62,7 @@ class Accountinginfomodel extends CI_Model {
 			}
 
 			// Constructing the final query
-			$query_string = "SELECT * FROM Viewprofile WHERE " . implode(" OR ", $whereClause) . "limit 1000";
+			$query_string = "SELECT * FROM viewprofile WHERE " . implode(" OR ", $whereClause) . "limit 1000";
 
 			$query = $this->db->query($query_string);
 

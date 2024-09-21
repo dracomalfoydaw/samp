@@ -36,7 +36,7 @@ class Dashboardinfomodel extends CI_Model {
 			}
 
 			// Constructing the final query
-			$query_string = "SELECT * FROM Viewprofile WHERE " . implode(" OR ", $whereClause) . "limit 1000";
+			$query_string = "SELECT * FROM viewprofile WHERE " . implode(" OR ", $whereClause) . "limit 1000";
 
 			$query = $this->db->query($query_string);
 

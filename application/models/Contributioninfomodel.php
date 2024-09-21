@@ -10,6 +10,62 @@ class Contributioninfomodel extends CI_Model {
 		return $query->result();
 	}
 
+	function synccollection($id)
+	{
+		$query = $this->db->query("select EntryId from tb_contribution_account where ContributionID='$id' ");
+		foreach($query->result() as $key)
+		{
+			$query2 = $this->db->query("select ActualPayment,Credit,BalanceFee,Discount from tb_journal where TransactionTypeID='1' and ReferenceID='".$key->EntryId."'");
+			foreach($query2->result() as $key2)
+			{
+				if($key2->ActualPayment>0)
+				{
+					$ActualPayment = $key2->ActualPayment;
+				}
+				else
+				{
+					$ActualPayment =0;
+				}
+
+				if($key2->Credit>0)
+				{
+					$Credit = $key2->Credit;
+				}
+				else
+				{
+					$Credit =0;
+				}
+
+				if($key2->BalanceFee>0)
+				{
+					$BalanceFee = $key2->BalanceFee;
+				}
+				else
+				{
+					$BalanceFee =0;
+				}
+
+				if($key2->Discount>0)
+				{
+					$Discount = $key2->Discount;
+				}
+				else
+				{
+					$Discount =0;
+				}
+
+				$data = array(
+					'Debit' => $ActualPayment , 
+					'BalanceFee' => $BalanceFee ,
+					'Discount' => $Discount ,
+				);
+
+                $this->db->where('EntryId', $key->EntryId);
+                $this->db->update('tb_contribution_account', $data);
+			}
+		}
+	}
+
 	function getData($searchValue,$category)
 	{
 		if($category=="collection")

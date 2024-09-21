@@ -71,7 +71,7 @@ class Cashieringinfomodel extends CI_Model {
 	{
 		if($searchValue =="")
 		{
-			$query = $this->db->query("select * from Viewprofile order by LastName asc limit 100 ");
+			$query = $this->db->query("select * from viewprofile order by LastName asc limit 100 ");
 		}
 		else
 		{
@@ -93,7 +93,7 @@ class Cashieringinfomodel extends CI_Model {
 			}
 
 			// Constructing the final query
-			$query_string = "SELECT * FROM Viewprofile WHERE " . implode(" OR ", $whereClause) . " order by LastName asc limit 1000";
+			$query_string = "SELECT * FROM viewprofile WHERE " . implode(" OR ", $whereClause) . " order by LastName asc limit 1000";
 
 			$query = $this->db->query($query_string);
 
