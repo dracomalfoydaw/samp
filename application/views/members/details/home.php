@@ -23,7 +23,7 @@
                 </a>
                 <!-- Wizard navigation item 3-->
                 <a class="nav-item nav-link" id="wizard2-tab" href="#wizard3" data-toggle="tab" role="tab" aria-controls="wizard2" aria-selected="true">
-                    <div class="wizard-step-icon">2</div>
+                    <div class="wizard-step-icon">3</div>
                     <div class="wizard-step-text">
                         <div class="wizard-step-text-name">Mason Record</div>
                         <div class="wizard-step-text-details"></div>
