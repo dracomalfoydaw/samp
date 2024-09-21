@@ -181,6 +181,12 @@
                         $('#loading').fadeOut("slow");
                         if(response.data.message=="success")
                         {
+                            this.formData.createannoucement = "";
+                            this.formData.sendannouncement = "";
+                            this.formData.applyrecord = "";
+                            this.formData.contributionname = "";
+                            this.formData.amountofcontribution = "";
+                            this.formData.desccontribution = "";
                             alert('Form submitted successfully!');
                             $('#registrationModal').modal('hide');
                             $("#contributionname").prop('disabled', false);
