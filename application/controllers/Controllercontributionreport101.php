@@ -34,6 +34,11 @@ class Controllercontributionreport101 extends CI_Controller {
 		$this->load->view('layouts/main', $this->data );
 	}
 
+	/*public function synccollection()
+	{
+		$this->contribution_model->synccollection(1);
+	}
+*/
 	public function collection($category = '')
 	{
 		if($this->session->userdata('gid')==3):
@@ -45,6 +50,21 @@ class Controllercontributionreport101 extends CI_Controller {
 			if($searchvalue !='')
 			{
 				$val = $this->contribution_model->profilecollectionlist($searchvalue);
+			}
+			else
+			{
+				$val = "";
+			}
+			header('Content-Type: application/json');
+			echo json_encode($val) ;
+		}
+		elseif($category == "synccollection")
+		{
+			//$this->contribution_model->synccollection(2);
+			$searchvalue = $this->htmlpurifier_lib->purify($this->input->post('searchvalue'));
+			if($searchvalue !='')
+			{
+				$val = $this->contribution_model->synccollection($searchvalue);
 			}
 			else
 			{
