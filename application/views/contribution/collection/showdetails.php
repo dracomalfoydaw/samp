@@ -10,16 +10,19 @@
             </div>
             <div class="modal-body">
                 <!-- DataTable for displaying fetched data -->
+                <div class="datatable">
                 <table class="table" id="modalDataTable">
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Billing</th>
                             <th>Billing</th>
                             <!-- Add other columns as needed -->
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
+                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

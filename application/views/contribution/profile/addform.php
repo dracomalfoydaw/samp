@@ -65,7 +65,7 @@
 
           <div>
             <label for="desccontribution">Description of Contribution:</label>
-            <input type="text" id="desccontribution" name="desccontribution" class="form-control" v-model="formData.desccontribution" required>
+            <input type="text" id="desccontribution" name="desccontribution" class="form-control" v-model="formData.desccontribution" >
             <span v-if="errors.desccontribution" class="error">{{ errors.desccontribution }}</span>
           </div>
 

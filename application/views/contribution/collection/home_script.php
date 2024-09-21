@@ -41,7 +41,7 @@
                           data: null,
                           render: (data, type, row) => {
                             
-                            return '<button class="show-button btn btn-sm btn-warning" data-user-id="' + row.EntryID + '"><i class="fa fa-eye"></i></button> ';
+                            return '<button class="show-button btn btn-sm btn-warning" data-user-id="' + row.EntryID + '"><i class="fa fa-eye"></i></button> &nbsp <button class="sync-button btn btn-sm btn-success" data-user-id="' + row.EntryID + '"><i class="fa fa-sync"></i></button>';
                           },
                         },
                     ]
@@ -57,32 +57,7 @@
             },
 
             openUpdateModal: function (userId) {
-                // Open the modal
                         $('#updateModal').modal('show');
-                // Fetch data for the user with userId via AJAX
-               /* $.ajax({
-                    url: base_url + 'contribution/collection/profilecollectionlist',  // Adjust the URL as needed
-                    type: 'POST',
-
-                    success: function (response) {
-                        // Initialize DataTable for the modal
-                        $('#modalDataTable').DataTable({
-                            destroy: true, // Destroy existing DataTable if it exists
-                            data: response,
-                            dataType: 'json',
-                            columns: [
-                                { data: 'Fullname', title: 'Name' },
-                                { data: 'TotalDebit', title: 'Value' },
-                                // Add other columns as needed
-                            ]
-                        });
-
-                        
-                    },
-                    error: function (error) {
-                        console.error('Error fetching user data:', error);
-                    }
-                });*/
 
 
                 let params = new URLSearchParams();
@@ -90,7 +65,6 @@
                     params.append("searchvalue", userId);
                     axios.post(address, params,)
                         .then(response => {
-                          
 
                             // Initialize DataTable for the modal
                             $('#modalDataTable').DataTable({
@@ -99,7 +73,8 @@
                                 dataType: 'json',
                                 columns: [
                                     { data: 'Fullname', title: 'Name' },
-                                    { data: 'TotalDebit', title: 'Value' },
+                                    { data: 'TotalDebit', title: 'Total Value Paid' },
+                                    { data: 'TotalCredit', title: 'Balance' },
                                     // Add other columns as needed
                                 ]
                             });
@@ -109,7 +84,27 @@
                         });
             },
 
+            syncRecord: function (userId) {
+                
+                this.syncformModal = new bootstrap.Modal(document.getElementById('syncformModal'), {
+                    backdrop: 'static', // Prevent closing when clicking outside
+                    keyboard: false, // Prevent closing with ESC key
+                  });
+                this.syncformModal.show();
 
+                let params = new URLSearchParams();
+                var address = base_url+"contribution/collection/synccollection";
+                params.append("searchvalue", userId);
+                axios.post(address, params,)
+                    .then(response => {
+                        this.syncformModal.hide();
+                        location.reload();
+                    })
+                    .catch(error => {
+                        this.syncformModal.hide();
+                        console.error('Error fetching data:', error);
+                    });
+            },
             updateDataInModal: function () {
                 // Implement the logic to update data based on the values in the modal form
                 // For example, make an AJAX call to update the user details
@@ -122,16 +117,14 @@
                 $('#modalDataTable tbody').empty();
             },
 
-          
-
         },
         mounted(){
             this.loadDatatable();
-            /*$('#dataTable').on('click', '.show-button', function () {
-                var userId = $(this).data('user-id');
-                
-                this.openUpdateModal(userId);
-            });*/
+
+            $('#dataTable').on('click', '.sync-button', (event) => {
+                var userId = $(event.currentTarget).data('user-id');
+                this.syncRecord(userId);
+            });
             $('#dataTable').on('click', '.show-button', (event) => {
                 var userId = $(event.currentTarget).data('user-id');
                 this.openUpdateModal(userId);

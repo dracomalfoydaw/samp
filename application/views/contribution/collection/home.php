@@ -31,5 +31,6 @@
 
 
 <?php $this->load->view("contribution/collection/showdetails") ?>
+<?php $this->load->view("contribution/collection/syncform") ?>
 
 
