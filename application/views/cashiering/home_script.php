@@ -26,7 +26,7 @@
                 totalAmount: 0,
                 totalDiscount: 0,
                 showerrorcashierpayment:"",
-
+                paymentModal : null,
                
                 selectedPaymentType: '' // stores selected payment type
             }
@@ -194,7 +194,14 @@
                 this.TotalCashChanged = 0.00;
                 this.showerrorcashierpayment = "";
                 $("#showerrorcashierpayment").hide();
-                $('#payment_modal').modal('show');
+
+                this.paymentModal = new bootstrap.Modal(document.getElementById('payment_modal'), {
+                    backdrop: 'static', // Prevent closing when clicking outside
+                    keyboard: false, // Prevent closing with ESC key
+                  });
+                  this.paymentModal.show();
+
+                //$('#payment_modal').modal('show');
             },
             confirmpayNow()
             {
@@ -336,6 +343,7 @@
             });
             if(this.setORnumber != "set")
             {
+                this.OrNumber=1;
                 $('#cashierSetup_modal').modal('show');
             }
         }

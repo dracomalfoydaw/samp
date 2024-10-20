@@ -63,6 +63,17 @@ $route['members/updateinfo'] = 'controllermembershipinfo101/updatetransactionadd
 $route['members/updateinfo2'] = 'controllermembershipinfo101/updatemasoninfo'; 
 $route['members/delete'] = 'controllermembershipinfo101/deletetransactioninfo'; 
 $route['members/show/(:any)'] = 'controllermembershipinfo101/individual_details/$1';
+
+$route['members/remarks/table/(:any)'] = 'controllermembershipinfo101/remarks/table/$1';
+$route['members/remarks/delete'] = 'controllermembershipinfo101/remarks/delete';
+$route['members/remarks/add'] = 'controllermembershipinfo101/remarks/add';
+
+$route['members/officerrecord/table/(:any)'] = 'controllermembershipinfo101/officerrecord/table/$1';
+$route['members/officerrecord/delete'] = 'controllermembershipinfo101/officerrecord/delete';
+$route['members/officerrecord/add'] = 'controllermembershipinfo101/officerrecord/add';
+
+//$route['members/remarks/(:any)/(:any)'] = 'controllermembershipinfo101/remarks/$1/$1';
+//$route['members/remarks/(:any)'] = 'controllermembershipinfo101/remarks/$1';
 $route['members/uploadImage'] = 'controllermembershipinfo101/uploadImage'; 
 
 

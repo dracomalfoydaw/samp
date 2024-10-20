@@ -224,6 +224,230 @@ class Membershipinfomodel extends CI_Model {
 		return $obj;
 	}
 
+	function search_data_officerrecord($start,$limit,$sortColumn,$sortOrder,$search,$session_log,$id)
+	{
+		$UniqueID	 = $id;
+		$ProfileID	 = "";
+		$query_res = $this->db->query("select * from tb_profile where UniqueID='$UniqueID'");
+		foreach ( $query_res->result() as $row) {
+			$ProfileID = $row->ProfileID;
+		}
+		$entryBy =  $this->encryption->decrypt($this->session->userdata('uid'));
+	    if($start <0 or !is_numeric($start))
+        {
+            $start = 0;
+        }
+        if($limit <5 or !is_numeric($start))
+        {
+            $limit = 5;
+        }
+
+       
+		//option 2 for query
+		if ($search) {
+			$this->db->or_group_start(); 
+			$this->db->or_like('DateTransaction', $search);
+			$this->db->or_like('Lodgeno', $search);
+			$this->db->or_like('LodgeName', $search);
+			$this->db->or_like('Type', $search);
+			$this->db->or_like('Position', $search);
+			$this->db->or_like('Remarks', $search);
+			$this->db->group_end(); // Close the group
+		}
+		//end of option 2 for query
+
+        // Apply sorting if sortColumn is provided
+        if ($sortColumn) {
+        	if($sortOrder !="asc")
+        	{
+        		$sortOrder = "desc";
+        	}
+        	switch ($sortColumn) {
+			    case "Date":			        
+            		$this->db->order_by("DateTransaction", $sortOrder);
+			        break;
+			    case "Remarks":			        
+            		$this->db->order_by("DateTransaction", $sortOrder);
+			        break;
+			    // more cases...
+			    default:
+			        $this->db->order_by("id", $sortOrder);
+			}
+
+        }
+
+        if(CNF_VIEW_DELETE_RECORD!=true)
+        {
+        	$this->db->where('is_del',0); // Add the is_active condition
+        }
+        $this->db->where('ProfileID', $ProfileID); // Add the is_active condition
+        $this->db->where('UniqueID',$UniqueID); // Add the is_active condition
+
+        $query = $this->db->get('tb_profile_officer_positions', $limit, $start);
+        $data = $query->result();
+
+
+        $obj = [];
+        foreach ( $data as $row) {
+        	if($row->is_del== 0) //data is not deleted
+        	{
+        		$deleted = "Not Deleted";
+        	}
+        	elseif($row->is_del== 1) //data is deleted
+        	{
+        		$deleted = "Record Deleted";
+        	}
+        	else
+        	{
+        		$deleted = "Unknown Status";
+        	}
+
+        	if( $row->is_active== 1 ) //data is not deleted
+        	{
+        		$active = "Active";
+        	}
+        	elseif($row->is_active== 0 ) //data is deleted
+        	{
+        		$active = "Inactive";
+        	}
+        	else
+        	{
+        		$active = "Unknown Status";
+        	}
+
+        	if(!($active =="Unknown Status" or  $deleted == "Unknown Status"))
+        	{
+        		array_push($obj,[
+	                'TransID' => $this->encryption->encrypt($row->id),
+	                'DateTransaction' => $this->htmlpurifier_lib->purify_decode($row->DateTransaction),
+	                'LodgeNo' => $this->htmlpurifier_lib->purify_decode($row->Lodgeno),
+	                'LodgeName' => $this->htmlpurifier_lib->purify_decode($row->LodgeName),
+	                'Type' => $this->htmlpurifier_lib->purify_decode($row->Type),
+	                'Position' => $this->htmlpurifier_lib->purify_decode($row->Position),
+
+	                'Remarks' => $this->htmlpurifier_lib->purify_decode($row->Remarks),
+	                'RecordStatus' => $deleted,
+	                'RecordActive' => $active,
+	            ]);
+        	}
+
+        	
+        }
+        if($search !=''):
+	        $note = "Search Value: ".$search;
+	       // $this->user_model->insertLog($note,"search" ,$entryBy ,"tb_profile", $entryBy,'');
+    	endif;
+
+		return array('session_log' => $session_log ,'data' => $obj , 'success' => true,);
+	}
+
+	function search_data_remarks($start,$limit,$sortColumn,$sortOrder,$search,$session_log,$id)
+	{
+		$UniqueID	 = $id;
+		$ProfileID	 = "";
+		$query_res = $this->db->query("select * from tb_profile where UniqueID='$UniqueID'");
+		foreach ( $query_res->result() as $row) {
+			$ProfileID = $row->ProfileID;
+		}
+		$entryBy =  $this->encryption->decrypt($this->session->userdata('uid'));
+	    if($start <0 or !is_numeric($start))
+        {
+            $start = 0;
+        }
+        if($limit <5 or !is_numeric($start))
+        {
+            $limit = 5;
+        }
+
+       
+		//option 2 for query
+		if ($search) {
+			$this->db->or_group_start(); 
+			$this->db->or_like('Remarks', $search);
+			$this->db->group_end(); // Close the group
+		}
+		//end of option 2 for query
+
+        // Apply sorting if sortColumn is provided
+        if ($sortColumn) {
+        	if($sortOrder !="asc")
+        	{
+        		$sortOrder = "desc";
+        	}
+        	switch ($sortColumn) {
+			    case "Date":			        
+            		$this->db->order_by("DateTransaction", $sortOrder);
+			        break;
+			    case "Remarks":			        
+            		$this->db->order_by("DateTransaction", $sortOrder);
+			        break;
+			    // more cases...
+			    default:
+			        $this->db->order_by("id", $sortOrder);
+			}
+
+        }
+
+        if(CNF_VIEW_DELETE_RECORD!=true)
+        {
+        	$this->db->where('is_del',0); // Add the is_active condition
+        }
+        $this->db->where('ProfileID', $ProfileID); // Add the is_active condition
+        $this->db->where('UniqueID',$UniqueID); // Add the is_active condition
+
+        $query = $this->db->get('tb_profile_remarks', $limit, $start);
+        $data = $query->result();
+
+
+        $obj = [];
+        foreach ( $data as $row) {
+        	if($row->is_del== 0) //data is not deleted
+        	{
+        		$deleted = "Not Deleted";
+        	}
+        	elseif($row->is_del== 1) //data is deleted
+        	{
+        		$deleted = "Record Deleted";
+        	}
+        	else
+        	{
+        		$deleted = "Unknown Status";
+        	}
+
+        	if( $row->is_active== 1 ) //data is not deleted
+        	{
+        		$active = "Active";
+        	}
+        	elseif($row->is_active== 0 ) //data is deleted
+        	{
+        		$active = "Inactive";
+        	}
+        	else
+        	{
+        		$active = "Unknown Status";
+        	}
+
+        	if(!($active =="Unknown Status" or  $deleted == "Unknown Status"))
+        	{
+        		array_push($obj,[
+	                'TransID' => $this->encryption->encrypt($row->id),
+	                'DateTransaction' => $this->htmlpurifier_lib->purify_decode($row->DateTransaction),
+	                'Remarks' => $this->htmlpurifier_lib->purify_decode($row->Remarks),
+	                'RecordStatus' => $deleted,
+	                'RecordActive' => $active,
+	            ]);
+        	}
+
+        	
+        }
+        if($search !=''):
+	        $note = "Search Value: ".$search;
+	       // $this->user_model->insertLog($note,"search" ,$entryBy ,"tb_profile", $entryBy,'');
+    	endif;
+
+		return array('session_log' => $session_log ,'data' => $obj , 'success' => true,);
+	}
+
 	function search_data($start,$limit,$sortColumn,$sortOrder,$search,$session_log)
 	{
 		$entryBy =  $this->encryption->decrypt($this->session->userdata('uid'));
@@ -389,6 +613,80 @@ class Membershipinfomodel extends CI_Model {
 		return array('session_log' => $session_log , 'success' => true,);
 	}
 
+	function delete_remarks($temp_id_res,$session_log)
+	{	    
+		$entryBy = $this->encryption->decrypt($this->session->userdata('uid'));
+		$count = 0;
+		$transid = "";
+        foreach ($temp_id_res as $data) {
+        	$count++;
+            // Assuming $this->encryption->decrypt() works as expected
+            $temp_id =  $this->htmlpurifier_lib->purify($this->encryption->decrypt($data));
+            
+            // Example operations on database based on your conditions
+            if (CNF_DELETE_RECORD_PERMANENTLY == true) {
+                $this->db->where('id', $temp_id);
+                $this->db->delete('tb_profile_remarks');
+            } else {
+                $data = array('is_del' => 1, );
+                $this->db->where('id', $temp_id);
+                $this->db->update('tb_profile_remarks', $data);
+            }
+
+        	if($count==1)
+        	{
+        		$transid = $temp_id;
+        	}
+        	else
+        	{
+        		$transid .= ','.$temp_id;
+        	}
+        }
+
+        $note = "Record Deleted";
+        //$this->user_model->insertLog($note,"delete" ,$entryBy ,"tb_profile", $entryBy,$transid);
+
+        // Prepare response data
+		return array('session_log' => $session_log , 'success' => true,);
+	}
+
+	function delete_officer_remarks($temp_id_res,$session_log)
+	{	    
+		$entryBy = $this->encryption->decrypt($this->session->userdata('uid'));
+		$count = 0;
+		$transid = "";
+        foreach ($temp_id_res as $data) {
+        	$count++;
+            // Assuming $this->encryption->decrypt() works as expected
+            $temp_id =  $this->htmlpurifier_lib->purify($this->encryption->decrypt($data));
+            
+            // Example operations on database based on your conditions
+            if (CNF_DELETE_RECORD_PERMANENTLY == true) {
+                $this->db->where('id', $temp_id);
+                $this->db->delete('tb_profile_officer_positions');
+            } else {
+                $data = array('is_del' => 1, );
+                $this->db->where('id', $temp_id);
+                $this->db->update('tb_profile_officer_positions', $data);
+            }
+
+        	if($count==1)
+        	{
+        		$transid = $temp_id;
+        	}
+        	else
+        	{
+        		$transid .= ','.$temp_id;
+        	}
+        }
+
+        $note = "Record Deleted";
+        //$this->user_model->insertLog($note,"delete" ,$entryBy ,"tb_profile", $entryBy,$transid);
+
+        // Prepare response data
+		return array('session_log' => $session_log , 'success' => true,);
+	}
+
 
 	function add_get_id($session_log,$data )
 	{
@@ -412,6 +710,44 @@ class Membershipinfomodel extends CI_Model {
 
         // Prepare response data
 		return array('session_log' => $session_log , 'data' => $UniqueID, 'message_details' => '', 'success' => true,);
+	}
+
+	function add_remarks($session_log,$data )
+	{
+		$entryBy = $this->encryption->decrypt($this->session->userdata('uid')) ;
+		isset($data['entry_by']) ;
+		isset($data['is_active']) ;
+		isset($data['is_del']) ;
+		$data['entry_by'] = $entryBy;
+		$data['is_active'] = 1 ;
+		$data['is_del'] = 0;
+        $this->db->insert('tb_profile_remarks',$data);
+		$transid = $this->db->insert_id();
+
+		$note = "New Record Added";
+        //$this->user_model->insertLog($note,"add" ,$entryBy ,"tb_profile", $entryBy,$transid);
+
+        // Prepare response data
+		return array('session_log' => $session_log , 'data' => '', 'message_details' => '', 'success' => true,);
+	}
+
+	function add_officer_remarks($session_log,$data )
+	{
+		$entryBy = $this->encryption->decrypt($this->session->userdata('uid')) ;
+		isset($data['entry_by']) ;
+		isset($data['is_active']) ;
+		isset($data['is_del']) ;
+		$data['entry_by'] = $entryBy;
+		$data['is_active'] = 1 ;
+		$data['is_del'] = 0;
+        $this->db->insert('tb_profile_officer_positions',$data);
+		$transid = $this->db->insert_id();
+
+		$note = "New Record Added";
+        //$this->user_model->insertLog($note,"add" ,$entryBy ,"tb_profile", $entryBy,$transid);
+
+        // Prepare response data
+		return array('session_log' => $session_log , 'data' => '', 'message_details' => '', 'success' => true,);
 	}
 
 	function add($session_log,$data )

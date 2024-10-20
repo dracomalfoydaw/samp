@@ -307,7 +307,7 @@ app.component('table-content', {
                   <div class ="row">
                     <div class="col-md-3">                      
                       <label for="Email" class="form-label">Email Address</label>
-                      <input :disabled="isSubmit" type="email" class="form-control" id="Email" name="Email" v-model="newForm.Email" required>
+                      <input :disabled="isSubmit" type="email" class="form-control" id="Email" name="Email" v-model="newForm.Email" >
                       <span v-if="errors.Email" style="color: red;">{{ errors.Email }}</span>
                     </div>
                   </div>
@@ -595,9 +595,9 @@ app.component('table-content', {
           $(".messagebox_error").fadeOut("slow");
           const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
           this.errors = {};
-          if (!this.newForm.Email) {
+         /* if (!this.newForm.Email) {
             this.errors.Email = 'Email is required.';
-          }
+          }*/
           else if (!emailPattern.test(this.newForm.Email)) {
             this.errors.Email = 'Invalid email address.';
           }

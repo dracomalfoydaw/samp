@@ -105,8 +105,8 @@ class Controllermembershipinfo101 extends CI_Controller {
         	{
         		redirect('members',301);
         	}
-        	$this->data['pageTitle'] = "My Account";
-			$this->data['pageSubtitle'] = "Profile";
+        	$this->data['pageTitle'] = "Members Information";
+			$this->data['pageSubtitle'] = "Profile Detail";
 			$this->data['pageSubtitleTable'] = "";
 			$this->data['pageTitleOption'] = "";
 			$this->data['content'] = $this->load->view('members/details/home',$this->data,true);
@@ -115,6 +115,203 @@ class Controllermembershipinfo101 extends CI_Controller {
 			$this->load->view('layouts/main', $this->data );
         else:
 			redirect('members',301);			
+        endif;
+	}
+
+	public function officerrecord($category = null,$id = null)
+	{
+		$system_user_login = $this->session->userdata('logged_in_session') ;
+		if($category =="delete" or $category =="add" ):
+			$session_log  = $this->encryption->decrypt($this->input->post('session_log'));
+		else:
+        	$session_log  = $this->encryption->decrypt($this->input->get('session_log'));
+		endif;
+        if($session_log==CNF_SESSION_LOG): // session for ajax is active
+        	if($system_user_login == true):
+        		$session_log = true;
+        	else:
+        		$session_log = true;
+        	endif;
+
+        	if($category =="add" ):
+        		$this->form_validation->set_rules('Remarks', 'Remarks', 'required|trim|htmlspecialchars');
+        		$this->form_validation->set_rules('LodgeNo', 'Lodge Number', 'required|trim|htmlspecialchars');
+        		$this->form_validation->set_rules('LodgeName', 'Lodge Name', 'required|trim|htmlspecialchars');
+        		$this->form_validation->set_rules('Type', 'Type', 'required|trim|htmlspecialchars');
+        		$this->form_validation->set_rules('Position', 'Position Name', 'required|trim|htmlspecialchars');
+
+        		$Remarks  =  $this->htmlpurifier_lib->purify($this->input->post('Remarks'));
+		    	$DateTransaction  =  $this->htmlpurifier_lib->purify($this->input->post('DateTransaction'));
+		    	$LodgeNo  =  $this->htmlpurifier_lib->purify($this->input->post('LodgeNo'));		    	
+		    	$LodgeName  =  $this->htmlpurifier_lib->purify($this->input->post('LodgeName'));
+		    	$Type  =  $this->htmlpurifier_lib->purify($this->input->post('Type'));
+		    	$Position  =  $this->htmlpurifier_lib->purify($this->input->post('Position'));
+		    	$UniqueID  =  $this->htmlpurifier_lib->purify($this->input->post('ProfileID'));
+
+		    	if ($this->form_validation->run()) {
+        			$form_validation_status = true;
+        		}
+        		else
+        		{
+        			$form_validation_status = false;
+        			$message_details = validation_errors('<li>', '</li>');//'The following errors occurred <br>' . validation_errors('<li>', '</li>');
+        		}
+        		if($form_validation_status == true):
+
+        			$ProfileID	 = "";
+					$query_res = $this->db->query("select * from tb_profile where UniqueID='$UniqueID'");
+					foreach ( $query_res->result() as $row) {
+						$ProfileID = $row->ProfileID;
+					}
+        			$data_transaction = array(
+			    		'Remarks' => $Remarks,
+			    		'DateTransaction' => $DateTransaction,
+			    		'LodgeNo' => $LodgeNo,
+			    		'LodgeName' => $LodgeName,
+			    		'LodgeName' => $LodgeName,
+			    		'Type' => $Type,
+			    		'Position' => $Position,
+			    		'UniqueID' => $UniqueID,
+			    		'ProfileID' => $ProfileID,
+			    	);
+			    	$data = $this->members->add_officer_remarks($session_log,$data_transaction);
+        		else:
+	        		$data = array('session_log' => $session_log ,'data' => '' , 'message_details' => $message_details, 'success' => false,);
+	        	endif;
+
+			   
+
+		    	
+        	elseif($category =="delete" ):
+        		// Check if 'data' is set in $_POST and is not empty
+				if (isset($_POST['data']) && !empty($_POST['data'])) {
+				    // Decode JSON data from Vue.js
+				    $temp_id_res = json_decode($_POST['data'], true);
+
+				    if ($temp_id_res !== null) { // Check if decoding was successful
+
+				    	$data = $this->members->delete_officer_remarks($temp_id_res,$session_log);
+				    } else {
+				        // Handle case where JSON decoding failed
+				        $data = array('session_log' => $session_log,  'success' => false);
+				    }
+				} else {
+				    // Handle case where 'data' is not set or empty
+				    $data = array('session_log' => $session_log,'success' => false);
+				}
+        	else:
+        		
+	        	$id = $this->htmlpurifier_lib->purify($id);
+	            // Get the start and limit parameters from the request
+	            $start = $this->input->get('start');
+	            $limit = $this->input->get('limit');
+	            $search = $this->htmlpurifier_lib->purify($this->input->get('search'));
+	            $sortColumn = $this->htmlpurifier_lib->purify($this->input->get('sortColumn'));
+	            $sortOrder = $this->htmlpurifier_lib->purify($this->input->get('sortOrder'));  
+
+	            $data = $this->members->search_data_officerrecord($start,$limit,$sortColumn,$sortOrder,$search,$session_log,$id ); 
+        	endif;
+        	
+            // Return the data as JSON
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($data));
+   
+
+        else:
+            redirect('home',301);
+        endif;
+	}
+
+	public function remarks($category = null,$id = null)
+	{
+		$system_user_login = $this->session->userdata('logged_in_session') ;
+		if($category =="delete" or $category =="add" ):
+			$session_log  = $this->encryption->decrypt($this->input->post('session_log'));
+		else:
+        	$session_log  = $this->encryption->decrypt($this->input->get('session_log'));
+		endif;
+        if($session_log==CNF_SESSION_LOG): // session for ajax is active
+        	if($system_user_login == true):
+        		$session_log = true;
+        	else:
+        		$session_log = true;
+        	endif;
+
+        	if($category =="add" ):
+        		$this->form_validation->set_rules('Remarks', 'Remarks', 'required|trim|htmlspecialchars');
+
+        		$Remarks  =  $this->htmlpurifier_lib->purify($this->input->post('Remarks'));
+		    	$DateTransaction  =  $this->htmlpurifier_lib->purify($this->input->post('DateTransaction'));		    	
+		    	$UniqueID  =  $this->htmlpurifier_lib->purify($this->input->post('ProfileID'));
+
+		    	if ($this->form_validation->run()) {
+        			$form_validation_status = true;
+        		}
+        		else
+        		{
+        			$form_validation_status = false;
+        			$message_details = validation_errors('<li>', '</li>');//'The following errors occurred <br>' . validation_errors('<li>', '</li>');
+        		}
+        		if($form_validation_status == true):
+
+        			$ProfileID	 = "";
+					$query_res = $this->db->query("select * from tb_profile where UniqueID='$UniqueID'");
+					foreach ( $query_res->result() as $row) {
+						$ProfileID = $row->ProfileID;
+					}
+        			$data_transaction = array(
+			    		'Remarks' => $Remarks,
+			    		'DateTransaction' => $DateTransaction,
+			    		'UniqueID' => $UniqueID,
+			    		'ProfileID' => $ProfileID,
+			    	);
+			    	$data = $this->members->add_remarks($session_log,$data_transaction);
+        		else:
+	        		$data = array('session_log' => $session_log ,'data' => '' , 'message_details' => $message_details, 'success' => false,);
+	        	endif;
+
+			   
+
+		    	
+        	elseif($category =="delete" ):
+        		// Check if 'data' is set in $_POST and is not empty
+				if (isset($_POST['data']) && !empty($_POST['data'])) {
+				    // Decode JSON data from Vue.js
+				    $temp_id_res = json_decode($_POST['data'], true);
+
+				    if ($temp_id_res !== null) { // Check if decoding was successful
+
+				    	$data = $this->members->delete_remarks($temp_id_res,$session_log);
+				    } else {
+				        // Handle case where JSON decoding failed
+				        $data = array('session_log' => $session_log,  'success' => false);
+				    }
+				} else {
+				    // Handle case where 'data' is not set or empty
+				    $data = array('session_log' => $session_log,'success' => false);
+				}
+        	else:
+        		
+	        	$id = $this->htmlpurifier_lib->purify($id);
+	            // Get the start and limit parameters from the request
+	            $start = $this->input->get('start');
+	            $limit = $this->input->get('limit');
+	            $search = $this->htmlpurifier_lib->purify($this->input->get('search'));
+	            $sortColumn = $this->htmlpurifier_lib->purify($this->input->get('sortColumn'));
+	            $sortOrder = $this->htmlpurifier_lib->purify($this->input->get('sortOrder'));  
+
+	            $data = $this->members->search_data_remarks($start,$limit,$sortColumn,$sortOrder,$search,$session_log,$id ); 
+        	endif;
+        	
+            // Return the data as JSON
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($data));
+   
+
+        else:
+            redirect('home',301);
         endif;
 	}
 
@@ -162,41 +359,7 @@ class Controllermembershipinfo101 extends CI_Controller {
 
 	public function updatetransactioninfo()
 	{
-		/*$this->form_validation->set_rules('firstName', 'First Name', 'required|trim|htmlspecialchars');
 		
-		$this->form_validation->set_rules('lastName', 'Last Name', 'required|trim|htmlspecialchars');
-		$this->form_validation->set_rules('userID', 'ID Number', 'required|trim|htmlspecialchars');
-		if ($this->form_validation->run()) {
-			$firstName  = $this->htmlpurifier_lib->purify($this->input->post('firstName'));
-            $middleName = $this->htmlpurifier_lib->purify($this->input->post('middleName'));
-            $lastName = $this->htmlpurifier_lib->purify($this->input->post('lastName'));
-            $nameExtension = $this->htmlpurifier_lib->purify($this->input->post('nameExtension'));
-            
-            $email = $this->htmlpurifier_lib->purify($this->input->post('email'));
-            $userID = $this->htmlpurifier_lib->purify($this->input->post('userID'));
-
-
-
-	        // Call the model method to update the profile
-	        $result = $this->members->updateProfile($userID, $firstName, $middleName, $lastName, $nameExtension, $email);
-
-	        $data = array(
-		        'message' =>  $result->SuccessMessage,  // Assuming success when validation passes
-		        'message_details' => '',
-		        
-		    );
-		
-		} else {
-		    // Form validation failed, there are errors
-		    $message_details = validation_errors('<li>', '</li>');//'The following errors occurred <br>' . validation_errors('<li>', '</li>');
-		    $data = array(
-		        'message' => "error",
-		        'message_details' =>  json_encode($_POST),//$message_details,
-		        'id' => '',
-		    );
-		}
-
-		echo json_encode($data);*/
 
 		$system_user_login = $this->session->userdata('logged_in_session') ;
 	   	$session_key  = $this->encryption->decrypt($this->input->post('session_log'));
@@ -292,62 +455,6 @@ class Controllermembershipinfo101 extends CI_Controller {
 
 	public function savetransactioninfo()
 	{
-
-		/*$this->form_validation->set_rules('firstName', 'First Name', 'required|trim|htmlspecialchars');
-		
-		$this->form_validation->set_rules('lastName', 'Last Name', 'required|trim|htmlspecialchars');
-		$this->form_validation->set_rules('email', 'Email', 'required|trim|htmlspecialchars|valid_email|is_unique[tb_profile.email]');
-		//$this->form_validation->set_rules('email', 'Email', 'required|trim|htmlspecialchars');
-		$this->form_validation->set_rules('idnumber', 'ID Number', 'required|trim|htmlspecialchars|is_unique[tb_profile.UniqueID]');
-
-		// Check if form validation passed
-		if ($this->form_validation->run()) {
-		    // Form validation passed, no errors
-		    
-                    $firstName  = $this->htmlpurifier_lib->purify($this->input->post('firstName'));
-                    $middleName = $this->htmlpurifier_lib->purify($this->input->post('middleName'));
-                    $lastName = $this->htmlpurifier_lib->purify($this->input->post('lastName'));
-                    $nameExtension = $this->htmlpurifier_lib->purify($this->input->post('nameExtension'));
-                    
-                    $email = $this->htmlpurifier_lib->purify($this->input->post('email'));
-                    $idnumber = $this->htmlpurifier_lib->purify($this->input->post('idnumber'));
-                    $defaultuseraccount = $this->htmlpurifier_lib->purify($this->input->post('defaultuseraccount'));
-
-
-                    $system_user = 1;
-                
-                    $result = $this->members->insertProfile($idnumber, $firstName, $middleName, $lastName, $nameExtension, $email);
-                    if($defaultuseraccount=="defaultsystemuser")
-                    {
-                    	$result = $this->User_model->insertUser($idnumber, $idnumber,  $email , 3, $result->ProfileID ,  $firstName  , $lastName, 1, $system_user);
-                    	$data = array(
-					        'message' =>  $result->SuccessMessage,  // Assuming success when validation passes
-					        'message_details' => '',
-					        
-					    );
-                    }
-                    else
-                    {
-                    	$data = array(
-					        'message' =>  $result->SuccessMessage,  // Assuming success when validation passes
-					        'message_details' => '',
-					        
-					    );
-                    }
-
-		    
-		} else {
-		    // Form validation failed, there are errors
-		    $message_details = validation_errors('<li>', '</li>');//'The following errors occurred <br>' . validation_errors('<li>', '</li>');
-		    $data = array(
-		        'message' => "error",
-		        'message_details' => $message_details,
-		        'id' => '',
-		    );
-		}
-
-		echo json_encode($data);*/
-
 
 		$system_user_login = $this->session->userdata('logged_in_session') ;
 	   	$session_key  = $this->encryption->decrypt($this->input->post('session_log'));
@@ -532,7 +639,7 @@ class Controllermembershipinfo101 extends CI_Controller {
 		         ->set_content_type('application/json')
 		         ->set_output(json_encode($data));
         else:            
-			redirect('template',301);
+			redirect('members',301);
         endif;
 
 	}

@@ -808,4 +808,1154 @@ app.component('account-mason-card', {
   `
 });
 
+
+app.component('account-remarks-card', {
+    template: `
+    
+    <div class="row ">
+      <div class="col-md-5">
+        <button class="tips btn btn-sm  btn-info" @click="newRecord"> <i class="fa fa-plus"></i> Add New</button>
+        <button class="tips btn btn-sm  btn-danger" v-if="selectedRows.length" @click="deleteRecord"> <i class="fa fa-trash"></i> Delete</button>
+      </div>
+      <div class="col-md-3">  
+
+      </div>
+      <div class="col-md-4">
+        <input type="text" class="form-control" v-model="searchQuery" @keyup.enter="onSearch" placeholder="Search...">
+      </div>
+    </div>
+    <div class="datatable">
+      <div class="row ">
+        <div class="col-md-5">
+         
+        </div>
+        <div class="col-md-3">            
+            <div class="form-group has-feedback justify-content-center align-items-center" id="loading" style="display: none;">
+                <div class="justify-content-center align-items-center">
+                  <img src="./assets/imgs/loading.gif" alt="Loading" style="width:150px;height:150px;">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+        
+        </div>
+      </div>
+      <div class="datatable" style="width: 100%; overflow-x: auto;">
+      <table class="table table-responsive table-bordered table-hover" id="remarks_table" width="100%" cellspacing="0"></table>
+      </div>
+      <div class="row">
+        <div class="col-md-6 d-flex align-items-center">
+          <div class="row-per-page">
+            <select class="form-control form-control-inline" id="rowsPerPage" v-model="rowsPerPage" @change="updateRowsPerPage">
+              <option v-for="option in rowOptions" :key="option.value" :value="option.value">{{ option.text }}</option>
+            </select>
+          </div>
+          <div class="sort-options ml-2">
+            <select id="sortColumn" class="form-control form-control-inline" v-model="sortColumn" @change="updateSort">
+              <option v-for="option in sortOptions" :key="option.value" :value="option.value">{{ option.text }}</option>
+            </select>
+            <select id="sortOrder" class="form-control form-control-inline ml-2" v-model="sortOrder" @change="updateSort">
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="pagination-controls">
+            <button class="btn btn-primary" @click="prevPage" :disabled="isDisabledPrevPage || currentPage === 1">Previous</button>
+            <span>Page {{ currentPage }} of many</span>
+            <button class="btn btn-primary" :disabled="isDisabledNextPage" @click="nextPage">Next</button>
+          </div>
+        </div>
+      </div>
+      <!-- Delete Modal -->
+      <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            
+              <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" @click="closeModal" aria-label="Close" :disabled="isDeleting">X</button>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to delete this record?
+                <div v-if="isDeleting">
+                  <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @click="closeModal" :disabled="isDeleting">Cancel</button>
+                <button type="submit" class="btn btn-danger"  @click="confirmDelete"  :disabled="isDeleting">Delete</button>
+              </div>
+            
+          </div>
+        </div>
+      </div>
+
+      <!-- New Form Modal -->
+      <div class="modal fade" id="newFormModal" tabindex="-1" aria-labelledby="newFormModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-l">
+          <div class="modal-content">
+            <form @submit.prevent="confirmSubmit">
+              <div class="modal-header">
+                <h5 class="modal-title" id="newFormModalLabel">New Record</h5>
+                <button type="button" class="btn-close" @click="closenewFormModal" :disabled="isSubmit" aria-label="Close">X</button>
+              </div>
+             
+              <div class="modal-body messagebox_error" style="display: none;">
+                <div class="alert alert-danger "  role="alert">
+                  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                  <span class="sr-only">Error:</span>
+                  <a style="color:black;"id="message_error" disabled >
+                    <b>You have following error(s):</b> 
+                    <p>Something went wrong. Contact the administrator for the problem.</p>
+                  </a>
+                </div> 
+              </div> 
+              <div class="modal-body messagebox" style="display: none;">
+                <div class="alert alert-danger "  role="alert">
+                  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                  <span class="sr-only">Error:</span>
+                  <a style="color:black;"id="message_error" disabled >
+                    <b>You have following error(s):</b> 
+                    <ul id="error_content">
+                       
+                    </ul>
+                  </a>
+                </div> 
+              </div> 
+              
+              <div class="modal-body">
+                <div v-if="isSubmit">
+                  <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;"></div>
+                  </div>
+                </div>
+                <div v-if="isSubmit">
+                </div>                
+
+                
+                <h3>Remarks</h3>
+                <hr>
+                <div class="mb-3">
+
+                  <div class ="row">
+                    <div class="col-md-12">
+                      <label for="TransactionDate" class="form-label">Transaction Date</label>
+                      <input :disabled="isSubmit" type="date" class="form-control" id="TransactionDate" name="TransactionDate" v-model="newForm.TransactionDate" >
+                      <span v-if="errors.TransactionDate" style="color: red;">{{ errors.TransactionDate }}</span>
+                    </div>
+                    <div class="col-md-12">
+                      <label for="Remarks" class="form-label">Remarks</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="Remarks" name="Remarks" v-model="newForm.Remarks" required>
+                      <span v-if="errors.Remarks" style="color: red;">{{ errors.Remarks }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                
+
+                
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @click="closenewFormModal" :disabled="isSubmit">Cancel</button>
+                <button type="submit" class="btn btn-primary" :disabled="isSubmit">Submit</button>
+              </div>
+            </form>           
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  data() {
+    return {
+      table: null,
+      isDisabledNextPage: null,
+      isDisabledPrevPage: null,
+      currentPage: 1,
+      searchQuery: '',
+      rowsPerPage: 5, // Default rows per page
+      sortColumn: '',
+      sortOrder: 'asc', // Default sort order
+      rowOptions: [
+        { value: '5', text: '5' },
+        { value: '10', text: '10' },
+        { value: '25', text: '25' },
+        { value: '50', text: '50' },
+        { value: '100', text: '100' }
+      ],
+      sortOptions: [
+        { value: '', text: 'Sort by' },
+      ],      
+      selectedRows: [],
+      session_log: session_log,
+      rowNumber: null,
+      /**delete form**/  
+      entryIdToDelete: null,
+      isDeleting: false,
+      deleteModal: null,
+      /**New form**/      
+      errors : {},      
+      isSubmit: false,
+      isAutomatic: false,
+      newForm: {},
+      newFormModal : null,
+    };
+  },
+  watch: {
+      'newForm.studNumRad'(newVal) {
+          this.isAutomatic = newVal === 'auto-num';
+      }
+  },
+  methods: {
+    async fetchData(page, query = '', sortColumn = '', sortOrder = 'asc') {
+      this.isDisabledNextPage = true;
+      this.isDisabledPrevPage = true;
+      this.showLoading(true);
+      this.table.clear();
+      this.table.draw();
+      try {
+        const response = await axios.get(base_url + 'members/remarks/table/'+ini_username, {
+          params: {
+            start: (page - 1) * this.rowsPerPage,
+            limit: this.rowsPerPage,
+            search: query,
+            sortColumn: sortColumn,
+            sortOrder: sortOrder,
+            session_log: this.session_log,
+          }
+        });
+        if(response.data.session_log && response.data.success) {
+          this.isDisabledNextPage  = false;
+          this.isDisabledPrevPage  = false;
+          table_data =  response.data.data; 
+          if(response.data.data.length <=0)
+          {
+            this.isDisabledNextPage = true;
+          } 
+        }
+        else
+        {
+          alert('Session TimeOut. Reloading the Page');
+          location.reload(true);
+        }
+        this.table.clear();
+        this.table.rows.add(table_data);
+        this.table.draw();
+        this.$nextTick(() => {
+          this.addEventListeners();
+        });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        this.showLoading(false);
+      }
+    },
+    nextPage() {
+      this.currentPage++;
+      this.fetchData(this.currentPage, this.searchQuery, this.sortColumn, this.sortOrder);
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+        this.fetchData(this.currentPage, this.searchQuery, this.sortColumn, this.sortOrder);
+      }
+    },
+    onSearch() {
+      this.currentPage = 1;
+      this.fetchData(this.currentPage, this.searchQuery, this.sortColumn, this.sortOrder);
+    },
+    updateRowsPerPage() {
+      this.currentPage = 1;
+      this.fetchData(this.currentPage, this.searchQuery, this.sortColumn, this.sortOrder);
+    },
+    updateSort() {
+      this.currentPage = 1;
+      this.fetchData(this.currentPage, this.searchQuery, this.sortColumn, this.sortOrder);
+    },
+    showLoading(show) {
+      const loadingElement = document.getElementById('loading');
+      if (loadingElement) {
+        loadingElement.style.display = show ? 'block' : 'none';
+      }
+    },
+    
+
+    /**New form**/    
+    newRecord() {
+      this.newFormModal = new bootstrap.Modal(document.getElementById('newFormModal'), {
+        backdrop: 'static', // Prevent closing when clicking outside
+        keyboard: false, // Prevent closing with ESC key
+      });
+      this.newFormModal.show();
+    },
+
+    confirmSubmit() {
+      try {   
+          $(".messagebox").fadeOut("slow");
+          $(".messagebox_error").fadeOut("slow");
+          const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+          this.errors = {};
+          if (!this.newForm.Remarks) {
+            this.errors.Remarks = 'Remarks is required.';
+          }
+          
+          
+          if (Object.keys(this.errors).length === 0) {
+            this.isSubmit = true;
+            var formdata = new FormData();
+            formdata.append('Remarks', this.newForm.Remarks );
+            formdata.append('session_log', this.session_log);
+            formdata.append('DateTransaction', this.newForm.TransactionDate);
+            formdata.append('ProfileID', ini_username);
+
+            var address = base_url + 'members/remarks/add';
+            axios.post(address, formdata,)
+            .then(response_server => {
+              const response = response_server.data;
+              console.log(response);
+              if (response.session_log && response.success) {
+                this.newForm= {};
+
+                this.currentPage = 1;
+                this.selectedRows = [];
+                this.fetchData(this.currentPage, this.searchQuery, this.sortColumn, this.sortOrder);
+                this.newFormModal.hide();
+                $(".messagebox").fadeOut("slow");
+              }
+              else if(response.session_log && response.success == false)
+              {
+                $("#error_content").html(response.message_details);
+                $(".messagebox").fadeIn("slow");
+              }
+              else
+              {
+                alert('Session TimeOut. Reloading the Page');
+                //location.reload(true);
+              }
+              this.isSubmit = false;
+            })
+            .catch(error => {
+              $(".messagebox_error").fadeIn("slow");
+              this.isSubmit = false;
+            });
+          }
+      } catch (error) {
+        this.newFormModal.hide();
+        console.error('Error of fetching data:', error);
+        alert('An error occurred while fetching the record.');
+      }
+    },
+    closenewFormModal() {
+      this.newFormModal.hide();
+    },
+    
+    /**delete row**/
+    deleteRow(entryId,rowNumber) {
+      this.entryIdToDelete = entryId;
+      this.rowNumber = rowNumber;
+      this.deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
+        backdrop: 'static', // Prevent closing when clicking outside
+        //keyboard: false // Prevent closing with ESC key
+      });
+      this.deleteModal.show();
+    },
+
+    async confirmDelete() {
+      this.isDeleting = true;
+      try {     
+          var formdata = new FormData();
+          var selectedRowsJSON = JSON.stringify(this.selectedRows);
+          formdata.append('session_log', this.session_log);
+          formdata.append('data', selectedRowsJSON);
+          const response = await axios.post(base_url + 'members/remarks/delete', formdata);
+          if (response.data.session_log && response.data.success) {
+            //this.currentPage = 1;
+            this.selectedRows = [];
+            this.fetchData(this.currentPage, this.searchQuery, this.sortColumn, this.sortOrder);
+            this.closeModal();           
+          }
+          else
+          {
+            alert('Session TimeOut. Reloading the Page');
+            location.reload(true);
+          }
+      } catch (error) {
+        console.error('Error deleting data:', error);
+        alert('An error occurred while deleting the record.');
+        this.isDeleting = false;
+      }
+    },
+    closeModal() {
+      this.isDeleting = false;
+      if (this.deleteModal) {
+        this.deleteModal.hide();
+      }
+    },
+    deleteRecord() {
+      //alert('Selected IDs: ' + this.selectedRows.join(', '));
+
+      this.deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
+        backdrop: 'static', // Prevent closing when clicking outside
+        keyboard: false // Prevent closing with ESC key
+      });
+      this.deleteModal.show();
+    },
+
+ 
+
+            
+    
+    addEventListeners() {
+      const self = this;
+      $('#remarks_table').off('click', '.update-button').on('click', '.update-button', function() {
+        const entryId = $(this).data('entry-id');
+        const rowNumber = $(this).data('row-number');
+        self.updateRow(entryId,rowNumber);
+      });
+
+      $('#remarks_table').on('click', '.avatar-img', function() {
+        const imgSrc = $(this).data('img');
+        alert('You clicked on the image: ' + imgSrc);
+      });
+      
+    },
+    
+    handleCheckboxClick(event, row) {
+      if (event.target.checked) {
+        if (!this.selectedRows.includes(row.TransID)) {
+          this.selectedRows.push(row.TransID);
+        }
+      } else {
+        const index = this.selectedRows.indexOf(row.TransID);
+        if (index > -1) {
+          this.selectedRows.splice(index, 1);
+        }
+      }
+    },
+    
+    handleSelectAll(event) {
+      const isChecked = event.target.checked;
+      this.selectedRows = [];
+      $('input.row-checkbox').prop('checked', isChecked);
+      if (isChecked) {
+        this.table.rows().every((index) => {
+          const row = this.table.row(index).data();
+          this.selectedRows.push(row.TransID);
+        });
+      }
+    }
+    
+  },
+  mounted() {
+    const default_avatar = base_url+`assets/assets/img/logo.png`; // Path to default image
+    this.newForm.ProfileID = '';
+    this.newForm.studNumRad = 'auto-num';
+    this.newForm.defaultuseraccount = false;
+    this.isAutomatic = true,
+    this.table = $('#remarks_table').DataTable({
+      columns: [
+        {
+          data: null,
+          render: function (data, type, row, meta) {
+            if (row.RecordStatus === 'Record Deleted') {
+              return "";
+            } else {              
+              return `<input type="checkbox" class="row-checkbox" data-entry-id="${row.TransID}" >`;
+            }
+          },
+          width:'5%',
+          title: '<input type="checkbox" id="select-all" >',
+          orderable: false
+        },
+        
+        
+        {
+          data: 'DateTransaction',
+          title: 'Date',
+          orderable: false ,// Disable default sorting,
+          render: function(data, type, row) {
+            if (row.RecordStatus === 'Record Deleted') {
+              return '<span><del>' + data + '</del></span>';
+            } else {
+              return data;
+            }
+          }
+        },
+        {
+          data: 'Remarks',
+          title: 'Remarks',
+          orderable: false ,// Disable default sorting,
+          render: function(data, type, row) {
+            if (row.RecordStatus === 'Record Deleted') {
+              return '<span><del>' + data + '</del></span>';
+            } else {
+              return data;
+            }
+          }
+        },
+        
+        
+        {
+          data: null,
+          render: (data, type, row, meta) => {
+            if (row.RecordStatus === 'Record Deleted') {
+              return `<button class="btn btn-sm btn-danger" disabled><i class="fa fa-trash"></i> Record deleted</button>`;
+            } else {
+              if (row.RecordActive === 'Active') {
+                return `<button class="btn btn-sm btn-success" disabled> Active</button>`;
+              }
+              else
+              {
+                return `<button class="btn btn-sm btn-danger" disabled>Inactive</button>`;
+              }
+            }
+          },
+          title: 'Status',
+          width:'5%',
+          orderable: false // Disable default sorting
+        },
+
+        
+        
+      ],
+      paging: false,
+      searching: false,
+      info: false
+    });
+    this.fetchData(this.currentPage);
+
+    $('#remarks_table tbody').on('click', 'input.row-checkbox', (event) => {
+      const row = this.table.row($(event.target).closest('tr')).data();
+      this.handleCheckboxClick(event, row);
+    });
+
+    $('#select-all').on('click', (event) => {
+      this.handleSelectAll(event);
+    });
+
+
+    
+  }
+});
+
+app.component('account-officers-card', {
+    template: `
+    
+    <div class="row ">
+      <div class="col-md-5">
+        <button class="tips btn btn-sm  btn-info" @click="newRecord"> <i class="fa fa-plus"></i> Add New</button>
+        <button class="tips btn btn-sm  btn-danger" v-if="selectedRows.length" @click="deleteRecord"> <i class="fa fa-trash"></i> Delete</button>
+      </div>
+      <div class="col-md-3">  
+
+      </div>
+      <div class="col-md-4">
+        <input type="text" class="form-control" v-model="searchQuery" @keyup.enter="onSearch" placeholder="Search...">
+      </div>
+    </div>
+    <div class="datatable">
+      <div class="row ">
+        <div class="col-md-5">
+         
+        </div>
+        <div class="col-md-3">            
+            <div class="form-group has-feedback justify-content-center align-items-center" id="loading_div" style="display: none;">
+                <div class="justify-content-center align-items-center">
+                  <img src="./assets/imgs/loading.gif" alt="Loading" style="width:150px;height:150px;">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+        
+        </div>
+      </div>
+      <div class="datatable" style="width: 100%; overflow-x: auto;">
+      <table class="table table-responsive table-bordered table-hover" id="officers_table" width="100%" cellspacing="0"></table>
+      </div>
+      <div class="row">
+        <div class="col-md-6 d-flex align-items-center">
+          <div class="row-per-page">
+            <select class="form-control form-control-inline" id="rowsPerPage" v-model="rowsPerPage" @change="updateRowsPerPage">
+              <option v-for="option in rowOptions" :key="option.value" :value="option.value">{{ option.text }}</option>
+            </select>
+          </div>
+          <div class="sort-options ml-2">
+            <select id="sortColumn" class="form-control form-control-inline" v-model="sortColumn" @change="updateSort">
+              <option v-for="option in sortOptions" :key="option.value" :value="option.value">{{ option.text }}</option>
+            </select>
+            <select id="sortOrder" class="form-control form-control-inline ml-2" v-model="sortOrder" @change="updateSort">
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="pagination-controls">
+            <button class="btn btn-primary" @click="prevPage" :disabled="isDisabledPrevPage || currentPage === 1">Previous</button>
+            <span>Page {{ currentPage }} of many</span>
+            <button class="btn btn-primary" :disabled="isDisabledNextPage" @click="nextPage">Next</button>
+          </div>
+        </div>
+      </div>
+      <!-- Delete Modal -->
+      <div class="modal fade" id="deleteofficerModal" tabindex="-1" aria-labelledby="deleteOfficerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content"> 
+            
+              <div class="modal-header">
+                <h5 class="modal-title" id="deleteOfficerModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" @click="closeModal" aria-label="Close" :disabled="isDeleting">X</button>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to delete this record?
+                <div v-if="isDeleting">
+                  <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @click="closeModal" :disabled="isDeleting">Cancel</button>
+                <button type="submit" class="btn btn-danger"  @click="confirmDelete"  :disabled="isDeleting">Delete</button>
+              </div>
+            
+          </div>
+        </div>
+      </div>
+
+      <!-- New Form Modal -->
+      <div class="modal fade" id="newFormofficerModal" tabindex="-1" aria-labelledby="newFormModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-l">
+          <div class="modal-content">
+            <form @submit.prevent="confirmSubmit">
+              <div class="modal-header">
+                <h5 class="modal-title" id="newFormModalLabel">New Record</h5>
+                <button type="button" class="btn-close" @click="closenewFormModal" :disabled="isSubmit" aria-label="Close">X</button>
+              </div>
+             
+              <div class="modal-body messagebox_error" style="display: none;">
+                <div class="alert alert-danger "  role="alert">
+                  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                  <span class="sr-only">Error:</span>
+                  <a style="color:black;"id="message_error" disabled >
+                    <b>You have following error(s):</b> 
+                    <p>Something went wrong. Contact the administrator for the problem.</p>
+                  </a>
+                </div> 
+              </div> 
+              <div class="modal-body messagebox" style="display: none;">
+                <div class="alert alert-danger "  role="alert">
+                  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                  <span class="sr-only">Error:</span>
+                  <a style="color:black;"id="message_error" disabled >
+                    <b>You have following error(s):</b> 
+                    <ul id="error_content">
+                       
+                    </ul>
+                  </a>
+                </div> 
+              </div> 
+              
+              <div class="modal-body">
+                <div v-if="isSubmit">
+                  <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;"></div>
+                  </div>
+                </div>
+                <div v-if="isSubmit">
+                </div>                
+
+                
+                <h3>Remarks</h3>
+                <hr>
+                <div class="mb-3">
+
+                  <div class ="row">
+                    <div class="col-md-12">
+                      <label for="TransactionDate" class="form-label">Year Appointed</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="TransactionDate" name="TransactionDate" v-model="newForm.TransactionDate" >
+                      <span v-if="errors.TransactionDate" style="color: red;">{{ errors.TransactionDate }}</span>
+                    </div>
+                    <div class="col-md-12">
+                      <label for="LodgeNo" class="form-label">Lodge Number</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="LodgeNo" name="LodgeNo" v-model="newForm.LodgeNo" required>
+                      <span v-if="errors.LodgeNo" style="color: red;">{{ errors.LodgeNo }}</span>
+                    </div>
+                    <div class="col-md-12">
+                      <label for="LodgeName" class="form-label">LodgeName</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="LodgeName" name="LodgeName" v-model="newForm.LodgeName" required>
+                      <span v-if="errors.LodgeName" style="color: red;">{{ errors.LodgeName }}</span>
+                    </div>
+                    <div class="col-md-12">
+                      <label for="Type" class="form-label">Type</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="Type" name="Type" v-model="newForm.Type" required>
+                      <span v-if="errors.Type" style="color: red;">{{ errors.Type }}</span>
+                    </div>
+                    <div class="col-md-12">
+                      <label for="Position" class="form-label">Position</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="Position" name="Position" v-model="newForm.Position" required>
+                      <span v-if="errors.Position" style="color: red;">{{ errors.Position }}</span>
+                    </div>
+                    <div class="col-md-12">
+                      <label for="Remarks" class="form-label">Remarks</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="Remarks" name="Remarks" v-model="newForm.Remarks" required>
+                      <span v-if="errors.Remarks" style="color: red;">{{ errors.Remarks }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                
+
+                
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @click="closenewFormModal" :disabled="isSubmit">Cancel</button>
+                <button type="submit" class="btn btn-primary" :disabled="isSubmit">Submit</button>
+              </div>
+            </form>           
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  data() {
+    return {
+      table: null,
+      isDisabledNextPage: null,
+      isDisabledPrevPage: null,
+      currentPage: 1,
+      searchQuery: '',
+      rowsPerPage: 5, // Default rows per page
+      sortColumn: '',
+      sortOrder: 'asc', // Default sort order
+      rowOptions: [
+        { value: '5', text: '5' },
+        { value: '10', text: '10' },
+        { value: '25', text: '25' },
+        { value: '50', text: '50' },
+        { value: '100', text: '100' }
+      ],
+      sortOptions: [
+        { value: '', text: 'Sort by' },
+      ],      
+      selectedRows: [],
+      session_log: session_log,
+      rowNumber: null,
+      /**delete form**/  
+      entryIdToDelete: null,
+      isDeleting: false,
+      deleteModal: null,
+      /**New form**/      
+      errors : {},      
+      isSubmit: false,
+      isAutomatic: false,
+      newForm: {},
+      newFormModal : null,
+    };
+  },
+  watch: {
+      'newForm.studNumRad'(newVal) {
+          this.isAutomatic = newVal === 'auto-num';
+      }
+  },
+  methods: {
+    async fetchData(page, query = '', sortColumn = '', sortOrder = 'asc') {
+      this.isDisabledNextPage = true;
+      this.isDisabledPrevPage = true;
+      this.showLoading(true);
+      this.table.clear();
+      this.table.draw();
+      try {
+        const response = await axios.get(base_url + 'members/officerrecord/table/'+ini_username, {
+          params: {
+            start: (page - 1) * this.rowsPerPage,
+            limit: this.rowsPerPage,
+            search: query,
+            sortColumn: sortColumn,
+            sortOrder: sortOrder,
+            session_log: this.session_log,
+          }
+        });
+        if(response.data.session_log && response.data.success) {
+          this.isDisabledNextPage  = false;
+          this.isDisabledPrevPage  = false;
+          table_data =  response.data.data; 
+          if(response.data.data.length <=0)
+          {
+            this.isDisabledNextPage = true;
+          } 
+        }
+        else
+        {
+          alert('Session TimeOut. Reloading the Page');
+          location.reload(true);
+        }
+        this.table.clear();
+        this.table.rows.add(table_data);
+        this.table.draw();
+        this.$nextTick(() => {
+          this.addEventListeners();
+        });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        this.showLoading(false);
+      }
+    },
+    nextPage() {
+      this.currentPage++;
+      this.fetchData(this.currentPage, this.searchQuery, this.sortColumn, this.sortOrder);
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+        this.fetchData(this.currentPage, this.searchQuery, this.sortColumn, this.sortOrder);
+      }
+    },
+    onSearch() {
+      this.currentPage = 1;
+      this.fetchData(this.currentPage, this.searchQuery, this.sortColumn, this.sortOrder);
+    },
+    updateRowsPerPage() {
+      this.currentPage = 1;
+      this.fetchData(this.currentPage, this.searchQuery, this.sortColumn, this.sortOrder);
+    },
+    updateSort() {
+      this.currentPage = 1;
+      this.fetchData(this.currentPage, this.searchQuery, this.sortColumn, this.sortOrder);
+    },
+    showLoading(show) {
+      const loadingElement = document.getElementById('loading_div');
+      if (loadingElement) {
+        loadingElement.style.display = show ? 'block' : 'none';
+      }
+    },
+    
+
+    /**New form**/    
+    newRecord() {
+      this.newFormModal = new bootstrap.Modal(document.getElementById('newFormofficerModal'), {
+        backdrop: 'static', // Prevent closing when clicking outside
+        keyboard: false, // Prevent closing with ESC key
+      });
+      this.newFormModal.show();
+    },
+
+    confirmSubmit() {
+      try {   
+          $(".messagebox").fadeOut("slow");
+          $(".messagebox_error").fadeOut("slow");
+          const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+          this.errors = {};
+          if (!this.newForm.Remarks) {
+            this.errors.Remarks = 'Remarks is required.';
+          }
+          
+          
+          if (Object.keys(this.errors).length === 0) {
+            this.isSubmit = true;
+            var formdata = new FormData();
+            formdata.append('Remarks', this.newForm.Remarks );
+            formdata.append('session_log', this.session_log);
+            formdata.append('DateTransaction', this.newForm.TransactionDate);
+            formdata.append('LodgeNo', this.newForm.LodgeNo);
+            formdata.append('LodgeName', this.newForm.LodgeName);
+            formdata.append('Type', this.newForm.Type);
+            formdata.append('Position', this.newForm.Position);
+            formdata.append('ProfileID', ini_username);
+
+            var address = base_url + 'members/officerrecord/add';
+            axios.post(address, formdata,)
+            .then(response_server => {
+              const response = response_server.data;
+              console.log(response);
+              if (response.session_log && response.success) {
+                this.newForm= {};
+
+                this.currentPage = 1;
+                this.selectedRows = [];
+                this.fetchData(this.currentPage, this.searchQuery, this.sortColumn, this.sortOrder);
+                this.newFormModal.hide();
+                $(".messagebox").fadeOut("slow");
+              }
+              else if(response.session_log && response.success == false)
+              {
+                $("#error_content").html(response.message_details);
+                $(".messagebox").fadeIn("slow");
+              }
+              else
+              {
+                alert('Session TimeOut. Reloading the Page');
+                //location.reload(true);
+              }
+              this.isSubmit = false;
+            })
+            .catch(error => {
+              $(".messagebox_error").fadeIn("slow");
+              this.isSubmit = false;
+            });
+          }
+      } catch (error) {
+        this.newFormModal.hide();
+        console.error('Error of fetching data:', error);
+        alert('An error occurred while fetching the record.');
+      }
+    },
+    closenewFormModal() {
+      this.newFormModal.hide();
+    },
+    
+    /**delete row**/
+    deleteRow(entryId,rowNumber) {
+      this.entryIdToDelete = entryId;
+      this.rowNumber = rowNumber;
+      this.deleteModal = new bootstrap.Modal(document.getElementById('deleteOfficerModal'), {
+        backdrop: 'static', // Prevent closing when clicking outside
+        //keyboard: false // Prevent closing with ESC key
+      });
+      this.deleteModal.show();
+    },
+
+    async confirmDelete() {
+      this.isDeleting = true;
+      try {     
+          var formdata = new FormData();
+          var selectedRowsJSON = JSON.stringify(this.selectedRows);
+          formdata.append('session_log', this.session_log);
+          formdata.append('data', selectedRowsJSON);
+          const response = await axios.post(base_url + 'members/officerrecord/delete', formdata);
+          if (response.data.session_log && response.data.success) {
+            //this.currentPage = 1;
+            this.selectedRows = [];
+            this.fetchData(this.currentPage, this.searchQuery, this.sortColumn, this.sortOrder);
+            this.closeModal();           
+          }
+          else
+          {
+            alert('Session TimeOut. Reloading the Page');
+            location.reload(true);
+          }
+      } catch (error) {
+        console.error('Error deleting data:', error);
+        alert('An error occurred while deleting the record.');
+        this.isDeleting = false;
+      }
+    },
+    closeModal() {
+      this.isDeleting = false;
+      if (this.deleteModal) {
+        this.deleteModal.hide();
+      }
+    },
+    deleteRecord() {
+      //alert('Selected IDs: ' + this.selectedRows.join(', '));
+
+      this.deleteModal = new bootstrap.Modal(document.getElementById('deleteofficerModal'), {
+        backdrop: 'static', // Prevent closing when clicking outside
+        keyboard: false // Prevent closing with ESC key
+      });
+      this.deleteModal.show();
+    },
+
+ 
+
+            
+    
+    addEventListeners() {
+      const self = this;
+      $('#officers_table').off('click', '.update-button').on('click', '.update-button', function() {
+        const entryId = $(this).data('entry-id');
+        const rowNumber = $(this).data('row-number');
+        self.updateRow(entryId,rowNumber);
+      });
+
+      $('#officers_table').on('click', '.avatar-img', function() {
+        const imgSrc = $(this).data('img');
+        alert('You clicked on the image: ' + imgSrc);
+      });
+      
+    },
+    
+    handleCheckboxClick(event, row) {
+      if (event.target.checked) {
+        if (!this.selectedRows.includes(row.TransID)) {
+          this.selectedRows.push(row.TransID);
+        }
+      } else {
+        const index = this.selectedRows.indexOf(row.TransID);
+        if (index > -1) {
+          this.selectedRows.splice(index, 1);
+        }
+      }
+    },
+    
+    handleSelectAll(event) {
+      const isChecked = event.target.checked;
+      this.selectedRows = [];
+      $('input.officer-row-checkbox').prop('checked', isChecked);
+      if (isChecked) {
+        this.table.rows().every((index) => {
+          const row = this.table.row(index).data();
+          this.selectedRows.push(row.TransID);
+        });
+      }
+    }
+    
+  },
+  mounted() {
+    const default_avatar = base_url+`assets/assets/img/logo.png`; // Path to default image
+    this.newForm.ProfileID = '';
+    this.newForm.studNumRad = 'auto-num';
+    this.newForm.defaultuseraccount = false;
+    this.isAutomatic = true,
+    this.table = $('#officers_table').DataTable({
+      columns: [
+        {
+          data: null,
+          render: function (data, type, row, meta) {
+            if (row.RecordStatus === 'Record Deleted') {
+              return "";
+            } else {              
+              return `<input type="checkbox" class="officer-row-checkbox" data-entry-id="${row.TransID}" >`;
+            }
+          },
+          width:'5%',
+          title: '<input type="checkbox" id="officer-select-all" >',
+          orderable: false
+        },
+        
+        
+        {
+          data: 'DateTransaction',
+          title: 'Date',
+          orderable: false ,// Disable default sorting,
+          render: function(data, type, row) {
+            if (row.RecordStatus === 'Record Deleted') {
+              return '<span><del>' + data + '</del></span>';
+            } else {
+              return data;
+            }
+          }
+        },
+        
+        
+        {
+          data: 'LodgeNo',
+          title: 'Lodge Number',
+          orderable: false ,// Disable default sorting,
+          render: function(data, type, row) {
+            if (row.RecordStatus === 'Record Deleted') {
+              return '<span><del>' + data + '</del></span>';
+            } else {
+              return data;
+            }
+          }
+        },
+
+        
+
+        {
+          data: 'LodgeName',
+          title: 'Lodge Name',
+          orderable: false ,// Disable default sorting,
+          render: function(data, type, row) {
+            if (row.RecordStatus === 'Record Deleted') {
+              return '<span><del>' + data + '</del></span>';
+            } else {
+              return data;
+            }
+          }
+        },
+
+        {
+          data: 'Type',
+          title: 'Type',
+          orderable: false ,// Disable default sorting,
+          render: function(data, type, row) {
+            if (row.RecordStatus === 'Record Deleted') {
+              return '<span><del>' + data + '</del></span>';
+            } else {
+              return data;
+            }
+          }
+        },
+
+        {
+          data: 'Position',
+          title: 'Position',
+          orderable: false ,// Disable default sorting,
+          render: function(data, type, row) {
+            if (row.RecordStatus === 'Record Deleted') {
+              return '<span><del>' + data + '</del></span>';
+            } else {
+              return data;
+            }
+          }
+        },
+
+        {
+          data: 'Remarks',
+          title: 'Remarks',
+          orderable: false ,// Disable default sorting,
+          render: function(data, type, row) {
+            if (row.RecordStatus === 'Record Deleted') {
+              return '<span><del>' + data + '</del></span>';
+            } else {
+              return data;
+            }
+          }
+        },
+        
+        {
+          data: null,
+          render: (data, type, row, meta) => {
+            if (row.RecordStatus === 'Record Deleted') {
+              return `<button class="btn btn-sm btn-danger" disabled><i class="fa fa-trash"></i> Record deleted</button>`;
+            } else {
+              if (row.RecordActive === 'Active') {
+                return `<button class="btn btn-sm btn-success" disabled> Active</button>`;
+              }
+              else
+              {
+                return `<button class="btn btn-sm btn-danger" disabled>Inactive</button>`;
+              }
+            }
+          },
+          title: 'Status',
+          width:'5%',
+          orderable: false // Disable default sorting
+        },
+
+        
+        
+      ],
+      paging: false,
+      searching: false,
+      info: false
+    });
+    this.fetchData(this.currentPage);
+
+    $('#officers_table tbody').on('click', 'input.officer-row-checkbox', (event) => {
+      const row = this.table.row($(event.target).closest('tr')).data();
+      this.handleCheckboxClick(event, row);
+    });
+
+    $('#officer-select-all').on('click', (event) => {
+      this.handleSelectAll(event);
+    });
+
+
+    
+  }
+});
+
+
+
     app.mount('#app');

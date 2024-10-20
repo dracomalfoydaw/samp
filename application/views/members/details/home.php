@@ -22,15 +22,32 @@
                     </div>
                 </a>
                 <!-- Wizard navigation item 3-->
-                <a class="nav-item nav-link" id="wizard2-tab" href="#wizard3" data-toggle="tab" role="tab" aria-controls="wizard2" aria-selected="true">
+                <a class="nav-item nav-link" id="wizard3-tab" href="#wizard3" data-toggle="tab" role="tab" aria-controls="wizard3" aria-selected="true">
                     <div class="wizard-step-icon">3</div>
                     <div class="wizard-step-text">
                         <div class="wizard-step-text-name">Mason Record</div>
                         <div class="wizard-step-text-details"></div>
                     </div>
                 </a>
+                <!-- Wizard navigation item 4-->
+                <a class="nav-item nav-link" id="wizard4-tab" href="#wizard4" data-toggle="tab" role="tab" aria-controls="wizard4" aria-selected="true">
+                    <div class="wizard-step-icon">4</div>
+                    <div class="wizard-step-text">
+                        <div class="wizard-step-text-name">Remarks</div>
+                        <div class="wizard-step-text-details"></div>
+                    </div>
+                </a>
+                <!-- Wizard navigation item 5-->
+                <a class="nav-item nav-link" id="wizard5-tab" href="#wizard5" data-toggle="tab" role="tab" aria-controls="wizard5" aria-selected="true">
+                    <div class="wizard-step-icon">5</div>
+                    <div class="wizard-step-text">
+                        <div class="wizard-step-text-name">Office Records</div>
+                        <div class="wizard-step-text-details"></div>
+                    </div>
+                </a>
                
             </div>
+            
         </div>
         <div class="card-body">
             <div class="tab-content" id="cardTabContent">
@@ -53,15 +70,31 @@
                 <!-- Wizard tab pane item 2-->
                 <div class="tab-pane py-5 py-xl-10 fade " id="wizard2" role="tabpanel" aria-labelledby="wizard2-tab">
 
-                    <div class="row justify-content-center" style="margin-top: -10%;">
+                    <div class="card-body" style="margin-top: -10%;">
                            <account-address-card></account-address-card>
                     </div>
                 </div>
                
-                <!-- Wizard tab pane item 2-->
+                <!-- Wizard tab pane item 3-->
                 <div class="tab-pane py-5 py-xl-10 fade" id="wizard3" role="tabpanel" aria-labelledby="wizard3-tab">
-                    <div class="row justify-content-center" style="margin-top: -10%;">
+                    <div class="card-body" style="margin-top: -10%;">
                          <account-mason-card></account-mason-card>
+                    </div>
+                </div>
+
+                <!-- Wizard tab pane item 4-->
+                <div class="tab-pane py-5 py-xl-10 fade " id="wizard4" role="tabpanel" aria-labelledby="wizard4-tab">
+                    <div class="card-body" style="margin-top: -10%;">
+                    
+                        <account-remarks-card></account-remarks-card>
+                    
+                    </div>
+                </div>
+
+                <!-- Wizard tab pane item 5-->
+                <div class="tab-pane py-5 py-xl-10 fade " id="wizard5" role="tabpanel" aria-labelledby="wizard5-tab">
+                    <div class="card-body" style="margin-top: -10%;">                    
+                        <account-officers-card></account-officers-card>                    
                     </div>
                 </div>
                 
