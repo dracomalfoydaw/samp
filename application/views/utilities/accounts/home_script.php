@@ -1,1 +1,1 @@
-<script src="<?php echo base_url() ?>assets/js/apptown.js"></script>
+<script src="<?php echo base_url() ?>assets/js/apptown.min.js"></script>

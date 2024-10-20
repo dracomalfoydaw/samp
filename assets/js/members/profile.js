@@ -307,7 +307,7 @@ app.component('table-content', {
                   <div class ="row">
                     <div class="col-md-3">                      
                       <label for="Email" class="form-label">Email Address</label>
-                      <input :disabled="isSubmit" type="email" class="form-control" id="Email" name="Email" v-model="newForm.Email" >
+                      <input :disabled="isSubmit" type="email" class="form-control" id="Email" name="Email" v-model="newForm.Email" required>
                       <span v-if="errors.Email" style="color: red;">{{ errors.Email }}</span>
                     </div>
                   </div>
@@ -386,8 +386,8 @@ app.component('table-content', {
                   <div class ="row">
                       <div class="col-md-6">
                         <span class="form-control">
-                          <label><input :disabled="isSubmit" type="radio" name="recordStat" class="recordStat auto" value="petitioner" v-model="newForm.recordStat"checked> Petitioner</label> &nbsp;
-                          <label><input :disabled="isSubmit" type="radio" name="recordStat" class="recordStat" value="cabletow" v-model="newForm.recordStat"> Cabletow</label>
+                          <label><input :disabled="isSubmit" type="radio" name="recordStat" class="recordStat auto" value="petitioner" v-model="recordStat"checked> Petitioner</label> &nbsp;
+                          <label><input :disabled="isSubmit" type="radio" name="recordStat" class="recordStat" value="cabletow" v-model="recordStat"> Cabletow</label>
                         </span>
                       </div>
                   </div>
@@ -595,9 +595,9 @@ app.component('table-content', {
           $(".messagebox_error").fadeOut("slow");
           const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
           this.errors = {};
-         /* if (!this.newForm.Email) {
+          if (!this.newForm.Email) {
             this.errors.Email = 'Email is required.';
-          }*/
+          }
           else if (!emailPattern.test(this.newForm.Email)) {
             this.errors.Email = 'Invalid email address.';
           }
@@ -686,9 +686,9 @@ app.component('table-content', {
             formdata.append('familykidsname', this.newForm.familykidsname);
 
             formdata.append('recordStat', this.newForm.recordStat);
-            formdata.append('LodgeNo', this.LodgeNo);
-            formdata.append('LodgeName', this.LodgeName);
-            formdata.append('MasonDistrict', this.MasonDistrict);
+            formdata.append('LodgeNo', this.newForm.LodgeNo);
+            formdata.append('LodgeName', this.newForm.LodgeName);
+            formdata.append('MasonDistrict', this.newForm.MasonDistrict);
             formdata.append('initiated', this.newForm.initiated);
             formdata.append('passed', this.newForm.passed);
             formdata.append('raised', this.newForm.raised);

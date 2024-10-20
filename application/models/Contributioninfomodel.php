@@ -128,7 +128,7 @@ class Contributioninfomodel extends CI_Model {
 				}
 
 				// Constructing the final query
-				$query_string = "SELECT * FROM viewcontribution WHERE " . implode(" OR ", $whereClause) . " order by EntryID desc limit 1000";
+				$query_string = "SELECT * FROM viewcontribution WHERE " . implode(" OR ", $whereClause) . " EntryID desc limit 1000";
 
 				$query = $this->db->query($query_string);
 

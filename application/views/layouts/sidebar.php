@@ -38,11 +38,11 @@
                             <div class="sidenav-menu-heading">Accounting</div>
 
 
-                            <a class="nav-link" href="<?php echo base_url() ?>accounting/assessment">
+                          <!--  <a class="nav-link" href="<?php echo base_url() ?>accounting/assessment">
 
                                 <div class="nav-link-icon"><i data-feather="book-open"></i></div>
                                 Assessment
-                            </a> 
+                            </a> -->
 
                             <?php if($this->session->userdata('gid')!=3 ): ?>
                             <a class="nav-link collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseContribution" aria-expanded="false" aria-controls="collapseContribution">

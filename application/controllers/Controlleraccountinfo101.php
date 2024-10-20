@@ -27,7 +27,6 @@ class Controlleraccountinfo101 extends CI_Controller {
 		$this->data['pageTitle'] = "Utilities";
 		$this->data['pageSubtitle'] = "User Account";
 		$this->data['pageSubtitleTable'] = "User Account List";
-		$this->data['custom_css'] = $this->load->view('utilities/accounts/css_script',$this->data,true);
 		$this->data['content'] = $this->load->view('utilities/accounts/home',$this->data, true );
 		$this->data['home_script'] = $this->load->view('utilities/accounts/home_script',$this->data, true );
 		$this->load->view('layouts/main', $this->data );
@@ -37,7 +36,7 @@ class Controlleraccountinfo101 extends CI_Controller {
 	{
 		if(isset($this->input->post('search')['value']))
 		{
-			$fieldValue = $this->htmlpurifier_lib->purify($this->input->post('search')['value']) ;
+			$fieldValue = trim($this->htmlpurifier_lib->purify($this->input->post('search')['value'])) ;
 		}
 		else
 		{
