@@ -974,7 +974,7 @@ app.component('table-content', {
               if (row.RecordStatus === 'Record Deleted') {
                 return '<span><del>' + data + '</del></span>';
               } else {
-                return `<a target="_blank" class="btn btn-sm btn-danger"  href="${base_url}members/print/${row.AccountID}"> <i class="fa fa-print"></i> </a>`;
+                return `<a target="_blank" class="btn btn-sm btn-danger"  href="${base_url}members/print/docs/${row.AccountID}"> <i class="fa fa-print"></i> </a>`;
               }
             }
           },

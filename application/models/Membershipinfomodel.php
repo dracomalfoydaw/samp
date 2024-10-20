@@ -3,6 +3,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Membershipinfomodel extends CI_Model {
 
+
+	// Function to retrieve image blob from the database
+	function getImageFromDatabase($idnumber) {
+	    $this->db->select('avatar');  // Assuming 'profile_image' is the blob field in your database
+	    $this->db->where('UserID', $idnumber);
+	    $query = $this->db->get('viewprofile');  // Replace 'users' with your table name
+
+	    if ($query->num_rows() > 0) {
+	        return $query->row()->avatar;  // Return the blob data
+	    }
+	    return false;  // No image found in database
+	}
+
 	function getMembers()
 	{
 		$query = $this->db->query("select * from viewprofile where RecordStatus='Record active' and RecordDeleted='Not Deleted' ");

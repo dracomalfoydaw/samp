@@ -6,19 +6,29 @@ class Controllermembershipinfo101 extends CI_Controller {
 	function __construct() {
 		parent::__construct();
 		if(!$this->session->userdata('logged_in_session')) :
-			redirect('login',301);
+		//	redirect('login',301);
 
 		endif;
 		
 
-		if($this->session->userdata('gid')==1 or $this->session->userdata('gid')==2):
+	/*	if($this->session->userdata('gid')==1 or $this->session->userdata('gid')==2):
 			$this->load->model('Membershipinfomodel','members');
 			$this->load->model('User_model','user_model');
+			$this->load->library('phpword');
+	        $this->load->library('spreadsheet');
+	        $this->load->library('tcpdf_lib'); // For PDF
 		else:
 			redirect('home',301);
-		endif;
+		endif;*/
+
+		$this->load->model('Membershipinfomodel','members');
+		$this->load->library('Phpword_lib');
+	        $this->load->library('Spreadsheet_lib');
+	        $this->load->library('tcpdf_lib'); // For PDF
 		
 	}
+
+
 
 
 
@@ -33,6 +43,212 @@ class Controllermembershipinfo101 extends CI_Controller {
 		$this->data['home_script'] = $this->load->view('members/profile/home_script',$this->data, true );
 		$this->data['custom_css'] = $this->load->view('members/profile/css_script',$this->data,true);
 		$this->load->view('layouts/main', $this->data );
+	}
+
+	public function print($category = null, $idnumber = null)
+	{
+
+		$category = $this->htmlpurifier_lib->purify($category);
+		$idnumber = $this->htmlpurifier_lib->purify($idnumber);
+
+
+		$data = $this->members->getMembersInfo($idnumber);
+		if(count($data)==1)
+		{
+			$ProfileID	 = "";
+			$UserID	= "";
+			$FirstName	= "";
+			$MiddleName	= "";
+			$LastName	= "";
+			$NameExtension	= "";
+			$Suffix	= "";
+			$HomeAddress	= "";
+			$HomeBarangay	= "";
+			$HomeCity	= "";
+			$HomeProvince	= "";
+			$zipcode	= "";
+			$sex	= "";
+			$dateofbirth	= "";
+			$placeofbirth	= "";
+			$Country	= "";
+			$contactno	= "";
+			$faxno	= "";
+			$homeno	= "";
+			$officeno	= "";
+			$Occupation	= "";
+			$Education= "";
+			$Employment	= "";
+			$EmploymentAddress= "";
+			$familykin = "";
+			$familyrelation = "";
+			$familyaddress = "";
+			$familynokids  = "";
+			$familykidsname	 = "";
+			$recordStat	= "";
+			$LodgeNo	= "";
+			$LodgeName	= "";
+			$MasonDistrict	= "";
+			$initiated	= "";
+			$passed	= "";
+			$raised	= "";
+			$memberstatus	= "";
+			$Fullname	= "";
+			$Email	= "";
+			$avatar	= "";
+
+
+			foreach ($data as $key) {
+				$ProfileID	 = $key->ProfileID;
+				$UserID	= $key->UserID;
+				$FirstName	= $key->FirstName;
+				$MiddleName	= $key->MiddleName;
+				$LastName	= $key->LastName;
+				$NameExtension	= $key->NameExtension;
+				$Suffix	= $key->Suffix;
+				$HomeAddress	= $key->HomeAddress;
+				$HomeBarangay	= $key->HomeBarangay;
+				$HomeCity	= $key->HomeCity;
+				$HomeProvince	= $key->HomeProvince;
+				$zipcode	= $key->zipcode;
+				$sex	= $key->sex;
+				$dateofbirth	= $key->dateofbirth;
+				$placeofbirth	= $key->placeofbirth;
+				$Country	= $key->Country;
+				$contactno	= $key->contactno;
+				$faxno	= $key->faxno;
+				$homeno	= $key->homeno;
+				$officeno	= $key->officeno;
+				$Occupation	= $key->Occupation;
+				$Education= $key->Education;
+				$Employment	= $key->Employment;
+				$EmploymentAddress= $key->EmploymentAddress;
+				$familykin= $key->familykin;
+				$familyrelation= $key->familyrelation;
+				$familyaddress= $key->familyaddress;
+				$familynokids= $key->familynokids;
+				$familykidsname	= $key->familykidsname;
+				$recordStat	= $key->recordStat;
+				$LodgeNo	= $key->LodgeNo;
+				$LodgeName	= $key->LodgeName;
+				$MasonDistrict	= $key->MasonDistrict;
+				$initiated	= $key->initiated;
+				$passed	= $key->passed;
+				$raised	= $key->raised;
+				$memberstatus	= $key->memberstatus;
+				$Fullname	= $key->Fullname;
+				$Email	= $key->Email;
+				$avatar	= $key->avatar;
+
+			}
+		}
+		else
+		{
+			redirect('home',301);
+		}
+
+		if($category=="docs")
+		{
+			$templateProcessor = $this->phpword_lib->loadTemplate('assets/assets/template/pds_template.docx');
+        
+	        // Replace placeholders with actual data
+	    
+			$templateProcessor->setValue('avatar', $avatar) ;
+	        $templateProcessor->setValue('ProfileID', $ProfileID) ;
+			$templateProcessor->setValue('UserID', $UserID) ;
+			$templateProcessor->setValue('FirstName', $FirstName) ;
+			$templateProcessor->setValue('MiddleName', $MiddleName) ;
+			$templateProcessor->setValue('LastName', $LastName) ;
+			$templateProcessor->setValue('NameExtension', $NameExtension) ;
+			$templateProcessor->setValue('Suffix', $Suffix) ;
+			$templateProcessor->setValue('HomeAddress', $HomeAddress) ;
+			$templateProcessor->setValue('HomeBarangay', $HomeBarangay) ;
+			$templateProcessor->setValue('HomeCity', $HomeCity) ;
+			$templateProcessor->setValue('HomeProvince', $HomeProvince) ;
+			$templateProcessor->setValue('zipcode', $zipcode) ;
+			$templateProcessor->setValue('sex', $sex) ;
+			$templateProcessor->setValue('dateofbirth', $dateofbirth) ;
+			$templateProcessor->setValue('placeofbirth', $placeofbirth) ;
+			$templateProcessor->setValue('Country', $Country) ;
+			$templateProcessor->setValue('contactno', $contactno) ;
+			$templateProcessor->setValue('faxno', $faxno) ;
+			$templateProcessor->setValue('homeno', $homeno) ;
+			$templateProcessor->setValue('officeno', $officeno) ;
+			$templateProcessor->setValue('Occupation', $Occupation) ;
+			$templateProcessor->setValue('Education', $Education) ;
+			$templateProcessor->setValue('Employment', $Employment) ;
+			$templateProcessor->setValue('EmploymentAddress', $EmploymentAddress) ;
+			$templateProcessor->setValue('familykin', $familykin) ;
+			$templateProcessor->setValue('familyrelation', $familyrelation) ;
+			$templateProcessor->setValue('familyaddress', $familyaddress) ;
+			$templateProcessor->setValue('familynokids', $familynokids) ;
+			$templateProcessor->setValue('familykidsname', $familykidsname) ;
+			$templateProcessor->setValue('recordStat', $recordStat) ;
+			$templateProcessor->setValue('LodgeNo', $LodgeNo) ;
+			$templateProcessor->setValue('LodgeName', $LodgeName) ;
+			$templateProcessor->setValue('MasonDistrict', $MasonDistrict) ;
+			$templateProcessor->setValue('initiated', $initiated) ;
+			$templateProcessor->setValue('passed', $passed) ;
+			$templateProcessor->setValue('raised', $raised) ;
+			$templateProcessor->setValue('memberstatus', $memberstatus) ;
+			$templateProcessor->setValue('Fullname', $Fullname) ;
+			$templateProcessor->setValue('Email', $Email) ;
+
+			// Check if the image exists in the file system or as a blob in the database
+		    $imagePath = 'uploads/users/' . $avatar . '';  // File path based on user ID
+		    $defaultImage = 'assets/imgs/login-logo-2.png';  // Default image path
+
+		    if (file_exists($imagePath)) {
+		        // Use the image from the file system
+		        $imageToUse = $imagePath;
+		    } else {
+		        // Check if the image exists as a blob in the database
+		        $imageBlob = $this->members->getImageFromDatabase($idnumber); // Get image blob from the database
+
+		        if ($imageBlob) {
+		            // Save blob to temporary file if exists
+		            $tempImagePath = 'uploads/temp_profile_' . $idnumber . '.jpg';
+		            file_put_contents($tempImagePath, $imageBlob);
+		            $imageToUse = $tempImagePath;
+		        } else {
+		            // Use default image if no file or blob exists
+		            $imageToUse = $defaultImage;
+		        }
+		    }
+
+
+	        // Insert Image
+	        $templateProcessor->setImageValue('profile_picture', array(
+	            'path' => $imageToUse,
+	            'width' => 100,
+	            'height' => 100,
+	            'ratio' => true
+	        ));
+
+	        // Save the generated file
+	        $format = date('YYmmhhss').$this->session->userdata('uid').date('ddhhss');
+	        $filePath = 'uploads/'.$format.'generated_report.docx';
+	        $templateProcessor->saveAs($filePath);
+
+	        // Download the generated file
+	        force_download($filePath, NULL);
+
+	        // Remove the file after downloading
+		    if (file_exists($filePath)) {
+		        unlink($filePath);
+		    }
+
+		    // Remove the temporary image file if used
+		    if (isset($tempImagePath) && file_exists($tempImagePath)) {
+		        unlink($tempImagePath);
+		    }
+		}
+		else
+		{
+			redirect('home',301);
+		}
+
+
+		
 	}
 
 	public function uploadImage() {
