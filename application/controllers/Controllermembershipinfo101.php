@@ -6,25 +6,25 @@ class Controllermembershipinfo101 extends CI_Controller {
 	function __construct() {
 		parent::__construct();
 		if(!$this->session->userdata('logged_in_session')) :
-		//	redirect('login',301);
+		redirect('login',301);
 
 		endif;
 		
 
-	/*	if($this->session->userdata('gid')==1 or $this->session->userdata('gid')==2):
+		if($this->session->userdata('gid')==1 or $this->session->userdata('gid')==2):
 			$this->load->model('Membershipinfomodel','members');
 			$this->load->model('User_model','user_model');
-			$this->load->library('phpword');
-	        $this->load->library('spreadsheet');
-	        $this->load->library('tcpdf_lib'); // For PDF
+			$this->load->library('Phpword_lib');
+	        $this->load->library('Spreadsheet_lib');
+	        $this->load->library('tcpdf_lib');  // For PDF
 		else:
 			redirect('home',301);
-		endif;*/
+		endif;
 
-		$this->load->model('Membershipinfomodel','members');
+		/*$this->load->model('Membershipinfomodel','members');
 		$this->load->library('Phpword_lib');
 	        $this->load->library('Spreadsheet_lib');
-	        $this->load->library('tcpdf_lib'); // For PDF
+	        $this->load->library('tcpdf_lib'); // For PDF*/
 		
 	}
 
@@ -95,6 +95,7 @@ class Controllermembershipinfo101 extends CI_Controller {
 			$Fullname	= "";
 			$Email	= "";
 			$avatar	= "";
+			$bloodtype = "";
 
 
 			foreach ($data as $key) {
@@ -138,13 +139,24 @@ class Controllermembershipinfo101 extends CI_Controller {
 				$Fullname	= $key->Fullname;
 				$Email	= $key->Email;
 				$avatar	= $key->avatar;
-
+				$bloodtype = $key->bloodtype;
 			}
 		}
 		else
 		{
 			redirect('home',301);
 		}
+/*
+		function calculateAge($dob) {
+    $dob = new DateTime($dob);
+    $today = new DateTime('today');
+    $age = $dob->diff($today);
+    return $age->y;
+}
+
+// Example usage
+$dateOfBirth = '1990-10-21';
+echo 'Age: ' . calculateAge($dateOfBirth) . ' years';*/
 
 		if($category=="docs")
 		{
@@ -192,6 +204,13 @@ class Controllermembershipinfo101 extends CI_Controller {
 			$templateProcessor->setValue('memberstatus', $memberstatus) ;
 			$templateProcessor->setValue('Fullname', $Fullname) ;
 			$templateProcessor->setValue('Email', $Email) ;
+			$templateProcessor->setValue('bloodtype', $bloodtype) ;
+
+			// Replace the checkbox placeholder
+		    $petitioner = $recordStat=="petitioner" ? '☑' : '☐';  // Checked if true, unchecked if false
+		    $cabletow = $recordStat=="cabletow" ? '☑' : '☐';  // Checked if true, unchecked if false
+		    $templateProcessor->setValue('petitioner', $petitioner);
+		    $templateProcessor->setValue('cabletow', $cabletow);
 
 			// Check if the image exists in the file system or as a blob in the database
 		    $imagePath = 'uploads/users/' . $avatar . '';  // File path based on user ID
@@ -219,8 +238,8 @@ class Controllermembershipinfo101 extends CI_Controller {
 	        // Insert Image
 	        $templateProcessor->setImageValue('profile_picture', array(
 	            'path' => $imageToUse,
-	            'width' => 100,
-	            'height' => 100,
+	            'width' => 200,
+	            'height' => 200,
 	            'ratio' => true
 	        ));
 

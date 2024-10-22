@@ -490,14 +490,18 @@ app.component('table-content', {
       isDeleting: false,
       deleteModal: null,
       /**New form**/      
-      LodgeNo: LodgeNo,
-      LodgeName: LodgeName,
-      MasonDistrict: MasonDistrict,
-      recordStat: "petitioner",
+      
       errors : {},      
       isSubmit: false,
       isAutomatic: false,
-      newForm: {},
+      newForm: {
+
+        LodgeNo: LodgeNo,
+        LodgeName: LodgeName,
+        MasonDistrict: MasonDistrict,
+        recordStat: "petitioner",
+        
+      },
       newFormModal : null,
     };
   },

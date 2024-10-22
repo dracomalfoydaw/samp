@@ -32,7 +32,7 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /tests/results/
 
 /uploads/users/*
-
+/uploads/*.docx
 
 vle.sql
 res_cons.php
