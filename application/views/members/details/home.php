@@ -25,7 +25,7 @@
                 <a class="nav-item nav-link" id="wizard3-tab" href="#wizard3" data-toggle="tab" role="tab" aria-controls="wizard3" aria-selected="true">
                     <div class="wizard-step-icon">3</div>
                     <div class="wizard-step-text">
-                        <div class="wizard-step-text-name">Mason Record</div>
+                        <div class="wizard-step-text-name">Masonic Record</div>
                         <div class="wizard-step-text-details"></div>
                     </div>
                 </a>

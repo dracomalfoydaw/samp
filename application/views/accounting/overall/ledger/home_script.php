@@ -150,6 +150,7 @@
                 var table = $('#showmemberinfoDataTable').DataTable();
                 var selectedRowData = table.row($(event.currentTarget).closest('tr')).data();
                 this.memberID = selectedRowData.UserID;
+                console.log(this.memberID );
                 //this.searchTerm = selectedRowData.LastName + ', ' +selectedRowData.FirstName ;
                 this.searchTerm = selectedRowData.UserID ;
                 this.memberFullname = selectedRowData.LastName + ', ' +selectedRowData.FirstName ;

@@ -183,9 +183,22 @@ class Controlleraccountinginfo101 extends CI_Controller {
 	     $this->data = [];
 	        $this->data['pageTitle'] = "Accounting";
 	        $this->data['pageSubtitle'] = "Ledger Module";
-	        $this->data['custom_css'] = $this->load->view('accounting/ledger/css_script',$this->data,true);
-	        $this->data['content'] = $this->load->view('accounting/ledger/home', $this->data, true);
-	        $this->data['home_script'] = $this->load->view('accounting/ledger/home_script', $this->data, true);
+
+	        if( $this->session->userdata('gid')==3 )
+        	{
+        		$this->data['custom_css'] = $this->load->view('accounting/individual/ledger/css_script',$this->data,true);
+		        $this->data['content'] = $this->load->view('accounting/individual/ledger/home', $this->data, true);
+		        $this->data['home_script'] = $this->load->view('accounting/individual/ledger/home_script', $this->data, true);
+        	}
+        	else
+        	{
+        		$this->data['custom_css'] = $this->load->view('accounting/overall/ledger/css_script',$this->data,true);
+		        $this->data['content'] = $this->load->view('accounting/overall/ledger/home', $this->data, true);
+		        $this->data['home_script'] = $this->load->view('accounting/overall/ledger/home_script', $this->data, true);
+        	}
+
+
+	        
 	        $this->load->view('layouts/main', $this->data);
 	}
 
@@ -210,18 +223,40 @@ class Controlleraccountinginfo101 extends CI_Controller {
 
 	function loadGetLedgerEntries()
 	{
-		if(isset($_POST['memberID']))
-		{
-			
-			$memberID  = $this->htmlpurifier_lib->purify($this->input->post('memberID'));
-
-			$data = array(
-					'memberID' => $memberID,
-			);	
-			$query = $this->accounting_model->GetLedgerEntries($data);
-			header('Content-Type: application/json');
-			echo json_encode($query);	
+		$limit = $this->input->post('limit');
+		if (empty($limit) || !is_numeric($limit)) {
+		    $limit = 10;
+		} else {
+		    $limit = $this->htmlpurifier_lib->purify($limit);
 		}
+
+		$start = $this->input->post('offset');
+		if (empty($start) || !is_numeric($start)) {
+		    $start = 0;
+		} else {
+		    $start = $this->htmlpurifier_lib->purify($start);
+		}
+
+		if($this->session->userdata('gid')==3)
+		{
+			$memberID  = $this->htmlpurifier_lib->purify($this->input->post('memberID'));
+		}
+		else
+		{
+			if(isset($_POST['memberID']) && $_POST['memberID'] !='')
+			{
+				$memberID  = $this->htmlpurifier_lib->purify($this->input->post('memberID'));
+			}
+			else
+			{
+				redirect('accounting/assessment',301);
+			}
+		}
+		
+
+		$query = $this->accounting_model->GetLedgerEntries($memberID,$start,$limit);
+		header('Content-Type: application/json');
+		echo json_encode($query);	
 	}
 	function loadGetAssestmentEntries()
 	{

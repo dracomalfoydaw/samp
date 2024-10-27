@@ -76,15 +76,31 @@ class Accountinginfomodel extends CI_Model {
 		return $query->result();
 	}
 
-	public function GetLedgerEntries($uniqueID) {
-    $sql = "CALL GetLedgerEntries(?)";
-    
-    $params = array(
-        $uniqueID,
-       
-    );
+	public function GetLedgerEntries($uniqueID,$start,$limit) {
 
-    $query = $this->db->query($sql, $params);
+	if($this->session->userdata('gid')==3)
+	{
+		 $uniqueID = $this->session->userdata('ProfileID');
+		$sql = "CALL GetLedgerEntrieswithLimit(?,?,?)";
+	    
+	    $params = array(
+	        $uniqueID,
+	       	$start,
+	       	$limit
+	    );
+
+	    
+	}	
+	else
+	{		
+	    $sql = "CALL GetLedgerEntries(?)";
+	    
+	    $params = array(
+	        $uniqueID,	       
+	    );	    
+	}
+
+	$query = $this->db->query($sql, $params);
     $result = $query->result();
 
     mysqli_next_result( $this->db->conn_id );

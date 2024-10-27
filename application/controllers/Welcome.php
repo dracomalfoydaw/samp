@@ -20,6 +20,20 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->view('welcome_message');
+		$query = $this->db->query("select count(UniqueID) as res,UniqueID  from tb_profile GROUP BY UniqueID");
+		foreach ($query->result() as $key) {
+			if($key->res >1)
+			{
+				$count=0;
+				$query2 = $this->db->query("select * from tb_profile where UniqueID='".$key->UniqueID ."' ");
+				foreach ($query2->result() as $key2) {
+					$count++;
+					if($count==$key->res)
+					{
+						$this->db->query("DELETE FROM `tb_profile` WHERE `ProfileID` = '".$key2->ProfileID."' ");
+					}
+				}
+			}
+		}
 	}
 }

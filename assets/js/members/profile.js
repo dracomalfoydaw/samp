@@ -241,14 +241,19 @@ app.component('table-content', {
                       <input :disabled="isSubmit" type="text" class="form-control" id="homeaddress" name="homeaddress" v-model="newForm.homeaddress" >
                       <span v-if="errors.homeaddress" style="color: red;">{{ errors.homeaddress }}</span>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                       <label for="Country" class=" control-label text-left"> Country</label>
                       <input :disabled="isSubmit" type="text" class="form-control" id="Country" name="Country" v-model="newForm.Country" >
                       <span v-if="errors.Country" style="color: red;">{{ errors.Country }}</span>
                     </div>
+                    <div class="col-md-3">
+                      <label for="zipcode" class="form-label">ZipCode</label>
+                      <input :disabled="isSubmit" type="text" class="form-control" id="zipcode" name="zipcode" v-model="newForm.zipcode" >
+                      <span v-if="errors.zipcode" style="color: red;">{{ errors.zipcode }}</span>
+                    </div>
                   </div>
                 </div>
-                <div class="mb-3">
+                <!--<div class="mb-3">
                   <div class ="row">
                     <div class="col-md-3">
                       <label for="Province" class=" control-label text-left"> Province </label>
@@ -271,7 +276,7 @@ app.component('table-content', {
                       <span v-if="errors.zipcode" style="color: red;">{{ errors.zipcode }}</span>
                     </div>
                   </div>
-                </div>
+                </div>-->
 
                 <div class="mb-3">
                   <div class ="row">
@@ -628,7 +633,7 @@ app.component('table-content', {
           if (!this.newForm.homeaddress) {
             this.errors.homeaddress = 'Home Address is required.';
           }
-          if (!this.newForm.Province) {
+          /*if (!this.newForm.Province) {
             this.errors.Province = 'Province Name is required.';
           }
           if (!this.newForm.Municipality) {
@@ -636,7 +641,7 @@ app.component('table-content', {
           }
           if (!this.newForm.Barangay) {
             this.errors.Barangay = 'Barangay Name is required.';
-          }
+          }*/
           if (!this.newForm.zipcode) {
             this.errors.zipcode = 'ZipCode is required.';
           }

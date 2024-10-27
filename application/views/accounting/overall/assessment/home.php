@@ -187,3 +187,4 @@
 
 
 
+<?php $this->load->view("accounting/overall/assessment/showmemberinfo"); ?>

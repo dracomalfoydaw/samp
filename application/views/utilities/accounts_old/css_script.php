@@ -1,11 +1,24 @@
 <link href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
 <style>
-.disabled-link {
-            pointer-events: none;
-            cursor: default;
-            opacity: 0.5;
-            text-decoration: none;
+        .drop-zone {
+            border: 2px dashed #007bff;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
         }
+        .drop-zone.dragover {
+            background-color: #e9ecef;
+        }
+
+        .error {
+      color: red;
+    }
+    .confirmation-code {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+    }
 
 .pagination-controls {
     display: flex;

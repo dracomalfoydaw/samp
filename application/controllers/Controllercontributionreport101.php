@@ -22,7 +22,8 @@ class Controllercontributionreport101 extends CI_Controller {
 	{
 		$this->data = [];
 		if($this->session->userdata('gid')==3):
-			$this->data['category']  = "members";
+			//$this->data['category']  = "members";
+			redirect('home',301);
 		else:
 			$this->data['category']  = "";
 		endif; 

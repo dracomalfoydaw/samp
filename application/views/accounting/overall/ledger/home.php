@@ -153,5 +153,5 @@
 </div>
 
 
-<?php $this->load->view("accounting/ledger/showmemberinfo"); ?>
+<?php $this->load->view("accounting/overall/ledger/showmemberinfo"); ?>
 

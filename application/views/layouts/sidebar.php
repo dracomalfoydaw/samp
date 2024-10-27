@@ -16,12 +16,13 @@
                             </a>
                            
 
-
+                             <?php if($this->session->userdata('gid')==4 or $this->session->userdata('gid')==1  or $this->session->userdata('gid')==2 ): ?>
                             <div class="sidenav-menu-heading">Module </div>
                             <a class="nav-link" href="<?php echo base_url() ?>announcement">
                                 <div class="nav-link-icon"><i data-feather="mail"></i></div>
                                 List of Announcement 
                             </a>
+                            <?php endif; ?>
                             <!-- <a class="nav-link" href="<?php echo base_url() ?>attendance">
                                 <div class="nav-link-icon"><i data-feather="check-square"></i></div>
                                 List of Attendance/Activities
@@ -38,11 +39,17 @@
                             <div class="sidenav-menu-heading">Accounting</div>
 
 
-                          <!--  <a class="nav-link" href="<?php echo base_url() ?>accounting/assessment">
+                           <a class="nav-link" href="<?php echo base_url() ?>accounting/assessment">
 
                                 <div class="nav-link-icon"><i data-feather="book-open"></i></div>
                                 Assessment
-                            </a> -->
+                            </a> 
+
+                            <a class="nav-link" href="<?php echo base_url() ?>accounting/ledger">
+
+                                <div class="nav-link-icon"><i data-feather="archive"></i></div>
+                                Ledger
+                            </a> 
 
                             <?php if($this->session->userdata('gid')!=3 ): ?>
                             <a class="nav-link collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseContribution" aria-expanded="false" aria-controls="collapseContribution">
@@ -60,11 +67,11 @@
                             </div> 
 
                             <?php else: ?>
-                            <a class="nav-link" href="<?php echo base_url() ?>contribution">
+                           <!--  <a class="nav-link" href="<?php echo base_url() ?>contribution">
 
                                 <div class="nav-link-icon"><i data-feather="users"></i></div>
                                 Contribution
-                            </a>
+                            </a> -->
                             <?php endif; ?>
                           
 
