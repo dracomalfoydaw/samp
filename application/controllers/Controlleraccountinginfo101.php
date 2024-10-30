@@ -249,7 +249,7 @@ class Controlleraccountinginfo101 extends CI_Controller {
 
 		if($this->session->userdata('gid')==3)
 		{
-			$memberID  = $this->htmlpurifier_lib->purify($this->input->post('memberID'));
+			$memberID = $this->session->userdata('ProfileID');//$this->htmlpurifier_lib->purify($this->input->post('memberID'));
 		}
 		else
 		{
