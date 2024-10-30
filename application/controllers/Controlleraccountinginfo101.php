@@ -167,9 +167,19 @@ class Controlleraccountinginfo101 extends CI_Controller {
 		$this->data = [];
 		$this->data['pageTitle'] = "Accounting";
 		$this->data['pageSubtitle'] = "Account balances Module";
-		$this->data['custom_css'] = $this->load->view('accounting/assessment/css_script',$this->data,true);
-		$this->data['content'] = $this->load->view('accounting/assessment/home',$this->data, true );
-		$this->data['home_script'] = $this->load->view('accounting/assessment/home_script',$this->data, true );
+		if( $this->session->userdata('gid')==3 )
+		{
+			$this->data['custom_css'] = $this->load->view('accounting/individual/assessment/css_script',$this->data,true);
+			$this->data['content'] = $this->load->view('accounting/individual/assessment/home',$this->data, true );
+			$this->data['home_script'] = $this->load->view('accounting/individual/assessment/home_script',$this->data, true );
+		}
+		else
+		{
+			$this->data['custom_css'] = $this->load->view('accounting/overall/assessment/css_script',$this->data,true);
+			$this->data['content'] = $this->load->view('accounting/overall/assessment/home',$this->data, true );
+			$this->data['home_script'] = $this->load->view('accounting/overall/assessment/home_script',$this->data, true );
+		}
+		
 		$this->load->view('layouts/main', $this->data );
 	}
 	public function individual_ledger($memberID = null)
@@ -260,18 +270,33 @@ class Controlleraccountinginfo101 extends CI_Controller {
 	}
 	function loadGetAssestmentEntries()
 	{
-		if(isset($_POST['memberID']))
+		if($this->session->userdata('gid')==3)
 		{
-			
-			$memberID  = $this->htmlpurifier_lib->purify($this->input->post('memberID'));
-
+			$memberID = $this->session->userdata('ProfileID');
+			//echo $memberID;
 			$data = array(
 					'memberID' => $memberID,
 			);	
-			$query = $this->accounting_model->GetAssestmentEntries($data);
+			$query = $this->cashiering_model->loadRemainingBalance($data);
 			header('Content-Type: application/json');
 			echo json_encode($query);	
 		}
+		else
+		{
+			if(isset($_POST['memberID']))
+			{
+				
+				$memberID  = $this->htmlpurifier_lib->purify($this->input->post('memberID'));
+
+				$data = array(
+						'memberID' => $memberID,
+				);	
+				$query = $this->accounting_model->GetAssestmentEntries($data);
+				header('Content-Type: application/json');
+				echo json_encode($query);	
+			}
+		}
+		
 	}
 }
 
