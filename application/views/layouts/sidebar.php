@@ -34,6 +34,10 @@
                                 <div class="nav-link-icon"><i data-feather="dollar-sign"></i></div>
                                 Cashiering Module
                             </a>
+                            <a class="nav-link" href="<?php echo base_url() ?>cashiering/reports">
+                                <div class="nav-link-icon"><i data-feather="dollar-sign"></i></div>
+                                List of Report
+                            </a>
                             <?php endif; ?>
 
                             <div class="sidenav-menu-heading">Accounting</div>

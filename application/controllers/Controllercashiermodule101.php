@@ -34,9 +34,23 @@ class Controllercashiermodule101 extends CI_Controller {
 			$this->data['issetORnumber'] ="set";
 			$this->data['ORnumber'] = $this->session->userdata('ORnumber');
 		}
-		$this->data['custom_css'] = $this->load->view('cashiering/css_script',$this->data,true);
-		$this->data['content'] = $this->load->view('cashiering/home',$this->data, true );
-		$this->data['home_script'] = $this->load->view('cashiering/home_script',$this->data, true );
+		$this->data['custom_css'] = $this->load->view('cashiering/cashier_module/css_script',$this->data,true);
+		$this->data['content'] = $this->load->view('cashiering/cashier_module/home',$this->data, true );
+		$this->data['home_script'] = $this->load->view('cashiering/cashier_module/home_script',$this->data, true );
+		$this->load->view('layouts/main', $this->data );
+	}
+
+
+
+	public function transactionreport()
+	{
+		$this->data = [];
+		$this->data['pageTitle'] = "Cashiering";
+		$this->data['pageSubtitle'] = "Cashiering Module";
+		$this->data['pageSubtitleTable'] = "";
+		$this->data['content'] = $this->load->view('cashiering/report/home',$this->data, true );
+		$this->data['home_script'] = $this->load->view('cashiering/report/home_script',$this->data, true );
+		$this->data['custom_css'] = $this->load->view('cashiering/report/css_script',$this->data,true);
 		$this->load->view('layouts/main', $this->data );
 	}
 

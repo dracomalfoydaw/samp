@@ -185,6 +185,6 @@
     
 
 
-<?php $this->load->view("cashiering/showmemberinfo"); ?>
-<?php $this->load->view("cashiering/paymentmodal"); ?>
-<?php $this->load->view("cashiering/cashiersettingmodal"); ?>
+<?php $this->load->view("cashiering/cashier_module/showmemberinfo"); ?>
+<?php $this->load->view("cashiering/cashier_module/paymentmodal"); ?>
+<?php $this->load->view("cashiering/cashier_module/cashiersettingmodal"); ?>

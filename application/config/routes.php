@@ -102,6 +102,7 @@ $route['cashiering/save'] = 'Controllercashiermodule101/savetransactioninfo';
 $route['cashiering/loadbalance'] = 'Controllercashiermodule101/loadRemainingBalance'; 
 $route['cashiering/checkornumber'] = 'Controllercashiermodule101/checkornumber';
 $route['cashiering/paymenttransaction'] = 'Controllercashiermodule101/paymenttransaction';
+$route['cashiering/reports'] = 'Controllercashiermodule101/transactionreport';
 
 
 $route['attendance'] = 'Controllerattendanceinfo101';
