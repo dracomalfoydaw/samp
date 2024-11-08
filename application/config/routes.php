@@ -118,7 +118,7 @@ $route['login'] = 'Controllerlogin101';
 $route['login/check_credentials'] = 'Controllerlogin101/searchaccount';
 
 
-$route['accounting'] = 'Controllerlogin101';
+$route['accounting'] = 'Controlleraccountinginfo101';
 $route['accounting/assessment'] = 'Controlleraccountinginfo101/individual_assessment';
 $route['accounting/ledger'] = 'Controlleraccountinginfo101/individual_ledger';
 $route['accounting/ledger/(:any)'] = 'Controlleraccountinginfo101/individual_ledger/$1';

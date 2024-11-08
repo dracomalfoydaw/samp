@@ -66,7 +66,7 @@ class Controllerlogin101 extends CI_Controller {
 				                'fid'    => $row->first_name.'  '.$row->last_name,
 				                'lname'    =>  $row->last_name,
 				                'fname'    => $row->first_name ,
-				                
+				                'avatar'    => $row->avatar ,
 			                ));
 
 							$error = "success";
