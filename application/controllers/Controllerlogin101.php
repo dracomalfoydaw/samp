@@ -61,7 +61,7 @@ class Controllerlogin101 extends CI_Controller {
 				                'username'    => $row->username,
 				                'email'    => $row->email,
 				                'gid'    => $row->group_id,
-				                  
+				                'eid'    => $this->htmlpurifier_lib->purify_decode($row->email),
 				                 
 				                'fid'    => $row->first_name.'  '.$row->last_name,
 				                'lname'    =>  $row->last_name,

@@ -22,8 +22,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 
                 <!-- Navbar Search Dropdown-->
                 <!-- * * Note: * * Visible only below the md breakpoint-->
-                <?php $this->load->view('layouts/notification_content') ?>
-                <?php $this->load->view('layouts/messenger_content') ?>
+                <?php //$this->load->view('layouts/notification_content') ?>
+                <?php //$this->load->view('layouts/messenger_content') ?>
                 <?php $this->load->view('layouts/profile') ?>
                 
             </ul>

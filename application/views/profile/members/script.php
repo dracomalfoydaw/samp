@@ -1,3 +1,56 @@
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+<script>
+    var image_var = '<?php echo SiteHelpers::avatar_class_members("img-account-profile rounded-circle mb-2", $data['Avatar']);?>';
+    var ini_username = "<?php echo $data['AccountID']; ?>";
+    var ini_emailaddress = "<?php echo $data['EmailAddress']; ?>";
+    var ini_firstname = "<?php echo $data['FirstName']; ?>";
+    var ini_lastname = "<?php echo $data['LastName']; ?>";
+    var ini_middlename = "<?php echo $data['MiddleName']; ?>";
+    var ini_nameextension = "<?php echo $data['NameExtension']; ?>";
+    var ini_ProfileStatus = "<?php echo $data['RecordActive']; ?>";
+
+    var ini_HomePurok = "<?php echo $data['HomePurok']; ?>";
+    var ini_HomeBaranggay = "<?php echo $data['HomeBaranggay']; ?>";
+    var ini_HomeMuncity = "<?php echo $data['HomeMuncity']; ?>";
+    var ini_HomeProvince = "<?php echo $data['HomeProvince']; ?>";
+    var ini_zipcode = "<?php echo $data['zipcode']; ?>";
+    var ini_Country = "<?php echo $data['Country']; ?>";
+
+    var ini_Sex = "<?php echo $data['Sex']; ?>";
+    var ini_DateofBirth = "<?php echo $data['DateofBirth']; ?>";
+    var ini_PlaceofBirth = "<?php echo $data['PlaceofBirth']; ?>";
+    var ini_Bloodtype = "<?php echo $data['Bloodtype']; ?>";
+
+    var ini_ContactNumber = "<?php echo $data['ContactNumber']; ?>";
+    var ini_FaxNumber = "<?php echo $data['FaxNumber']; ?>";
+    var ini_HomeNumber = "<?php echo $data['HomeNumber']; ?>";
+    var ini_OfficeNumber = "<?php echo $data['OfficeNumber']; ?>";
+
+    var ini_Occupation = "<?php echo $data['Occupation']; ?>";
+    var ini_Education = "<?php echo $data['Education']; ?>";
+    var ini_Employment = "<?php echo $data['Employment']; ?>";
+    var ini_EmploymentAddress = "<?php echo $data['EmploymentAddress']; ?>";
+
+    var ini_familykin = "<?php echo $data['familykin']; ?>";
+    var ini_familyrelation = "<?php echo $data['familyrelation']; ?>";
+    var ini_familyaddress = "<?php echo $data['familyaddress']; ?>";
+    var ini_familynokids = "<?php echo $data['familynokids']; ?>";
+    var ini_familykidsname = "<?php echo $data['familykidsname']; ?>";
+
+
+    var ini_recordStat = "<?php echo $data['recordStat']; ?>";
+    var ini_LodgeNo = "<?php echo $data['LodgeNo']; ?>";
+    var ini_LodgeName = "<?php echo $data['LodgeName']; ?>";
+    var ini_MasonDistrict = "<?php echo $data['MasonDistrict']; ?>";
+    var ini_initiated = "<?php echo $data['initiated']; ?>";
+    var ini_passed = "<?php echo $data['passed']; ?>";
+    var ini_raised = "<?php echo $data['raised']; ?>";
+    var ini_memberstatus = "<?php echo $data['memberstatus']; ?>";
+</script>
+
+<script >
+
  const { createApp, onMounted } = Vue;
 
     //const app = Vue.createApp({});
@@ -100,7 +153,7 @@ app.component('image-uploader', {
             formData.append('ini_username', this.ini_username);
             formData.append('session_log', session_log);
 
-            axios.post(base_url + 'members/uploadImage', formData, {
+            axios.post(base_url + 'profile/membership/uploadImage', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 },
@@ -173,9 +226,7 @@ app.component('image-uploader', {
 
       // Debugging: Log the ProfileStatus value
 
-      if (!this.form.ProfileStatus) {
-        this.errors.ProfileStatus = 'Profile Status is required.';
-      }
+     
       if (!this.form.username) {
         this.errors.username = 'Username is required.';
       }
@@ -205,16 +256,16 @@ app.component('image-uploader', {
         $(".messagebox_error").fadeOut("slow");
       try {
         var formdata = new FormData();
-        formdata.append('ProfileStatus', this.form.ProfileStatus);
+     
         formdata.append('session_log', this.session_log);
         formdata.append('FirstName', this.form.firstname);
         formdata.append('LastName', this.form.lastname);
         formdata.append('MiddleName', this.form.middlename|| '');
         formdata.append('nameExtension', this.form.nameExtension|| '');
-        formdata.append('ProfileID', this.form.username);
+       
         formdata.append('email', this.form.email);
 
-        axios.post(base_url + 'members/update', formdata)
+        axios.post(base_url + 'profile/membership/update', formdata)
           .then(response_server => {
             const response = response_server.data;
             if (response.session_log && response.success) {
@@ -287,16 +338,7 @@ app.component('image-uploader', {
           <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%"></div>
         </div>
         <form @submit.prevent="validateForm" v-if="!isLoading">
-          <div class="form-group">
-            <label class="small mb-1" for="ProfileStatus">Profile Status:</label>
-            <div class="col-md-12">
-              <span class="form-control">
-                <label><input :disabled="isLoading" type="radio" name="ProfileStatus" value="Active" v-model="form.ProfileStatus"> Active</label> &nbsp;
-                <label><input :disabled="isLoading" type="radio" name="ProfileStatus" value="Inactive" v-model="form.ProfileStatus"> Inactive</label>
-              </span>
-            </div>
-            <div v-if="errors.ProfileStatus" class="error">{{ errors.ProfileStatus }}</div>
-          </div>
+          
 
           <div class="form-group">
             <label class="small mb-1" for="username">AccountID:</label>
@@ -397,65 +439,65 @@ app.component('account-address-card', {
                 this.errorsForms.zipcode = 'ZipCode is required.';
             }
             try {   
-            if (Object.keys(this.errorsForms).length === 0) {
-                this.isSubmit = true;
-                var formdata = new FormData();
-                formdata.append('ProfileID', this.username);
-                formdata.append('session_log', this.session_log);
-                formdata.append('homeaddress', this.newForm.homeaddress);
-                formdata.append('Province', this.newForm.Province);
-                formdata.append('Municipality', this.newForm.Municipality);
-                formdata.append('Barangay', this.newForm.Barangay);
-                formdata.append('ZipCode', this.newForm.zipcode);
+                if (Object.keys(this.errorsForms).length === 0) {
+                    this.isSubmit = true;
+                    var formdata = new FormData();
+                   
+                    formdata.append('session_log', this.session_log);
+                    formdata.append('homeaddress', this.newForm.homeaddress);
+                    formdata.append('Province', this.newForm.Province);
+                    formdata.append('Municipality', this.newForm.Municipality);
+                    formdata.append('Barangay', this.newForm.Barangay);
+                    formdata.append('ZipCode', this.newForm.zipcode);
 
-                formdata.append('sex', this.newForm.sex);
-                formdata.append('dateofbirth', this.newForm.dateofbirth);
-                formdata.append('placeofbirth', this.newForm.placeofbirth);
-                formdata.append('bloodtype', this.newForm.bloodtype);
+                    formdata.append('sex', this.newForm.sex);
+                    formdata.append('dateofbirth', this.newForm.dateofbirth);
+                    formdata.append('placeofbirth', this.newForm.placeofbirth);
+                    formdata.append('bloodtype', this.newForm.bloodtype);
 
-                formdata.append('Country', this.newForm.Country);
+                    formdata.append('Country', this.newForm.Country);
 
-                formdata.append('contactno', this.newForm.contactno);
-                formdata.append('faxno', this.newForm.faxno);
-                formdata.append('homeno', this.newForm.homeno);
-                formdata.append('officeno', this.newForm.officeno);
+                    formdata.append('contactno', this.newForm.contactno);
+                    formdata.append('faxno', this.newForm.faxno);
+                    formdata.append('homeno', this.newForm.homeno);
+                    formdata.append('officeno', this.newForm.officeno);
 
-                formdata.append('Occupation', this.newForm.Occupation);
-                formdata.append('Education', this.newForm.Education);
-                formdata.append('Employment', this.newForm.Employment);
-                formdata.append('EmploymentAddress', this.newForm.EmploymentAddress);
+                    formdata.append('Occupation', this.newForm.Occupation);
+                    formdata.append('Education', this.newForm.Education);
+                    formdata.append('Employment', this.newForm.Employment);
+                    formdata.append('EmploymentAddress', this.newForm.EmploymentAddress);
 
-                formdata.append('familykin', this.newForm.familykin);
-                formdata.append('familyrelation', this.newForm.familyrelation);
-                formdata.append('familyaddress', this.newForm.familyaddress);
-                formdata.append('familynokids', this.newForm.familynokids);
-                formdata.append('familykidsname', this.newForm.familykidsname);
+                    formdata.append('familykin', this.newForm.familykin);
+                    formdata.append('familyrelation', this.newForm.familyrelation);
+                    formdata.append('familyaddress', this.newForm.familyaddress);
+                    formdata.append('familynokids', this.newForm.familynokids);
+                    formdata.append('familykidsname', this.newForm.familykidsname);
 
-                var address = base_url + 'members/updateinfo';
-                axios.post(address, formdata,)
-                .then(response_server => {
-                  const response = response_server.data;
-                  console.log(response);
-                  if (response.session_log && response.success) {
-                    alert("success");
-                  }
-                  else if(response.session_log && response.success == false)
-                  {
-                    $("#error_content").html(response.message_details);
-                    $(".messagebox").fadeIn("slow");
-                  }
-                  else
-                  {
-                    alert('Session TimeOut. Reloading the Page');
-                    location.reload(true);
-                  }
-                  this.isSubmit = false;
-                })
-                .catch(error => {
-                  $(".messagebox_error").fadeIn("slow");
-                  this.isSubmit = false;
-                });
-              }
+                    var address = base_url + 'profile/membership/updateinfo';
+                    axios.post(address, formdata,)
+                    .then(response_server => {
+                      const response = response_server.data;
+                      //console.log(response);
+                      if (response.session_log && response.success) {
+                        alert("success");
+                      }
+                      else if(response.session_log && response.success == false)
+                      {
+                        $("#error_content").html(response.message_details);
+                        $(".messagebox").fadeIn("slow");
+                      }
+                      else
+                      {
+                        alert('Session TimeOut. Reloading the Page');
+                        location.reload(true);
+                      }
+                      this.isSubmit = false;
+                    })
+                    .catch(error => {
+                      $(".messagebox_error").fadeIn("slow");
+                      this.isSubmit = false;
+                    });
+                }
           } catch (error) {
             console.error('Error of fetching data:', error);
             alert('An error occurred while fetching the record.');
@@ -680,7 +722,7 @@ app.component('account-mason-card', {
             if (Object.keys(this.errorsForms).length === 0) {
                 this.isSubmit = true;
                 var formdata = new FormData();
-                formdata.append('ProfileID', this.username);
+               
                 formdata.append('session_log', this.session_log);
                 formdata.append('recordStat', this.newForm.recordStat);
                 formdata.append('LodgeNo', this.newForm.LodgeNo);
@@ -691,11 +733,11 @@ app.component('account-mason-card', {
                 formdata.append('raised', this.newForm.raised);
                 formdata.append('memberstatus', this.newForm.memberstatus);
 
-                var address = base_url + 'members/updateinfo2';
+                var address = base_url + 'profile/membership/updatemasoninfo';
                 axios.post(address, formdata,)
                 .then(response_server => {
                   const response = response_server.data;
-                  console.log(response);
+                  //console.log(response);
                   if (response.session_log && response.success) {
                     alert("success");
                   }
@@ -833,7 +875,7 @@ app.component('account-remarks-card', {
         <div class="col-md-3">            
             <div class="form-group has-feedback justify-content-center align-items-center" id="loading" style="display: none;">
                 <div class="justify-content-center align-items-center">
-                  <img src="./assets/imgs/loading.gif" alt="Loading" style="width:150px;height:150px;">
+                  <img src="`+base_url+`assets/imgs/loading.gif" alt="Loading" style="width:150px;height:150px;">
                 </div>
             </div>
         </div>
@@ -1020,7 +1062,7 @@ app.component('account-remarks-card', {
       this.table.clear();
       this.table.draw();
       try {
-        const response = await axios.get(base_url + 'members/remarks/table/'+ini_username, {
+        const response = await axios.get(base_url + 'profile/membership/remarks/table/', {
           params: {
             start: (page - 1) * this.rowsPerPage,
             limit: this.rowsPerPage,
@@ -1042,7 +1084,7 @@ app.component('account-remarks-card', {
         else
         {
           alert('Session TimeOut. Reloading the Page');
-          location.reload(true);
+          //location.reload(true);
         }
         this.table.clear();
         this.table.rows.add(table_data);
@@ -1114,7 +1156,7 @@ app.component('account-remarks-card', {
             formdata.append('DateTransaction', this.newForm.TransactionDate);
             formdata.append('ProfileID', ini_username);
 
-            var address = base_url + 'members/remarks/add';
+            var address = base_url + 'profile/membership/remarks/add';
             axios.post(address, formdata,)
             .then(response_server => {
               const response = response_server.data;
@@ -1173,7 +1215,7 @@ app.component('account-remarks-card', {
           var selectedRowsJSON = JSON.stringify(this.selectedRows);
           formdata.append('session_log', this.session_log);
           formdata.append('data', selectedRowsJSON);
-          const response = await axios.post(base_url + 'members/remarks/delete', formdata);
+          const response = await axios.post(base_url + 'profile/membership/remarks/delete', formdata);
           if (response.data.session_log && response.data.success) {
             //this.currentPage = 1;
             this.selectedRows = [];
@@ -1183,7 +1225,7 @@ app.component('account-remarks-card', {
           else
           {
             alert('Session TimeOut. Reloading the Page');
-            location.reload(true);
+            //location.reload(true);
           }
       } catch (error) {
         console.error('Error deleting data:', error);
@@ -1367,7 +1409,7 @@ app.component('account-officers-card', {
         <div class="col-md-3">            
             <div class="form-group has-feedback justify-content-center align-items-center" id="loading_div" style="display: none;">
                 <div class="justify-content-center align-items-center">
-                  <img src="./assets/imgs/loading.gif" alt="Loading" style="width:150px;height:150px;">
+                  <img src="`+base_url+`assets/imgs/loading.gif" alt="Loading" style="width:150px;height:150px;">
                 </div>
             </div>
         </div>
@@ -1574,7 +1616,7 @@ app.component('account-officers-card', {
       this.table.clear();
       this.table.draw();
       try {
-        const response = await axios.get(base_url + 'members/officerrecord/table/'+ini_username, {
+        const response = await axios.get(base_url + 'profile/membership/officerrecord/table/', {
           params: {
             start: (page - 1) * this.rowsPerPage,
             limit: this.rowsPerPage,
@@ -1672,11 +1714,11 @@ app.component('account-officers-card', {
             formdata.append('Position', this.newForm.Position);
             formdata.append('ProfileID', ini_username);
 
-            var address = base_url + 'members/officerrecord/add';
+            var address = base_url + 'profile/membership/officerrecord/add';
             axios.post(address, formdata,)
             .then(response_server => {
               const response = response_server.data;
-              console.log(response);
+
               if (response.session_log && response.success) {
                 this.newForm= {};
 
@@ -1694,7 +1736,7 @@ app.component('account-officers-card', {
               else
               {
                 alert('Session TimeOut. Reloading the Page');
-                //location.reload(true);
+                location.reload(true);
               }
               this.isSubmit = false;
             })
@@ -1731,7 +1773,7 @@ app.component('account-officers-card', {
           var selectedRowsJSON = JSON.stringify(this.selectedRows);
           formdata.append('session_log', this.session_log);
           formdata.append('data', selectedRowsJSON);
-          const response = await axios.post(base_url + 'members/officerrecord/delete', formdata);
+          const response = await axios.post(base_url + 'profile/membership/officerrecord/delete', formdata);
           if (response.data.session_log && response.data.success) {
             //this.currentPage = 1;
             this.selectedRows = [];
@@ -1741,7 +1783,7 @@ app.component('account-officers-card', {
           else
           {
             alert('Session TimeOut. Reloading the Page');
-            location.reload(true);
+            //location.reload(true);
           }
       } catch (error) {
         console.error('Error deleting data:', error);
@@ -1959,4 +2001,10 @@ app.component('account-officers-card', {
 
 
 
-    app.mount('#app');
+    app.mount('#app');    
+
+</script>
+
+
+
+

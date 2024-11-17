@@ -273,7 +273,7 @@ echo 'Age: ' . calculateAge($dateOfBirth) . ' years';*/
 
 	public function uploadImage() {
 
-		$entryBy =  $this->encryption->decrypt($this->session->userdata('uid'));
+		$entryBy = $this->session->userdata('uid');// $this->encryption->decrypt($this->session->userdata('uid'));
 		$session_log  = $this->encryption->decrypt($this->input->post('session_log'));
 		$ProfileID  = $this->htmlpurifier_lib->purify($this->input->post('ini_username'));
 
@@ -467,7 +467,7 @@ echo 'Age: ' . calculateAge($dateOfBirth) . ' years';*/
 		else:
         	$session_log  = $this->encryption->decrypt($this->input->get('session_log'));
 		endif;
-        if($session_log==CNF_SESSION_LOG): // session for ajax is active
+        if($CNF_SESSION_LOG==CNF_SESSION_LOG): // session for ajax is active
         	if($system_user_login == true):
         		$session_log = true;
         	else:
