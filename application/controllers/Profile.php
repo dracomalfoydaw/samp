@@ -361,73 +361,8 @@ class Profile extends CI_Controller {
 	        		$session_log = true;
 	        	endif;
 
-	        	if($type =="add" ):
-	        		$this->form_validation->set_rules('Remarks', 'Remarks', 'required|trim|htmlspecialchars');
-	        		$this->form_validation->set_rules('LodgeNo', 'Lodge Number', 'required|trim|htmlspecialchars');
-	        		$this->form_validation->set_rules('LodgeName', 'Lodge Name', 'required|trim|htmlspecialchars');
-	        		$this->form_validation->set_rules('Type', 'Type', 'required|trim|htmlspecialchars');
-	        		$this->form_validation->set_rules('Position', 'Position Name', 'required|trim|htmlspecialchars');
-
-	        		$Remarks  =  $this->htmlpurifier_lib->purify($this->input->post('Remarks'));
-			    	$DateTransaction  =  $this->htmlpurifier_lib->purify($this->input->post('DateTransaction'));
-			    	$LodgeNo  =  $this->htmlpurifier_lib->purify($this->input->post('LodgeNo'));		    	
-			    	$LodgeName  =  $this->htmlpurifier_lib->purify($this->input->post('LodgeName'));
-			    	$Type  =  $this->htmlpurifier_lib->purify($this->input->post('Type'));
-			    	$Position  =  $this->htmlpurifier_lib->purify($this->input->post('Position'));
-			    	$UniqueID  =  $ProfileID;
-
-			    	if ($this->form_validation->run()) {
-	        			$form_validation_status = true;
-	        		}
-	        		else
-	        		{
-	        			$form_validation_status = false;
-	        			$message_details = validation_errors('<li>', '</li>');//'The following errors occurred <br>' . validation_errors('<li>', '</li>');
-	        		}
-	        		if($form_validation_status == true):
-
-	        			$ProfileID	 = "";
-						$query_res = $this->db->query("select * from tb_profile where UniqueID='$UniqueID'");
-						foreach ( $query_res->result() as $row) {
-							$ProfileID = $row->ProfileID;
-						}
-	        			$data_transaction = array(
-				    		'Remarks' => $Remarks,
-				    		'DateTransaction' => $DateTransaction,
-				    		'LodgeNo' => $LodgeNo,
-				    		'LodgeName' => $LodgeName,
-				    		'LodgeName' => $LodgeName,
-				    		'Type' => $Type,
-				    		'Position' => $Position,
-				    		'UniqueID' => $UniqueID,
-				    		'ProfileID' => $ProfileID,
-				    	);
-				    	$data = $this->members->add_officer_remarks($session_log,$data_transaction);
-	        		else:
-		        		$data = array('session_log' => $session_log ,'data' => '' , 'message_details' => $message_details, 'success' => false,);
-		        	endif;
-
-				   
-
-			    	
-	        	elseif($type =="delete" ):
-	        		// Check if 'data' is set in $_POST and is not empty
-					if (isset($_POST['data']) && !empty($_POST['data'])) {
-					    // Decode JSON data from Vue.js
-					    $temp_id_res = json_decode($_POST['data'], true);
-
-					    if ($temp_id_res !== null) { // Check if decoding was successful
-
-					    	$data = $this->members->delete_officer_remarks($temp_id_res,$session_log);
-					    } else {
-					        // Handle case where JSON decoding failed
-					        $data = array('session_log' => $session_log,  'success' => false);
-					    }
-					} else {
-					    // Handle case where 'data' is not set or empty
-					    $data = array('session_log' => $session_log,'success' => false);
-					}
-	        	elseif($type =="table" ):
+	        	
+	        	if($type =="table" ):
 	        		
 		        	$id = $this->htmlpurifier_lib->purify($ProfileID);
 		            // Get the start and limit parameters from the request
@@ -468,60 +403,7 @@ class Profile extends CI_Controller {
 	        		$session_log = true;
 	        	endif;
 
-	        	if($type =="add" ):
-	        		$this->form_validation->set_rules('Remarks', 'Remarks', 'required|trim|htmlspecialchars');
-
-	        		$Remarks  =  $this->htmlpurifier_lib->purify($this->input->post('Remarks'));
-			    	$DateTransaction  =  $this->htmlpurifier_lib->purify($this->input->post('DateTransaction'));		    	
-			    	$UniqueID  =  $ProfileID;
-
-			    	if ($this->form_validation->run()) {
-	        			$form_validation_status = true;
-	        		}
-	        		else
-	        		{
-	        			$form_validation_status = false;
-	        			$message_details = validation_errors('<li>', '</li>');//'The following errors occurred <br>' . validation_errors('<li>', '</li>');
-	        		}
-	        		if($form_validation_status == true):
-
-	        			$ProfileID	 = "";
-						$query_res = $this->db->query("select * from tb_profile where UniqueID='$UniqueID'");
-						foreach ( $query_res->result() as $row) {
-							$ProfileID = $row->ProfileID;
-						}
-	        			$data_transaction = array(
-				    		'Remarks' => $Remarks,
-				    		'DateTransaction' => $DateTransaction,
-				    		'UniqueID' => $UniqueID,
-				    		'ProfileID' => $ProfileID,
-				    	);
-				    	$data = $this->members->add_remarks($session_log,$data_transaction);
-	        		else:
-		        		$data = array('session_log' => $session_log ,'data' => '' , 'message_details' => $message_details, 'success' => false,);
-		        	endif;
-
-				   
-
-			    	
-	        	elseif($type =="delete" ):
-	        		// Check if 'data' is set in $_POST and is not empty
-					if (isset($_POST['data']) && !empty($_POST['data'])) {
-					    // Decode JSON data from Vue.js
-					    $temp_id_res = json_decode($_POST['data'], true);
-
-					    if ($temp_id_res !== null) { // Check if decoding was successful
-
-					    	$data = $this->members->delete_remarks($temp_id_res,$session_log);
-					    } else {
-					        // Handle case where JSON decoding failed
-					        $data = array('session_log' => $session_log,  'success' => false);
-					    }
-					} else {
-					    // Handle case where 'data' is not set or empty
-					    $data = array('session_log' => $session_log,'success' => false);
-					}
-	        	elseif($type =="table" ):
+	        	if($type =="table" ):
 	        		
 		        	$id = $this->htmlpurifier_lib->purify($ProfileID);
 		            // Get the start and limit parameters from the request
@@ -558,27 +440,10 @@ class Profile extends CI_Controller {
 	        		$session_log = false;
 	        	endif;
 	        	
-				/*$this->form_validation->set_rules('homeaddress', 'Home Address', 'required|trim|htmlspecialchars');
-		    	$this->form_validation->set_rules('Province', 'Province Name', 'required|trim|htmlspecialchars');
-		    	$this->form_validation->set_rules('Municipality', 'Municipality Name', 'required|trim|htmlspecialchars');
-		    	$this->form_validation->set_rules('Barangay', 'Barangay Name', 'required|trim|htmlspecialchars');
-		    	$this->form_validation->set_rules('ZipCode', 'ZipCode', 'required|trim|htmlspecialchars');*/
+				
 	        	$form_validation_status = true;
 	        	$message_details = "";
-	        	/*if($system_user_login == true):
-	        		$session_log = true;
-	        		if ($this->form_validation->run()) {
-	        			$form_validation_status = true;
-	        		}
-	        		else
-	        		{
-	        			$form_validation_status = false;
-	        			$message_details = validation_errors('<li>', '</li>');//'The following errors occurred <br>' . validation_errors('<li>', '</li>');
-	        		}
-	        	else:
-	        		$form_validation_status = false;
-	        		$session_log = false;
-	        	endif;*/
+	        	
 	        	$UniqueID  =  $ProfileID;
 	        
 	        	$recordStat  =  $this->htmlpurifier_lib->purify($this->input->post('recordStat'));
@@ -762,7 +627,7 @@ class Profile extends CI_Controller {
 	        endif;
 		}
 
-		elseif($category=="updateinfo")
+		elseif($category=="update")
 		{
 			$system_user_login = $this->session->userdata('logged_in_session') ;
 		   	$session_key  = $this->encryption->decrypt($this->input->post('session_log'));

@@ -857,7 +857,7 @@ app.component('account-remarks-card', {
     
     <div class="row ">
       <div class="col-md-5">
-        <button class="tips btn btn-sm  btn-info" @click="newRecord"> <i class="fa fa-plus"></i> Add New</button>
+      
         <button class="tips btn btn-sm  btn-danger" v-if="selectedRows.length" @click="deleteRecord"> <i class="fa fa-trash"></i> Delete</button>
       </div>
       <div class="col-md-3">  
@@ -938,80 +938,7 @@ app.component('account-remarks-card', {
         </div>
       </div>
 
-      <!-- New Form Modal -->
-      <div class="modal fade" id="newFormModal" tabindex="-1" aria-labelledby="newFormModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-l">
-          <div class="modal-content">
-            <form @submit.prevent="confirmSubmit">
-              <div class="modal-header">
-                <h5 class="modal-title" id="newFormModalLabel">New Record</h5>
-                <button type="button" class="btn-close" @click="closenewFormModal" :disabled="isSubmit" aria-label="Close">X</button>
-              </div>
-             
-              <div class="modal-body messagebox_error" style="display: none;">
-                <div class="alert alert-danger "  role="alert">
-                  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                  <span class="sr-only">Error:</span>
-                  <a style="color:black;"id="message_error" disabled >
-                    <b>You have following error(s):</b> 
-                    <p>Something went wrong. Contact the administrator for the problem.</p>
-                  </a>
-                </div> 
-              </div> 
-              <div class="modal-body messagebox" style="display: none;">
-                <div class="alert alert-danger "  role="alert">
-                  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                  <span class="sr-only">Error:</span>
-                  <a style="color:black;"id="message_error" disabled >
-                    <b>You have following error(s):</b> 
-                    <ul id="error_content">
-                       
-                    </ul>
-                  </a>
-                </div> 
-              </div> 
-              
-              <div class="modal-body">
-                <div v-if="isSubmit">
-                  <div class="progress">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;"></div>
-                  </div>
-                </div>
-                <div v-if="isSubmit">
-                </div>                
-
-                
-                <h3>Remarks</h3>
-                <hr>
-                <div class="mb-3">
-
-                  <div class ="row">
-                    <div class="col-md-12">
-                      <label for="TransactionDate" class="form-label">Transaction Date</label>
-                      <input :disabled="isSubmit" type="date" class="form-control" id="TransactionDate" name="TransactionDate" v-model="newForm.TransactionDate" >
-                      <span v-if="errors.TransactionDate" style="color: red;">{{ errors.TransactionDate }}</span>
-                    </div>
-                    <div class="col-md-12">
-                      <label for="Remarks" class="form-label">Remarks</label>
-                      <input :disabled="isSubmit" type="text" class="form-control" id="Remarks" name="Remarks" v-model="newForm.Remarks" required>
-                      <span v-if="errors.Remarks" style="color: red;">{{ errors.Remarks }}</span>
-                    </div>
-                  </div>
-                </div>
-
-                
-
-                
-
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @click="closenewFormModal" :disabled="isSubmit">Cancel</button>
-                <button type="submit" class="btn btn-primary" :disabled="isSubmit">Submit</button>
-              </div>
-            </form>           
-          </div>
-        </div>
-      </div>
+      
     </div>
   `,
   data() {
@@ -1128,126 +1055,10 @@ app.component('account-remarks-card', {
     },
     
 
-    /**New form**/    
-    newRecord() {
-      this.newFormModal = new bootstrap.Modal(document.getElementById('newFormModal'), {
-        backdrop: 'static', // Prevent closing when clicking outside
-        keyboard: false, // Prevent closing with ESC key
-      });
-      this.newFormModal.show();
-    },
-
-    confirmSubmit() {
-      try {   
-          $(".messagebox").fadeOut("slow");
-          $(".messagebox_error").fadeOut("slow");
-          const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-          this.errors = {};
-          if (!this.newForm.Remarks) {
-            this.errors.Remarks = 'Remarks is required.';
-          }
-          
-          
-          if (Object.keys(this.errors).length === 0) {
-            this.isSubmit = true;
-            var formdata = new FormData();
-            formdata.append('Remarks', this.newForm.Remarks );
-            formdata.append('session_log', this.session_log);
-            formdata.append('DateTransaction', this.newForm.TransactionDate);
-            formdata.append('ProfileID', ini_username);
-
-            var address = base_url + 'profile/membership/remarks/add';
-            axios.post(address, formdata,)
-            .then(response_server => {
-              const response = response_server.data;
-              console.log(response);
-              if (response.session_log && response.success) {
-                this.newForm= {};
-
-                this.currentPage = 1;
-                this.selectedRows = [];
-                this.fetchData(this.currentPage, this.searchQuery, this.sortColumn, this.sortOrder);
-                this.newFormModal.hide();
-                $(".messagebox").fadeOut("slow");
-              }
-              else if(response.session_log && response.success == false)
-              {
-                $("#error_content").html(response.message_details);
-                $(".messagebox").fadeIn("slow");
-              }
-              else
-              {
-                alert('Session TimeOut. Reloading the Page');
-                //location.reload(true);
-              }
-              this.isSubmit = false;
-            })
-            .catch(error => {
-              $(".messagebox_error").fadeIn("slow");
-              this.isSubmit = false;
-            });
-          }
-      } catch (error) {
-        this.newFormModal.hide();
-        console.error('Error of fetching data:', error);
-        alert('An error occurred while fetching the record.');
-      }
-    },
-    closenewFormModal() {
-      this.newFormModal.hide();
-    },
     
-    /**delete row**/
-    deleteRow(entryId,rowNumber) {
-      this.entryIdToDelete = entryId;
-      this.rowNumber = rowNumber;
-      this.deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
-        backdrop: 'static', // Prevent closing when clicking outside
-        //keyboard: false // Prevent closing with ESC key
-      });
-      this.deleteModal.show();
-    },
-
-    async confirmDelete() {
-      this.isDeleting = true;
-      try {     
-          var formdata = new FormData();
-          var selectedRowsJSON = JSON.stringify(this.selectedRows);
-          formdata.append('session_log', this.session_log);
-          formdata.append('data', selectedRowsJSON);
-          const response = await axios.post(base_url + 'profile/membership/remarks/delete', formdata);
-          if (response.data.session_log && response.data.success) {
-            //this.currentPage = 1;
-            this.selectedRows = [];
-            this.fetchData(this.currentPage, this.searchQuery, this.sortColumn, this.sortOrder);
-            this.closeModal();           
-          }
-          else
-          {
-            alert('Session TimeOut. Reloading the Page');
-            //location.reload(true);
-          }
-      } catch (error) {
-        console.error('Error deleting data:', error);
-        alert('An error occurred while deleting the record.');
-        this.isDeleting = false;
-      }
-    },
-    closeModal() {
-      this.isDeleting = false;
-      if (this.deleteModal) {
-        this.deleteModal.hide();
-      }
-    },
-    deleteRecord() {
-      //alert('Selected IDs: ' + this.selectedRows.join(', '));
-
-      this.deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
-        backdrop: 'static', // Prevent closing when clicking outside
-        keyboard: false // Prevent closing with ESC key
-      });
-      this.deleteModal.show();
-    },
+   
+    
+   
 
  
 
@@ -1268,30 +1079,7 @@ app.component('account-remarks-card', {
       
     },
     
-    handleCheckboxClick(event, row) {
-      if (event.target.checked) {
-        if (!this.selectedRows.includes(row.TransID)) {
-          this.selectedRows.push(row.TransID);
-        }
-      } else {
-        const index = this.selectedRows.indexOf(row.TransID);
-        if (index > -1) {
-          this.selectedRows.splice(index, 1);
-        }
-      }
-    },
-    
-    handleSelectAll(event) {
-      const isChecked = event.target.checked;
-      this.selectedRows = [];
-      $('input.row-checkbox').prop('checked', isChecked);
-      if (isChecked) {
-        this.table.rows().every((index) => {
-          const row = this.table.row(index).data();
-          this.selectedRows.push(row.TransID);
-        });
-      }
-    }
+   
     
   },
   mounted() {
@@ -1302,19 +1090,7 @@ app.component('account-remarks-card', {
     this.isAutomatic = true,
     this.table = $('#remarks_table').DataTable({
       columns: [
-        {
-          data: null,
-          render: function (data, type, row, meta) {
-            if (row.RecordStatus === 'Record Deleted') {
-              return "";
-            } else {              
-              return `<input type="checkbox" class="row-checkbox" data-entry-id="${row.TransID}" >`;
-            }
-          },
-          width:'5%',
-          title: '<input type="checkbox" id="select-all" >',
-          orderable: false
-        },
+        
         
         
         {
@@ -1391,8 +1167,7 @@ app.component('account-officers-card', {
     
     <div class="row ">
       <div class="col-md-5">
-        <button class="tips btn btn-sm  btn-info" @click="newRecord"> <i class="fa fa-plus"></i> Add New</button>
-        <button class="tips btn btn-sm  btn-danger" v-if="selectedRows.length" @click="deleteRecord"> <i class="fa fa-trash"></i> Delete</button>
+       
       </div>
       <div class="col-md-3">  
 
@@ -1446,126 +1221,9 @@ app.component('account-officers-card', {
           </div>
         </div>
       </div>
-      <!-- Delete Modal -->
-      <div class="modal fade" id="deleteofficerModal" tabindex="-1" aria-labelledby="deleteOfficerModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content"> 
-            
-              <div class="modal-header">
-                <h5 class="modal-title" id="deleteOfficerModalLabel">Confirm Delete</h5>
-                <button type="button" class="btn-close" @click="closeModal" aria-label="Close" :disabled="isDeleting">X</button>
-              </div>
-              <div class="modal-body">
-                Are you sure you want to delete this record?
-                <div v-if="isDeleting">
-                  <div class="progress">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;"></div>
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @click="closeModal" :disabled="isDeleting">Cancel</button>
-                <button type="submit" class="btn btn-danger"  @click="confirmDelete"  :disabled="isDeleting">Delete</button>
-              </div>
-            
-          </div>
-        </div>
-      </div>
+      
 
-      <!-- New Form Modal -->
-      <div class="modal fade" id="newFormofficerModal" tabindex="-1" aria-labelledby="newFormModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-l">
-          <div class="modal-content">
-            <form @submit.prevent="confirmSubmit">
-              <div class="modal-header">
-                <h5 class="modal-title" id="newFormModalLabel">New Record</h5>
-                <button type="button" class="btn-close" @click="closenewFormModal" :disabled="isSubmit" aria-label="Close">X</button>
-              </div>
-             
-              <div class="modal-body messagebox_error" style="display: none;">
-                <div class="alert alert-danger "  role="alert">
-                  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                  <span class="sr-only">Error:</span>
-                  <a style="color:black;"id="message_error" disabled >
-                    <b>You have following error(s):</b> 
-                    <p>Something went wrong. Contact the administrator for the problem.</p>
-                  </a>
-                </div> 
-              </div> 
-              <div class="modal-body messagebox" style="display: none;">
-                <div class="alert alert-danger "  role="alert">
-                  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                  <span class="sr-only">Error:</span>
-                  <a style="color:black;"id="message_error" disabled >
-                    <b>You have following error(s):</b> 
-                    <ul id="error_content">
-                       
-                    </ul>
-                  </a>
-                </div> 
-              </div> 
-              
-              <div class="modal-body">
-                <div v-if="isSubmit">
-                  <div class="progress">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;"></div>
-                  </div>
-                </div>
-                <div v-if="isSubmit">
-                </div>                
-
-                
-                <h3>Remarks</h3>
-                <hr>
-                <div class="mb-3">
-
-                  <div class ="row">
-                    <div class="col-md-12">
-                      <label for="TransactionDate" class="form-label">Year Appointed</label>
-                      <input :disabled="isSubmit" type="text" class="form-control" id="TransactionDate" name="TransactionDate" v-model="newForm.TransactionDate" >
-                      <span v-if="errors.TransactionDate" style="color: red;">{{ errors.TransactionDate }}</span>
-                    </div>
-                    <div class="col-md-12">
-                      <label for="LodgeNo" class="form-label">Lodge Number</label>
-                      <input :disabled="isSubmit" type="text" class="form-control" id="LodgeNo" name="LodgeNo" v-model="newForm.LodgeNo" required>
-                      <span v-if="errors.LodgeNo" style="color: red;">{{ errors.LodgeNo }}</span>
-                    </div>
-                    <div class="col-md-12">
-                      <label for="LodgeName" class="form-label">LodgeName</label>
-                      <input :disabled="isSubmit" type="text" class="form-control" id="LodgeName" name="LodgeName" v-model="newForm.LodgeName" required>
-                      <span v-if="errors.LodgeName" style="color: red;">{{ errors.LodgeName }}</span>
-                    </div>
-                    <div class="col-md-12">
-                      <label for="Type" class="form-label">Type</label>
-                      <input :disabled="isSubmit" type="text" class="form-control" id="Type" name="Type" v-model="newForm.Type" required>
-                      <span v-if="errors.Type" style="color: red;">{{ errors.Type }}</span>
-                    </div>
-                    <div class="col-md-12">
-                      <label for="Position" class="form-label">Position</label>
-                      <input :disabled="isSubmit" type="text" class="form-control" id="Position" name="Position" v-model="newForm.Position" required>
-                      <span v-if="errors.Position" style="color: red;">{{ errors.Position }}</span>
-                    </div>
-                    <div class="col-md-12">
-                      <label for="Remarks" class="form-label">Remarks</label>
-                      <input :disabled="isSubmit" type="text" class="form-control" id="Remarks" name="Remarks" v-model="newForm.Remarks" required>
-                      <span v-if="errors.Remarks" style="color: red;">{{ errors.Remarks }}</span>
-                    </div>
-                  </div>
-                </div>
-
-                
-
-                
-
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @click="closenewFormModal" :disabled="isSubmit">Cancel</button>
-                <button type="submit" class="btn btn-primary" :disabled="isSubmit">Submit</button>
-              </div>
-            </form>           
-          </div>
-        </div>
-      </div>
+      
     </div>
   `,
   data() {
@@ -1682,130 +1340,6 @@ app.component('account-officers-card', {
     },
     
 
-    /**New form**/    
-    newRecord() {
-      this.newFormModal = new bootstrap.Modal(document.getElementById('newFormofficerModal'), {
-        backdrop: 'static', // Prevent closing when clicking outside
-        keyboard: false, // Prevent closing with ESC key
-      });
-      this.newFormModal.show();
-    },
-
-    confirmSubmit() {
-      try {   
-          $(".messagebox").fadeOut("slow");
-          $(".messagebox_error").fadeOut("slow");
-          const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-          this.errors = {};
-          if (!this.newForm.Remarks) {
-            this.errors.Remarks = 'Remarks is required.';
-          }
-          
-          
-          if (Object.keys(this.errors).length === 0) {
-            this.isSubmit = true;
-            var formdata = new FormData();
-            formdata.append('Remarks', this.newForm.Remarks );
-            formdata.append('session_log', this.session_log);
-            formdata.append('DateTransaction', this.newForm.TransactionDate);
-            formdata.append('LodgeNo', this.newForm.LodgeNo);
-            formdata.append('LodgeName', this.newForm.LodgeName);
-            formdata.append('Type', this.newForm.Type);
-            formdata.append('Position', this.newForm.Position);
-            formdata.append('ProfileID', ini_username);
-
-            var address = base_url + 'profile/membership/officerrecord/add';
-            axios.post(address, formdata,)
-            .then(response_server => {
-              const response = response_server.data;
-
-              if (response.session_log && response.success) {
-                this.newForm= {};
-
-                this.currentPage = 1;
-                this.selectedRows = [];
-                this.fetchData(this.currentPage, this.searchQuery, this.sortColumn, this.sortOrder);
-                this.newFormModal.hide();
-                $(".messagebox").fadeOut("slow");
-              }
-              else if(response.session_log && response.success == false)
-              {
-                $("#error_content").html(response.message_details);
-                $(".messagebox").fadeIn("slow");
-              }
-              else
-              {
-                alert('Session TimeOut. Reloading the Page');
-                location.reload(true);
-              }
-              this.isSubmit = false;
-            })
-            .catch(error => {
-              $(".messagebox_error").fadeIn("slow");
-              this.isSubmit = false;
-            });
-          }
-      } catch (error) {
-        this.newFormModal.hide();
-        console.error('Error of fetching data:', error);
-        alert('An error occurred while fetching the record.');
-      }
-    },
-    closenewFormModal() {
-      this.newFormModal.hide();
-    },
-    
-    /**delete row**/
-    deleteRow(entryId,rowNumber) {
-      this.entryIdToDelete = entryId;
-      this.rowNumber = rowNumber;
-      this.deleteModal = new bootstrap.Modal(document.getElementById('deleteOfficerModal'), {
-        backdrop: 'static', // Prevent closing when clicking outside
-        //keyboard: false // Prevent closing with ESC key
-      });
-      this.deleteModal.show();
-    },
-
-    async confirmDelete() {
-      this.isDeleting = true;
-      try {     
-          var formdata = new FormData();
-          var selectedRowsJSON = JSON.stringify(this.selectedRows);
-          formdata.append('session_log', this.session_log);
-          formdata.append('data', selectedRowsJSON);
-          const response = await axios.post(base_url + 'profile/membership/officerrecord/delete', formdata);
-          if (response.data.session_log && response.data.success) {
-            //this.currentPage = 1;
-            this.selectedRows = [];
-            this.fetchData(this.currentPage, this.searchQuery, this.sortColumn, this.sortOrder);
-            this.closeModal();           
-          }
-          else
-          {
-            alert('Session TimeOut. Reloading the Page');
-            //location.reload(true);
-          }
-      } catch (error) {
-        console.error('Error deleting data:', error);
-        alert('An error occurred while deleting the record.');
-        this.isDeleting = false;
-      }
-    },
-    closeModal() {
-      this.isDeleting = false;
-      if (this.deleteModal) {
-        this.deleteModal.hide();
-      }
-    },
-    deleteRecord() {
-      //alert('Selected IDs: ' + this.selectedRows.join(', '));
-
-      this.deleteModal = new bootstrap.Modal(document.getElementById('deleteofficerModal'), {
-        backdrop: 'static', // Prevent closing when clicking outside
-        keyboard: false // Prevent closing with ESC key
-      });
-      this.deleteModal.show();
-    },
 
  
 
@@ -1826,30 +1360,7 @@ app.component('account-officers-card', {
       
     },
     
-    handleCheckboxClick(event, row) {
-      if (event.target.checked) {
-        if (!this.selectedRows.includes(row.TransID)) {
-          this.selectedRows.push(row.TransID);
-        }
-      } else {
-        const index = this.selectedRows.indexOf(row.TransID);
-        if (index > -1) {
-          this.selectedRows.splice(index, 1);
-        }
-      }
-    },
-    
-    handleSelectAll(event) {
-      const isChecked = event.target.checked;
-      this.selectedRows = [];
-      $('input.officer-row-checkbox').prop('checked', isChecked);
-      if (isChecked) {
-        this.table.rows().every((index) => {
-          const row = this.table.row(index).data();
-          this.selectedRows.push(row.TransID);
-        });
-      }
-    }
+   
     
   },
   mounted() {
@@ -1860,19 +1371,7 @@ app.component('account-officers-card', {
     this.isAutomatic = true,
     this.table = $('#officers_table').DataTable({
       columns: [
-        {
-          data: null,
-          render: function (data, type, row, meta) {
-            if (row.RecordStatus === 'Record Deleted') {
-              return "";
-            } else {              
-              return `<input type="checkbox" class="officer-row-checkbox" data-entry-id="${row.TransID}" >`;
-            }
-          },
-          width:'5%',
-          title: '<input type="checkbox" id="officer-select-all" >',
-          orderable: false
-        },
+        
         
         
         {
